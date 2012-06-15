@@ -1,0 +1,50 @@
+.navbar
+	.navbar-inner
+		.container
+			.brand
+				a(href="/") jQuest
+			ul.nav.pull-right
+				
+				- var mainLinks = [{path:"/",label:"Home"}, {path:"/topics",label:"Topics"}, {path:"/help",label:"Find help"}]
+
+				each link in mainLinks				
+					if currentRoute.path == link.path
+						li.main-link.active
+							a(href=link.path)=link.label
+					else
+						li.main-link
+							a(href=link.path)=link.label
+				
+				-if( currentUser )
+					li.user-avatar.dropdown
+						a.dropdown-toggle(href="#",data-toggle="dropdown")
+							img(src="https://si0.twimg.com/profile_images/1765018680/penguin_nb_normal.jpg")
+							b.caret
+						ul.dropdown-menu
+							li 
+								a(href="/user") Profil
+							li 
+								a(href="/user/scores") My scores
+							li 
+								a(href="/user/settings") Settings
+							li.divider
+							li 
+								a(href="/user/logout") Log out
+				- else
+					li.dropdown
+						.btn.btn-primary(data-toggle="dropdown") Log in
+						form.dropdown-menu.log-in(action="/user/login",method="POST")
+							
+							label Username or email :
+							input.input-large(type="text", name="email", placeholder="Email",tabindex=10)
+
+							label Password :
+							input.input-large(type="password", name="password", placeholder="Password",tabindex=20)
+
+							input.btn.pull-right(type="submit",value="Log in",tabindex=40)	
+
+							label.checkbox.pull-left
+								input(type="checkbox",name="keep-log-in",tabindex=30)
+								| Remmeber me
+
+							

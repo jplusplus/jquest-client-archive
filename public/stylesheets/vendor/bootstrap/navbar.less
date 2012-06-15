@@ -7,11 +7,23 @@
 
 .navbar {
   // Fix for IE7's bad z-indexing so dropdowns don't appear below content that follows the navbar
-  *position: relative;
+  position: relative;
   *z-index: 2;
 
   overflow: visible;
   margin-bottom: @baseLineHeight;
+
+  &:after {
+    position:absolute;
+    content:"";
+
+    width:100%;
+    height:2px;
+    z-index:10;
+
+    background: #DFDFDF;
+    border-bottom:1px darken(#DFDFDF, 10%) solid;
+  }
 }
 
 // Gradient is applied to it's own element because overflow visible is not honored by IE when filter is present
@@ -21,7 +33,8 @@
   padding-right: 20px;
   #gradient > .vertical(@navbarBackgroundHighlight, @navbarBackground);
   .border-radius(@inputBorderRadius);
-  .box-shadow(~"0 1px 3px rgba(0,0,0,.25)");
+  //.box-shadow(0 -2px 3px rgba(0,0,0,.25) inset);
+
 }
 
 // Set width to auto for default container
@@ -238,12 +251,12 @@
 
 // Dividers (basically a vertical hr)
 .navbar .divider-vertical {
-  height: @navbarHeight;
+  height: @navbarHeight -  16px;
   width: 1px;
-  margin: 0 9px;
+  margin: 8px 9px;
   overflow: hidden;
-  background-color: @navbarBackground;
-  border-right: 1px solid @navbarBackgroundHighlight;
+  background-color: darken(@navbarBackground, 10%);
+  border-right: 1px solid lighten(@navbarBackground, 10%);
 }
 
 // Secondary (floated right) nav in topbar
