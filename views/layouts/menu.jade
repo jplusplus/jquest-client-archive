@@ -22,7 +22,8 @@
 							b.caret
 						ul.dropdown-menu
 							li 
-								a(href="/user") Profil
+								a(href="/user"
+									) Profil
 							li 
 								a(href="/user/scores") My scores
 							li 
@@ -32,19 +33,6 @@
 								a(href="/user/logout") Log out
 				- else
 					li.dropdown
-						.btn.btn-primary(data-toggle="dropdown") Log in
-						form.dropdown-menu.log-in(action="/user/login",method="POST")
-							
-							label Username or email :
-							input.input-large(type="text", name="email", placeholder="Email",tabindex=10)
-
-							label Password :
-							input.input-large(type="password", name="password", placeholder="Password",tabindex=20)
-
-							input.btn.pull-right(type="submit",value="Log in",tabindex=40)	
-
-							label.checkbox.pull-left
-								input(type="checkbox",name="keep-log-in",tabindex=30)
-								| Remmeber me
+						.btn.btn-primary Log in
 
 							

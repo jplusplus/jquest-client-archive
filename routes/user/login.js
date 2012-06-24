@@ -1,45 +1,21 @@
-/*
- * GET user root page.
+/**
+ * @author Pirhoo
+ * @description Login route
+ *
  */
-app.get('/user', function(req, res){
+module.exports = function(app, db) {
 
-	// Redirects not logged users
-	if(!req.session.currentUser) return res.redirect("/user/login");
+	/*
+	 * GET user login page.
+	 */
+	app.get('/user/login', loginPage);
 
-	res.render('user/', 
-		{ 
-			title: 'jQuest', 
-			stylesheets: [
-				"/stylesheets/vendor/bootstrap-build/bootstrap.min.css",
-				"/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css",
-				"http://fonts.googleapis.com/css?family=Share:400,700",
-				"/stylesheets/style.less"
-			], 
-			javascripts: [
-				"/javascripts/vendor/bootstrap/bootstrap.min.js"								
-			]
-		}
-	);
-});
+	/*
+	 * POST user login page.
+	 */
+	app.post('/user/login', loginPage);
 
-/*
- * GET user log out.
- */
-app.get('/user/logout', function(req, res) {
-	delete req.session.currentUser;
-	res.redirect("/");
-});
-
-/*
- * GET user login page.
- */
-app.get('/user/login', loginPage);
-
-/*
- * POST user login page.
- */
-app.post('/user/login', loginPage);
-
+};
 
 
 function loginPage (req, res){
