@@ -4,7 +4,7 @@
  * @description Logout route binder
  *
  */
-module.exports = function(app, db) {
+module.exports = function(app, sequelize) {
 	/*
 	 * GET user log out.
 	 */

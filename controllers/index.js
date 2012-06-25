@@ -1,14 +1,15 @@
 /**
  * @author Pirhoo
- * @description Topics route binder
+ * @description Home route binder
  *
  */
-module.exports = function(app,db) {
+module.exports = function(app, db, controllers) {
 
 	/*
-	 * GET topics page.
+	 * GET home page.
 	 */
-	app.get('/topics', function(req, res){
+	app.get('/', function(req, res){
+
 	  res.render('index.jade', 
 			{ 
 				title: 'jQuest', 

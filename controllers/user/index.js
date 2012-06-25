@@ -6,7 +6,7 @@ var util = require("util")
  * @description Home route binder
  *
  */
-module.exports = function(app, db) {
+module.exports = function(app, sequelize) {
 
 	/*
 	 * GET user root page.
@@ -39,32 +39,16 @@ module.exports = function(app, db) {
  * @description Get a new Twitter consumer instance
  * @return oauth.OAuth
  */
-module.exports.twitterConsumer = function() {
+module.exports.getTwitterConsumer = function() {
 	return new oauth.OAuth(
-		"https://twitter.com/oauth/request_token",
-		"https://twitter.com/oauth/access_token",
+		"https://api.twitter.com/oauth/request_token",
+		"https://api.twitter.com/oauth/access_token",
     	"mkZ4S7psHzfkDCfOzQTOg",//_twitterConsumerKey, 
     	"ah1B8CYFt8uaIR9J1DiGV5gLwEifdEliJmNrOtOs",//_twitterConsumerSecret, 
     	"1.0A",
-    	"http://pirhoo.dev:3000/user/callback",
+    	"http://pirhoo.dev:3000/user/twitter-callback",
     	"HMAC-SHA1"
     );
 }
 
-
-/**
- * @author Pirhoo
- * @description Add the given data as a User to the data (update if exists)
- * @return boolean
- */
-module.exports.addTwitterUser = function(data) {
-	console.log(data.screen_name);
-	// error handling omitted
-	var query = db.query("SELECT id FROM jquest_user WHERE username=$1", [ data.screen_name ]);
-	query.on("end", function(result) {
-		console.log(result);	
-	});
-		
-	return true;
-}
 

@@ -3,7 +3,7 @@
  * @description Login route
  *
  */
-module.exports = function(app, db) {
+module.exports = function(app, sequelize) {
 
 	/*
 	 * GET user login page.
@@ -53,7 +53,7 @@ function loginForm(req, res){
 function loadUser(req, res, callback) {
 
 	//error handling omitted
-	var query = db.query("SELECT * FROM jquest_user WHERE ( email=$1 OR username=$1 ) AND password=crypt($2, password)", [ req.param('email'), req.param('password') ] );
+	var query = sequelize.query("SELECT * FROM jquest_user WHERE ( email=$1 OR username=$1 ) AND password=crypt($2, password)", [ req.param('email'), req.param('password') ] );
 	
 	// for each row
 	query.on("row", function(row, result) {
