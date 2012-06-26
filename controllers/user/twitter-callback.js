@@ -40,7 +40,6 @@ module.exports = function(app, sequelize) {
 							where: { 
 								  consumerUserId: data.user_id
 								, consumer:"twitter"
-								, password: ["CRYPT(?, password)", require("enc").sha1("coucou") ]
 							}
 						// If success
 						}).complete(function(error, userOauth) {
