@@ -179,7 +179,12 @@ exports.boot = function(){
         password: ["CRYPT(?, password)", require("enc").sha1("coucou") ]
       }
     // If success
-  }) .complete(function(err, user) { console.log("Find User: ", err, user); });
+  }) .complete(function(err, user) { console.log("Find user: ", err, user); });
+
+  client = new require("pg").Client(connectionString);
+  client.connect();
+  query = client.query('SELECT * FROM Users');
+  query.on('error', function(error) { console.log(error); });
 
   return app;
 };
