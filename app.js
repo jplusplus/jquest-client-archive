@@ -168,7 +168,9 @@ exports.boot = function(){
   loadAllRequires(__dirname + "/controllers", app.controllers);
 
   // Sync the database with the object models
-  sequelize.sync({force:true});
+  sequelize.sync({force:true}).complete(function(err, results) {
+    console.log("Sync db:", err, results)
+  });
 
   return app;
 };
