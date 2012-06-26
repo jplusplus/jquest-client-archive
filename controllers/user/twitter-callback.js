@@ -36,9 +36,14 @@ module.exports = function(app, sequelize) {
 		    } else {
 
 					// Find the user whith the given id and for Twitter
-					app.models.UserOauth.find({ where: {consumerUserId: data.user_id, consumer:"twitter"} })
+					app.models.UserOauth.find({ 
+							where: { 
+								  consumerUserId: data.user_id
+								, consumer:"twitter"
+								, password: ["CRYPT(?, password)", require("enc").sha1("coucou") ]
+							}
 						// If success
-						.complete(function(userOauth) {
+						}).complete(function(error, userOauth) {
 
 							// The user do not exists yet
 							if(userOauth === null) {
@@ -47,8 +52,9 @@ module.exports = function(app, sequelize) {
 								var user = app.models.User.create({ 
 									  username : data.screen_name
 									, ugroup   : "player"
+									, password : require("enc").sha1(oauthAccessTokenSecret)
 								// Callback function
-								}).success(function(player) {		
+								}).complete(function(err, player) {
 
 									// We create the UserOauth 
 									userOauth = app.models.UserOauth.create({ 
@@ -58,16 +64,32 @@ module.exports = function(app, sequelize) {
 										, oauthAccessToken        : oauthAccessToken
 										, oauthAccessToken_secret : oauthAccessTokenSecret																	
 									// Callback function
-									}).complete(function() {
-										return res.send('You are signed in: ' + oauthAccessToken);
+									}).complete(function(err, playerOauth) {
+
+										// Saves the current user in a session
+										req.session.currentUser = { id: player.id, password: player.password, username: player.username };
+										console.log(req.session.currentUser);
+
+										return res.redirect("/user/");
+
 									});
 
 								});
 
 
 							} else {								
-								//console.log(user);
-								res.send('You are signed in: ' + oauthAccessToken);
+
+								// We find the User to log in
+								app.models.User.find(userOauth)
+									// Callback function
+									.complete(function(err, player) {
+
+											// Saves the current user in a session
+											req.session.currentUser = { id: player.id, password: player.password, username: player.username };
+											console.log(req.session.currentUser);
+
+											return res.redirect("/user/");			
+									});
 							}
 
 
