@@ -175,7 +175,7 @@ exports.boot = function(){
 
 
   var pg = require("pg"),
-  client = new pg.Client(process.env.DATABASE_URL.replace("postgres://", "tcp://"));
+  client = new pg.Client(process.env.DATABASE_URL.replace("postgres://", "tcp://")+1);
 
   client.connect(function(err,state) {
     console.log("Connexion à PG:", err)
