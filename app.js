@@ -169,9 +169,18 @@ exports.boot = function(){
   loadAllRequires(__dirname + "/controllers", app.controllers);
 
   // Sync the database with the object models
-  sequelize.sync().complete(function(e, r) {
-    console.log(e,r);
+  sequelize.sync().complete(function(e, r) {  
+    console.log("Synchronie ORM:", e,r);
   });
+
+
+  var pg = require("pg"),
+  client = new pg.Client(process.env.DATABASE_URL);
+
+  client.connect(function(err,state) {
+    console.log("Connexion à PG:", err)
+  });
+
 
   // Find the user whith the given id and for Twitter
   app.models.User.find({ 
@@ -179,12 +188,7 @@ exports.boot = function(){
         password: ["CRYPT(?, password)", require("enc").sha1("coucou") ]
       }
     // If success
-  }) .complete(function(err, user) { console.log("Find user: ", err, user); });
-
-  client = new require("pg").Client(connectionString);
-  client.connect();
-  query = client.query('SELECT * FROM Users');
-  query.on('error', function(error) { console.log(error); });
+  }) .complete(function(err, user) { console.log("Find user:", err, user); });
 
   return app;
 };
