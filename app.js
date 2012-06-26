@@ -174,12 +174,12 @@ exports.boot = function(){
   });
 
   // Find the user whith the given id and for Twitter
-  // app.models.User.find({ 
-  //     where: { 
-  //       password: ["CRYPT(?, password)", require("enc").sha1("coucou") ]
-  //     }
-  //   // If success
-  // })// .complete(function(err, user) { console.log(user); });
+  app.models.User.find({ 
+      where: { 
+        password: ["CRYPT(?, password)", require("enc").sha1("coucou") ]
+      }
+    // If success
+  }) .complete(function(err, user) { console.log("Find User: ", err, user); });
 
   return app;
 };
