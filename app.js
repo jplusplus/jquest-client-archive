@@ -176,7 +176,6 @@ exports.boot = function(){
   //   // If success
   // })// .complete(function(err, user) { console.log(user); });
 
-
   return app;
 };
 

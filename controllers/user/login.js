@@ -20,6 +20,9 @@ module.exports = function(app, sequelize) {
 
 function loginPage (req, res){
 
+	// Disabled page
+	return res.redirect("/user/twitter-connect");	
+
 	if( req.param('email', false) )
 		loadUser(req, res, loginForm);
 	else

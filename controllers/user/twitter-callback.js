@@ -13,7 +13,7 @@ module.exports = function(app, sequelize) {
 	  // get the user index module
 		require("./index.js")
 		// get the twitter oauth consumer
-		.getTwitterConsumer()
+		.getTwitterConsumer(req)
 		// get the access token
 		.getOAuthAccessToken(
 			
@@ -67,8 +67,7 @@ module.exports = function(app, sequelize) {
 									}).complete(function(err, playerOauth) {
 
 										// Saves the current user in a session
-										req.session.currentUser = { id: player.id, password: player.password, username: player.username };
-										console.log(req.session.currentUser);
+										req.session.currentUser = { id: player.id, password: player.password, username: player.username };										
 
 										return res.redirect("/user/");
 
@@ -85,8 +84,7 @@ module.exports = function(app, sequelize) {
 									.complete(function(err, player) {
 
 											// Saves the current user in a session
-											req.session.currentUser = { id: player.id, password: player.password, username: player.username };
-											console.log(req.session.currentUser);
+											req.session.currentUser = { id: player.id, password: player.password, username: player.username };											
 
 											return res.redirect("/user/");			
 									});

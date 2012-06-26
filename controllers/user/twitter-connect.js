@@ -10,7 +10,7 @@ module.exports = function(app, sequelize) {
 	app.get('/user/twitter-connect', function(req, res){
 
 		require("./index.js")
-		.getTwitterConsumer()
+		.getTwitterConsumer(req)
 		.getOAuthRequestToken(
 			function(
 					error
