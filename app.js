@@ -118,6 +118,7 @@ exports.boot = function(){
   
   // Database configuration
   var config = getDbConfigFromURL(process.env.DATABASE_URL);
+  console.log(config);
   // Database instance 
   sequelize  = new Sequelize(config.database, config.username, config.password, config);      
 
