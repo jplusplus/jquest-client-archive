@@ -8,7 +8,7 @@ var express   = require('express')
 /**
  * Global objects
  */
-var app    = sequelize = null;
+var app = sequelize = null;
 
 
 /**
@@ -167,6 +167,14 @@ exports.boot = function(){
 
   // Sync the database with the object models
   sequelize.sync();
+
+  // Find the user whith the given id and for Twitter
+  // app.models.User.find({ 
+  //     where: { 
+  //       password: ["CRYPT(?, password)", require("enc").sha1("coucou") ]
+  //     }
+  //   // If success
+  // })// .complete(function(err, user) { console.log(user); });
 
 
   return app;

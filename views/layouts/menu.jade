@@ -18,14 +18,13 @@
 				-if( currentUser )
 					li.user-avatar.dropdown
 						a.dropdown-toggle(href="#",data-toggle="dropdown")
-							img(src="https://si0.twimg.com/profile_images/1765018680/penguin_nb_normal.jpg")
+							img(src="http://twitter.com/api/users/profile_image/"+currentUser.username)
 							b.caret
 						ul.dropdown-menu
 							li 
-								a(href="/user"
-									) Profil
+								a(href="/user/"+currentUser.username) Profil
 							li 
-								a(href="/user/scores") My scores
+								a(href="/user/"+currentUser.username+"/scores") My scores
 							li 
 								a(href="/user/settings") Settings
 							li.divider
@@ -33,6 +32,7 @@
 								a(href="/user/logout") Log out
 				- else
 					li.dropdown
-						.btn.btn-primary Log in
+						a.padding0(href="/user/twitter-connect")
+							span.btn.btn-primary Log in
 
 							
