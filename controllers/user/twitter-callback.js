@@ -44,6 +44,11 @@ module.exports = function(app, sequelize) {
 						// If success
 						}).complete(function(error, userOauth) {
 
+							if(error) {
+								console.log(error);
+								return res.send("Error getting access to the database.");
+							} 
+
 							// The user do not exists yet
 							if(userOauth === null) {
 
