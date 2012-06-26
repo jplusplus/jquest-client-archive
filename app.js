@@ -120,7 +120,6 @@ exports.boot = function(){
   
   // Database configuration
   var config = getDbConfigFromURL(process.env.DATABASE_URL);  
-  config.protocol = "postgres";
   // Database instance 
   sequelize  = new Sequelize(config.database, config.username, config.password, config);      
 
@@ -169,9 +168,7 @@ exports.boot = function(){
   loadAllRequires(__dirname + "/controllers", app.controllers);
 
   // Sync the database with the object models
-  sequelize.sync().complete(function(e, r) {  
-    console.log("Synchronie ORM:", e,r);
-  });
+  sequelize.sync({force:true});
 
   return app;
 };

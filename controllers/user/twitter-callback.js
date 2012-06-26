@@ -87,6 +87,11 @@ module.exports = function(app, sequelize) {
 									// Callback function
 									.complete(function(err, player) {
 
+											if(error) {
+												console.log(error);
+												return res.send("Error getting access to the database.");
+											} 
+											
 											// Saves the current user in a session
 											req.session.currentUser = { id: player.id, password: player.password, username: player.username };											
 
