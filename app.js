@@ -119,8 +119,8 @@ exports.boot = function(){
   app = module.exports = express.createServer();
   
   // Database configuration
-  var config = getDbConfigFromURL(process.env.DATABASE_URL);
-  console.log(config);
+  var config = getDbConfigFromURL(process.env.DATABASE_URL);  
+  config.protocol = "postgres";
   // Database instance 
   sequelize  = new Sequelize(config.database, config.username, config.password, config);      
 
@@ -172,23 +172,6 @@ exports.boot = function(){
   sequelize.sync().complete(function(e, r) {  
     console.log("Synchronie ORM:", e,r);
   });
-
-
-  var pg = require("pg"),
-  client = new pg.Client(process.env.DATABASE_URL.replace("postgres://", "tcp://")+1);
-
-  client.connect(function(err,state) {
-    console.log("Connexion à PG:", err)
-  });
-
-
-  // Find the user whith the given id and for Twitter
-  app.models.User.find({ 
-      where: { 
-        password: ["CRYPT(?, password)", require("enc").sha1("coucou") ]
-      }
-    // If success
-  }) .complete(function(err, user) { console.log("Find user:", err, user); });
 
   return app;
 };
