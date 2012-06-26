@@ -101,6 +101,8 @@ function getDbConfigFromURL(url) {
   return config;
 }
 
+
+
 /**
 * @author Pirhoo
 *
@@ -167,7 +169,9 @@ exports.boot = function(){
   loadAllRequires(__dirname + "/controllers", app.controllers);
 
   // Sync the database with the object models
-  sequelize.sync({force:true});
+  sequelize.sync().complete(function(e, r) {
+    console.log(e,r);
+  });
 
   // Find the user whith the given id and for Twitter
   // app.models.User.find({ 
