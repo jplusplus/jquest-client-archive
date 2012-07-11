@@ -18,7 +18,7 @@ module.exports = function(app, sequelize) {
 };
 
 
-function loginPage (req, res){
+function loginPage (req, res) {
 
 	// Disabled page
 	return res.redirect("/user/twitter-connect");	

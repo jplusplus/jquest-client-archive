@@ -13,9 +13,6 @@ module.exports = function(app, sequelize) {
 	 */
 	app.get('/user', function(req, res){
 
-
-  console.log(  req.headers.host );
-
 		// Redirects not logged users
 		if(!req.session.currentUser) return res.redirect("/user/login");
 
@@ -47,11 +44,11 @@ module.exports.getTwitterConsumer = function(request) {
 	return new oauth.OAuth(
 		"https://api.twitter.com/oauth/request_token",
 		"https://api.twitter.com/oauth/access_token",
-  	"mkZ4S7psHzfkDCfOzQTOg",//_twitterConsumerKey, 
-  	"ah1B8CYFt8uaIR9J1DiGV5gLwEifdEliJmNrOtOs",//_twitterConsumerSecret, 
-  	"1.0A",
-  	"http://" + request.headers.host + "/user/twitter-callback",
-  	"HMAC-SHA1"
+	  	"mkZ4S7psHzfkDCfOzQTOg",//_twitterConsumerKey, 
+	  	"ah1B8CYFt8uaIR9J1DiGV5gLwEifdEliJmNrOtOs",//_twitterConsumerSecret, 
+	  	"1.0A",
+	  	"http://" + request.headers.host + "/user/twitter-callback",
+	  	"HMAC-SHA1"
   );
 }
 
