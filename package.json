@@ -7,7 +7,7 @@
     , "less"          : "latest"
     , "jade"          : "latest"
     , "oauth"         : ">= 0.9.7"
-    , "pg"            : "latest"
+    , "pg"            : "0.7.2"
     , "sequelize"     : ">= 1.4.1"
     , "enc"           : "0.0.1"
     , "restler"       : "latest"
