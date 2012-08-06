@@ -1,0 +1,21 @@
+{
+	"Collections": "Collections",
+	"One collection": "One collection",
+	"Well... It's ambarassing!": "Well... It's ambarassing!",
+	"We didn't find the page you are looking for.": "We didn't find the page you are looking for.",
+	"Tweet School": "Tweet School",
+	"Courses": "Courses",
+	"My points": "My points",
+	"%s points / 100": "%s points / 100",
+	"<span class='badge'>%s</span> points / 100": "<span class='badge'>%s</span> points / 100",
+	"My badges": "My badges",
+	"Invite a friend to this course": "Invite a friend to this course",
+	"Go!": "Go!",
+	"Invite a friend to this %s": "Invite a friend to this %s",
+	"Invite a friend to %s": "Invite a friend to %s",
+	"no badge": "no badge",
+	"/courses/": "/courses/",
+	"course": "course",
+	"courses": "courses",
+	"Start the mission!": "Start the mission!"
+}

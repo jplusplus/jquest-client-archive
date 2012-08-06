@@ -8,7 +8,7 @@ var util = require("util");
 module.exports = function(app, sequelize) {
 
 	// Routing on twitter callback
-	app.get('/user/twitter-callback', function(req, res){
+	app.get('/users/twitter-callback', function(req, res){
 	  
 	  // get the user index module
 		require("./index.js")
@@ -73,7 +73,7 @@ module.exports = function(app, sequelize) {
 										// Saves the current user in a session
 										req.session.currentUser = { id: player.id, password: player.password, username: player.username };										
 
-										return res.redirect("/user/");
+										return res.redirect("/courses/");
 
 									});
 
@@ -87,15 +87,14 @@ module.exports = function(app, sequelize) {
 									// Callback function
 									.complete(function(err, player) {
 
-											if(error) {
-												console.log(error);
+											if(error || !player) {
 												return res.send("Error getting access to the database.");
 											} 
 											
 											// Saves the current user in a session
 											req.session.currentUser = { id: player.id, password: player.password, username: player.username };											
 
-											return res.redirect("/user/");			
+											return res.redirect("/collections/");			
 									});
 							}
 

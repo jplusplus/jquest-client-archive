@@ -3,7 +3,8 @@
  */
 var express   = require('express')
   , fs        = require('fs')
-  , Sequelize = require('sequelize');
+  , Sequelize = require('sequelize')  
+  ,      i18n = require("i18n");
 
 /**
  * Global objects
@@ -128,11 +129,15 @@ exports.boot = function(){
     
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
+    
+    // using 'accept-language' header to guess language settings
+    app.use(i18n.init);
 
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.cookieParser());
     app.use(express.session({ secret: 'L7mdcS4k5JzIepqwTaVdTGp4uZi4iIYF0ht2bkET' }));
+    
     app.use(app.router);
     app.use(express.static(__dirname + '/public'));
 
@@ -146,6 +151,17 @@ exports.boot = function(){
     app.use( express.errorHandler() );
   });
 
+  i18n.configure({
+    // setup some locales
+    locales:['fr'],
+  });
+
+  // Register helpers for use in templates
+  app.helpers({
+    _: i18n.__,
+    _n: i18n.__n
+  });
+
   // Dynamic view's helpers
   app.dynamicHelpers({
     currentUser: function (req, res) {
@@ -156,7 +172,7 @@ exports.boot = function(){
     },
     session: function(req, res){
       return req.session;
-    }
+    },
   });
 
   // all models and controller on this scope
@@ -168,9 +184,9 @@ exports.boot = function(){
   loadAllRequires(__dirname + "/controllers", app.controllers);
 
   // Sync the database with the object models
-  sequelize.sync({force:true}).complete(function(err, results) {
-    console.log("Sync db:", err, results)
-  });
+  sequelize.sync({force: process.env.PORT ? true : false});
+
+
 
   return app;
 };

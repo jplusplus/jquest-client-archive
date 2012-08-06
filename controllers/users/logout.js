@@ -8,7 +8,7 @@ module.exports = function(app, sequelize) {
 	/*
 	 * GET user log out.
 	 */
-	app.get('/user/logout', function(req, res) {
+	app.get('/users/logout', function(req, res) {
 		delete req.session.currentUser;
 		res.redirect("/");
 	});	

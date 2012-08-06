@@ -5,7 +5,7 @@
 				a(href="/") jQuest
 			ul.nav.pull-right
 				
-				- var mainLinks = [{path:"/",label:"Home"}, {path:"/topics",label:"Topics"}, {path:"/help",label:"Find help"}]
+				- var mainLinks = [{path:"/",label:"Home"}, {path:"/courses",label:"Courses"}, {path:"/help",label:"Find help"}]
 
 				each link in mainLinks				
 					if currentRoute.path == link.path
@@ -22,17 +22,17 @@
 							b.caret
 						ul.dropdown-menu
 							li 
-								a(href="/user/"+currentUser.username) Profil
+								a(href="/users/"+currentUser.username) Profil
 							li 
-								a(href="/user/"+currentUser.username+"/scores") My scores
+								a(href="/users/"+currentUser.username+"/scores") My scores
 							li 
-								a(href="/user/settings") Settings
+								a(href="/users/settings") Settings
 							li.divider
 							li 
-								a(href="/user/logout") Log out
+								a(href="/users/logout") Log out
 				- else
 					li.dropdown
-						a.padding0(href="/user/twitter-connect")
+						a.padding0(href="/users/twitter-connect")
 							span.btn.btn-primary Log in
 
 							

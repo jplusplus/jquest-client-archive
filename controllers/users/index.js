@@ -1,5 +1,6 @@
 var util = require("util")
-,  oauth = require("oauth");
+ , oauth = require("oauth")
+ ,  i18n = require("i18n");
 
 /**
  * @author Pirhoo
@@ -11,14 +12,14 @@ module.exports = function(app, sequelize) {
 	/*
 	 * GET user root page.
 	 */
-	app.get('/user', function(req, res){
+	app.get('/users', function(req, res){
 
 		// Redirects not logged users
-		if(!req.session.currentUser) return res.redirect("/user/login");
+		if(!req.session.currentUser) return res.redirect("/users/login");
 
-		res.render('user/', 
+		res.render('users', 
 			{ 
-				title: 'jQuest', 
+				title: i18n.__('User'), 
 				stylesheets: [
 					"/stylesheets/vendor/bootstrap-build/bootstrap.min.css",
 					"/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css",
@@ -47,7 +48,7 @@ module.exports.getTwitterConsumer = function(request) {
 	  	"mkZ4S7psHzfkDCfOzQTOg",//_twitterConsumerKey, 
 	  	"ah1B8CYFt8uaIR9J1DiGV5gLwEifdEliJmNrOtOs",//_twitterConsumerSecret, 
 	  	"1.0A",
-	  	"http://" + request.headers.host + "/user/twitter-callback",
+	  	"http://" + request.headers.host + "/users/twitter-callback",
 	  	"HMAC-SHA1"
   );
 }

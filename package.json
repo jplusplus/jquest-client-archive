@@ -3,13 +3,17 @@
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {  	 
-      "express"   : "2.5.10"
-    , "less"      : "latest"
-    , "jade"      : "latest"
-    , "oauth"     : ">= 0.9.7"
-    , "pg"        : "latest"
-    , "sequelize" : ">= 1.4.1"
-    , "enc"       : "0.0.1"
+      "express"       : "2.5.10"
+    , "less"          : "latest"
+    , "jade"          : "latest"
+    , "oauth"         : ">= 0.9.7"
+    , "pg"            : "latest"
+    , "sequelize"     : ">= 1.4.1"
+    , "enc"           : "0.0.1"
+    , "restler"       : "latest"
+    , "memory-cache"  : "latest"
+    , "async"         : "latest"
+    , "i18n"          : "latest"
   }
   , "engines": {
     "node": "0.6.18",

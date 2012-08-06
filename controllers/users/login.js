@@ -8,12 +8,12 @@ module.exports = function(app, sequelize) {
 	/*
 	 * GET user login page.
 	 */
-	app.get('/user/login', loginPage);
+	app.get('/users/login', loginPage);
 
 	/*
 	 * POST user login page.
 	 */
-	app.post('/user/login', loginPage);
+	app.post('/users/login', loginPage);
 
 };
 
@@ -21,7 +21,7 @@ module.exports = function(app, sequelize) {
 function loginPage (req, res) {
 
 	// Disabled page
-	return res.redirect("/user/twitter-connect");	
+	return res.redirect("/users/twitter-connect");	
 
 	if( req.param('email', false) )
 		loadUser(req, res, loginForm);
@@ -49,7 +49,7 @@ function loginForm(req, res){
 		email: req.param('email', false)
 	};
 
-	res.render('user/login.jade', params);
+	res.render('users/login.jade', params);
 }
 
 

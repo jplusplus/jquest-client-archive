@@ -1,0 +1,15 @@
+include ../layouts/menu
+.page-header
+	.container
+		h1=_("Courses")	
+		
+.container
+	ul.row.no-bullet		
+		each cour in courses
+			li.span4
+				a(href="/courses/"+cour.slug)
+					h3
+						=cour.title
+					p 
+						em
+							=cour.description	

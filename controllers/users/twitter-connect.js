@@ -7,7 +7,7 @@ var util = require("util");
  */
 module.exports = function(app, sequelize) {
 	
-	app.get('/user/twitter-connect', function(req, res){
+	app.get('/users/twitter-connect', function(req, res){
 
 		require("./index.js")
 		.getTwitterConsumer(req)
