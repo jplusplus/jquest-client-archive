@@ -1,11 +1,15 @@
-/**
- * Module dependencies.
- */
+  // Express Framework
 var express        = require('express')
+  // Filesystem manager
   , fs             = require('fs')
+  // Data ORM
   , Sequelize      = require('sequelize')  
+  // Locales manager
   , i18n           = require("i18n")
-  , lessMiddleware = require("less-middleware");
+  // Less middle ware
+  , lessMiddleware = require("less-middleware")
+  // Environement configuration
+  , env            = require("config").env;
 
 /**
  * Global objects
@@ -114,8 +118,8 @@ function getDbConfigFromURL(url) {
 exports.boot = function(){
 
   // Environement configuration
-  process.env.DATABASE_URL = process.env.DATABASE_URL || "postgres://pirhoo:pirhoo@localhost:5432/jquest_orm";
-  process.env.PORT = process.env.PORT || 3000;
+  process.env.DATABASE_URL = process.env.DATABASE_URL || env.db.uri;
+  process.env.PORT = process.env.PORT || env.port;
 
   // Creates Express server
   app = module.exports = express.createServer();
@@ -162,7 +166,7 @@ exports.boot = function(){
 
   i18n.configure({
     // setup some locales
-    locales:['fr', 'en'],
+    locales: env.locale.available
   });
 
   // Register helpers for use in templates
@@ -194,8 +198,6 @@ exports.boot = function(){
 
   // Sync the database with the object models
   sequelize.sync({force: process.env.PORT ? true : false});
-
-
 
   return app;
 };
