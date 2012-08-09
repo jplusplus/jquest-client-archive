@@ -1,10 +1,11 @@
 /**
  * Module dependencies.
  */
-var express   = require('express')
-  , fs        = require('fs')
-  , Sequelize = require('sequelize')  
-  ,      i18n = require("i18n");
+var express        = require('express')
+  , fs             = require('fs')
+  , Sequelize      = require('sequelize')  
+  , i18n           = require("i18n")
+  , lessMiddleware = require("less-middleware");
 
 /**
  * Global objects
@@ -139,8 +140,16 @@ exports.boot = function(){
     app.use(express.session({ secret: 'L7mdcS4k5JzIepqwTaVdTGp4uZi4iIYF0ht2bkET' }));
     
     app.use(app.router);
-    app.use(express.static(__dirname + '/public'));
 
+    // Less middle ware to auto-compile less files
+    app.use(lessMiddleware({
+      src: __dirname + '/public',
+      // Compress the files
+      compress: true
+    }));
+
+    // Public directory
+    app.use(express.static(__dirname + '/public'));
   });
 
   app.configure('development', function(){

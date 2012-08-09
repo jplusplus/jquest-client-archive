@@ -41,7 +41,7 @@ function loginForm(req, res){
 			"/stylesheets/vendor/bootstrap-build/bootstrap.min.css",
 			"/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css",
 			"http://fonts.googleapis.com/css?family=Share:400,700",
-			"/stylesheets/style.less"
+			"/stylesheets/style.css"
 		], 
 		javascripts: [
 			"/javascripts/vendor/bootstrap/bootstrap.min.js"								
