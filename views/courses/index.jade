@@ -7,7 +7,7 @@ include ../layouts/menu
 	ul.row.no-bullet		
 		each cour in courses
 			li.span4
-				a(href="/courses/"+cour.slug)
+				a(href=_("/courses/")+cour.slug)
 					h3
 						=cour.title
 					p 

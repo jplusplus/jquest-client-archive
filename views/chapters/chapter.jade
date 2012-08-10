@@ -2,7 +2,7 @@ include ../layouts/menu
 .page-header
 	.container
 		h1
-			a(href="/" + _("courses") + "/" + course.slug)=course.title
+			a(href=_("/courses/") + course.slug)=course.title
 			=" › " + chapter.title
 		p=chapter.excerpt
 		

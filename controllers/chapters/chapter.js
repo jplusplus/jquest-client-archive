@@ -11,11 +11,10 @@ var coursesCtrl = require('../courses')
  */
 module.exports = function(app, sequelize) {
 
-  config = app.config;
 	/*
 	 * GET chapter page.
 	 */
-	app.get('/courses/:course_slug/:chapter_slug', function(req, res){
+	app.get(/^\/(courses|cours)\/([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+)$/, function(req, res){
 
 		var defaultData = {
       stylesheets: [
@@ -28,7 +27,9 @@ module.exports = function(app, sequelize) {
         "/javascripts/vendor/bootstrap/bootstrap.min.js",
         "/javascripts/courses.js"                
       ]
-    }; 
+    },
+    course_slug  = req.params[1],
+		chapter_slug = req.params[2]; 
 
     req.session.language = users.getUserLang(req);
 
@@ -36,7 +37,7 @@ module.exports = function(app, sequelize) {
 			// Finds the course
 			function getCourse(callback) {
 				// There is a function for that.
-				coursesCtrl.getCourseBySlug(req.params.course_slug, req.session.language, function(course) {					
+				coursesCtrl.getCourseBySlug(course_slug, req.session.language, function(course) {					
     			
 					// Next step...
 					callback(null, course);
@@ -47,7 +48,7 @@ module.exports = function(app, sequelize) {
 			function getChapter(callback) {
 
 				// Get chapter ? There is also a function for that
-				chaptersCtrl.getChapterBySlug(req.params.chapter_slug, req.session.language, function(chapter) {
+				chaptersCtrl.getChapterBySlug(chapter_slug, req.session.language, function(chapter) {
 
 					// This is the end (my only friend).
 					callback(null, chapter);

@@ -15,5 +15,14 @@
 	"Secure School": "Secure School",
 	"courses": "courses",
 	"Start the mission!": "Start the mission!",
-	"The journalist&#8217;s toolbox ‹ Secure School": "The journalist&#8217;s toolbox ‹ Secure School"
+	"The journalist&#8217;s toolbox ‹ Secure School": "The journalist&#8217;s toolbox ‹ Secure School",
+	"Well... It's ambarassing!": "Well... It's ambarassing!",
+	"We didn't find the page you are looking for.": "We didn't find the page you are looking for.",
+	"Tweet School": "Tweet School",
+	"/courses": "/courses",
+	"/courses/": "/courses/",
+	"Do you Twitter ? Part I ‹ Tweet School": "Do you Twitter ? Part I ‹ Tweet School",
+	"Tweet School @en": "Tweet School @en",
+	"The Tweet School": "The Tweet School",
+	"La Tweet School": "La Tweet School"
 }

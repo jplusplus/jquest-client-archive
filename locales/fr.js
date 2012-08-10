@@ -26,5 +26,12 @@
 	"Tweet School": "Tweet School",
 	"Parlez vous Twitter ? I ‹ Tweet School": "Parlez vous Twitter ? I ‹ Tweet School",
 	"Inscription sur Twitter ‹ Tweet School": "Inscription sur Twitter ‹ Tweet School",
-	"Suivre des utilisateurs ‹ Tweet School": "Suivre des utilisateurs ‹ Tweet School"
+	"Suivre des utilisateurs ‹ Tweet School": "Suivre des utilisateurs ‹ Tweet School",
+	"undefined ‹ Tweet School": "undefined ‹ Tweet School",
+	"/courses": "/cours",
+	"Tweet School @en": "Tweet School @en",
+	"The Tweet School": "The Tweet School",
+	"La Tweet School": "La Tweet School",
+	"The Secure School": "The Secure School",
+	"Parlez vous Twitter ? I ‹ La Tweet School": "Parlez vous Twitter ? I ‹ La Tweet School"
 }

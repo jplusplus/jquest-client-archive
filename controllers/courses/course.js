@@ -14,7 +14,7 @@ module.exports = function(app, sequelize) {
 	/*
 	 * GET topics page.
 	 */
-	app.get('/courses/:slug', function(req, res){
+	app.get(/^\/(courses|cours)\/([a-zA-Z0-9_.-]+)$/, function(req, res){
 
 		var defaultData = {
       stylesheets: [
@@ -35,7 +35,7 @@ module.exports = function(app, sequelize) {
 			// First, finds the course
 			function getCourse(callback) {
 				// There is a function for that.
-				coursesCtrl.getCourseBySlug(req.params.slug, req.session.language, function(course) {
+				coursesCtrl.getCourseBySlug(req.params[1], req.session.language, function(course) {
 					// Next step...
 					callback(null, course);
 				});
@@ -47,7 +47,7 @@ module.exports = function(app, sequelize) {
 	    	if(course === null) return callback();
 
 				// Get chapters ? There is also a function for that
-				chaptersCtrl.getChaptersByCourse(course.slug, req.session.language, function(chapters) {
+				chaptersCtrl.getChaptersByCourse(req.params[1], req.session.language, function(chapters) {
 
 					// This is the end (my only friend).
 					callback(null, [course, chapters])

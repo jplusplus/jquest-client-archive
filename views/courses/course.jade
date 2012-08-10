@@ -26,7 +26,7 @@ include ../layouts/menu
                 .thumb
                   img(src=chapter.thumbnail)  
                 h4
-                  a(href="/courses/"+course.slug+"/"+chapter.slug)=chapter.title
+                  a(href=_("/courses/")+course.slug+"/"+chapter.slug)=chapter.title
               //- After the first element, every chapter has a parent
               if(key > 0)
                 //- Draws an arrow related to the parent chapter
@@ -42,7 +42,7 @@ include ../layouts/menu
                 .thumb
                   img(src=chapter.thumbnail)    
                 h4
-                  a(href="/courses/"+course.slug+"/"+chapter.slug)=chapter.title
+                  a(href=_("/courses/")+course.slug+"/"+chapter.slug)=chapter.title
               //- After the first element, every chapter has a parent
               if(key > 0)
                 //- Draws an arrow related to the parent chapter
