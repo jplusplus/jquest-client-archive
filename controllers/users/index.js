@@ -1,6 +1,7 @@
 var util = require("util")
  , oauth = require("oauth")
- ,  i18n = require("i18n");
+ ,  i18n = require("i18n")
+, config = require("config");
 
 /**
  * @author Pirhoo
@@ -33,6 +34,14 @@ module.exports = function(app, sequelize) {
 		);
 	});
 
+};
+
+/**
+ * @author Pirhoo
+ * @description Get the current user lang according to the given request
+ */
+module.exports.getUserLang = function(request) {	
+	return request.session.language || i18n.getLocale(request) || config.locale.default;
 };
 
 /**

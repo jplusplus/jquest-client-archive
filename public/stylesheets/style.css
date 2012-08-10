@@ -49,6 +49,7 @@
 .tr{text-align:right;}
 .tc{text-align:center;}
 .tj{text-align:justify;}
+hr.soften{position:relative;height:1px;margin:40px 0;background-image:-webkit-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));background-image:-moz-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));background-image:-ms-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));background-image:-o-linear-gradient(left, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));border:0;}hr.soften:after{content:"";position:absolute;left:0;bottom:-1px;display:block;background-image:-webkit-linear-gradient(left, rgba(255, 255, 255, 0), #ffffff, rgba(255, 255, 255, 0));background-image:-moz-linear-gradient(left, rgba(255, 255, 255, 0), #ffffff, rgba(255, 255, 255, 0));background-image:-ms-linear-gradient(left, rgba(255, 255, 255, 0), #ffffff, rgba(255, 255, 255, 0));background-image:-o-linear-gradient(left, rgba(255, 255, 255, 0), #ffffff, rgba(255, 255, 255, 0));height:1px;width:100%;}
 h1,h2,h3,h4,.brand,fieldset legend{font-family:'Share',sans-serif;text-shadow:1px 1px 0 white;}
 .navbar{margin-bottom:0;}.navbar a.padding0{padding:0 !important;}
 .navbar .main-link{font-family:'Share',sans-serif;font-size:16px;margin-right:10px;}
@@ -63,3 +64,4 @@ h1,h2,h3,h4,.brand,fieldset legend{font-family:'Share',sans-serif;text-shadow:1p
 .chapter .arrow.west.equal{top:22px;left:-61px;}
 .chapter .arrow.east.equal{top:22px;right:-61px;-webkit-transform:rotate(180deg);-moz-transform:rotate(180deg);-ms-transform:rotate(180deg);-o-transform:rotate(180deg);transform:rotate(180deg);}
 .chapter .arrow.equal.north{top:-32px;left:50%;-webkit-transform:rotate(90deg);-moz-transform:rotate(90deg);-ms-transform:rotate(90deg);-o-transform:rotate(90deg);transform:rotate(90deg);}
+footer{color:#555555;}

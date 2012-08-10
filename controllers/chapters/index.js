@@ -1,6 +1,8 @@
 var rest = require('restler')
  , async = require('async')
- , cache = require('memory-cache');
+ , cache = require('memory-cache')
+, config = require("config")
+ , users = require("../users");
 
 /**
  * @author Pirhoo
@@ -23,15 +25,15 @@ module.exports = function(app, sequelize) {
  * @author Pirhoo
  * @description Get a course using its slug
  */
-module.exports.getChaptersByCourse = function(id, complete) {
+module.exports.getChaptersByCourse = function(slug, lang, complete) {
 
-  var slug = "chapters-list--" + id;
+  var cacheSlug = "chapters-list--" + lang + "-" + slug;
 
   async.series([
     // Get data from cache first
     function getFromCache(fallback) {      
       // Get the course from the cache
-      if( cache.get(slug) ) complete( cache.get(slug) );
+      if( !! cache.get(cacheSlug) ) complete( cache.get(cacheSlug) );
       // Or get the colletion from the fallback function
       else fallback();
     },
@@ -39,13 +41,14 @@ module.exports.getChaptersByCourse = function(id, complete) {
     function getFromAPI() {      
 
       // get_category_index request from the external "WordPress API"
-      rest.get("http://jquest.oeildupirate.dev/category/course/?id=" + id + "&json=1&post_type=jquest_chapter&count=50&order_by=parent&order=ASC").on("complete", function(data) {
+      rest.get(config.api.hostname + "/category/" + slug + "/?lang=" + lang   + "&json=1&post_type=jquest_chapter&count=50&order_by=parent&order=ASC").on("complete", function(data) {
+        
 
         // Put the data in the cache 
-        cache.put(slug, data.posts);
+        cache.put(cacheSlug, data.posts || []);
 
         // Call the complete functions
-        complete( data.posts );
+        complete( data.posts  || []);
 
       });
     }        
@@ -57,15 +60,15 @@ module.exports.getChaptersByCourse = function(id, complete) {
  * @author Pirhoo
  * @description Get a chapter using its slug
  */
-module.exports.getChapterBySlug = function(id, complete) {
+module.exports.getChapterBySlug = function(id, lang, complete) {
 
-  var slug = "chapters--" + id;
+  var slug = "chapters--" + lang + "-" + id;
 
   async.series([
     // Get data from cache first
     function getFromCache(fallback) {      
       // Get the course from the cache
-      if( cache.get(slug) ) complete( cache.get(slug) );
+      if( !! cache.get(slug) ) complete( cache.get(slug) );
       // Or get the colletion from the fallback function
       else fallback();
     },
@@ -74,14 +77,14 @@ module.exports.getChapterBySlug = function(id, complete) {
 
       // get_category_index request from the external "WordPress API"
       rest
-        .get("http://jquest.oeildupirate.dev/jquest_chapter/" + id + "?json=get_post&post_type=jquest_chapter")
+        .get(config.api.hostname + "/jquest_chapter/" + id + "?json=get_post&post_type=jquest_chapter&lang="+lang)
         .on("complete", function(data) {
                     
           // Put the data in the cache 
-          cache.put(slug, data.post);
+          cache.put(slug, data.post || []);
 
           // Call the complete functions
-          complete( data.post );
+          complete( data.post  || []);
 
         });
     }        
@@ -102,7 +105,7 @@ module.exports.getChapterBySlug = function(id, complete) {
  */
 module.exports.getZOrder = function(chapters) {
 
-  var finalChapters = [];
+  var finalChapters = [];  
 
   // First, record the parent of every chapter
   for(var index in chapters) {

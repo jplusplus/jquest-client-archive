@@ -9,7 +9,9 @@ var express        = require('express')
   // Less middle ware
   , lessMiddleware = require("less-middleware")
   // Environement configuration
-  , env            = require("config").env;
+  , config         = require("config");
+  // Stop watching for file changes
+  config.watchForConfigFileChanges(0);
 
 /**
  * Global objects
@@ -91,7 +93,7 @@ function getDbConfigFromURL(url) {
   var regex  =  /(\w*)\:\/\/(([a-zA-Z0-9_\-.]*)\:([a-zA-Z0-9_\-.]*))?@([a-zA-Z0-9_\-.]*)(\:(\d+))?\/([a-zA-Z0-9_\-.]*)/
   ,   fields = [undefined, "dialect", "auth", "username", "password", "host", undefined, "port", "database"]
   ,   match  = url.match(regex)
-  ,   config = {};
+  ,   conf   = {};
   
   // Puts every match in the right field
   for(var index in fields) {
@@ -99,12 +101,12 @@ function getDbConfigFromURL(url) {
     var fieldName = fields[index];
     // If the current field index matches to something
     if( fieldName && match[index] ) {
-      config[fieldName] = match[index];
+      conf[fieldName] = match[index];
     }
   }
   
   // Return the configuration
-  return config;
+  return conf;
 }
 
 
@@ -118,16 +120,16 @@ function getDbConfigFromURL(url) {
 exports.boot = function(){
 
   // Environement configuration
-  process.env.DATABASE_URL = process.env.DATABASE_URL || env.db.uri;
-  process.env.PORT = process.env.PORT || env.port;
+  process.env.DATABASE_URL = process.env.DATABASE_URL || config.db.uri;
+  process.env.PORT = process.env.PORT || config.port;
 
   // Creates Express server
   app = module.exports = express.createServer();
   
   // Database configuration
-  var config = getDbConfigFromURL(process.env.DATABASE_URL);  
+  var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL);  
   // Database instance 
-  sequelize  = new Sequelize(config.database, config.username, config.password, config);      
+  sequelize  = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);      
 
   // Configuration
   app.configure(function(){
@@ -164,32 +166,66 @@ exports.boot = function(){
     app.use( express.errorHandler() );
   });
 
+  // Temporary solution to avoid a bug on config module
+  var arr = [];
+  // The config module convert the array to object for a curious reason
+  for(var ln in config.locale.available) {
+    arr.push( config.locale.available[ln] );
+  }
+  // So we convert it and set the new values
+  config.locale.available = arr;
+
   i18n.configure({
     // setup some locales
-    locales: env.locale.available
+    locales: config.locale.available
   });
 
-  // Register helpers for use in templates
+  // Register helpers for use in view's
   app.helpers({
-    _: i18n.__,
-    _n: i18n.__n
+    _: function(msg) {
+      i18n.setLocale(this.session.language || config.locale.default);
+      return i18n.__(msg);
+    },
+    _n: function(singular, plural, count) {
+      i18n.setLocale(this.session.language || config.locale.default);
+      return i18n.__n(singular, plural, count);
+    },
+    getLanguageName: function(lang) {
+      return {
+        "fr": i18n.__("French"),
+        "en": i18n.__("English")
+      }[lang.toLowerCase()] || lang;
+    }
   });
 
   // Dynamic view's helpers
   app.dynamicHelpers({
+    // Current user
     currentUser: function (req, res) {
       return req.session.currentUser;
     },
+    // Current route
     currentRoute: function(req, res) {
       return req.route;
     },
+    // Current request session
     session: function(req, res){
       return req.session;
     },
+    // Configuration variables
+    config:function() {
+      return config;
+    },
+    // User language
+    userLang: function(req) {
+      return req.session.language || i18n.getLocale(req) || config.locale.default;
+    }
   });
 
   // all models and controller on this scope
   app.controllers = app.models = {};
+  // add the config object to the app to be accessible in the sub modules
+  app.config = config;
 
   // Import all models from the /models directory
   importAllModels(__dirname + "/models", app.models);
