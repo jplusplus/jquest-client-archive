@@ -15,7 +15,7 @@ module.exports = function(app, sequelize) {
 	/*
 	 * GET topics page.
 	 */
-	app.get('/courses', function(req, res){
+	app.get(/^\/(courses|cours)$/, function(req, res){
 
     req.session.language = users.getUserLang(req);
 
@@ -83,16 +83,28 @@ module.exports.getCourses = function(lang, complete) {
  */
 module.exports.getCourseBySlug = function(slug, lang, complete) {
 
-  this.getCourses(lang, function(courses) {
+  async.series([
+    // Get data from cache first
+    function getFromCache(fallback) {      
+      // Get the course from the cache
+      if( !! cache.get('course--'+slug) ) complete( cache.get('course--'+slug) );
+      // Or get the colletion from the fallback function
+      else fallback();
+    },
+    // Get data from the API 
+    function getFromAPI() {
 
-    // Index in the list    
-    var i;
-    // Fetchs courses list and looks for the course with the given slug
-    for(i = 0; courses && i < courses.length && courses[i].slug !== slug; ++i);
+      // get_category_index request from the external "WordPress API"
+      rest.get(config.api.hostname + "/category/"+slug+"?lang=auto&json=1&post_type=jquest_chapter&count=10&order_by=parent&order=ASC").on("complete", function(data) {
 
-    // return null for no course found
-    complete( courses && i == courses.length ? null : courses[i] );
+        // Put the data in the cache 
+        cache.put('course--'+slug, data.category || null);
 
-  });
+        // Call the complete function
+        complete( data.category  || null);
+
+      });
+    }        
+  ]);
 
 };

@@ -16,7 +16,7 @@ module.exports = function(app, sequelize) {
 	 */
 	app.get('/chapters', function(req, res){
     // Redirects to the courses page (that clusters every chapters)
-    req.redirect('/courses');
+    res.redirect('/courses');
 	});
 
 };
@@ -27,7 +27,7 @@ module.exports = function(app, sequelize) {
  */
 module.exports.getChaptersByCourse = function(slug, lang, complete) {
 
-  var cacheSlug = "chapters-list--" + lang + "-" + slug;
+  var cacheSlug = "chapters-list--" + slug;
 
   async.series([
     // Get data from cache first
@@ -39,11 +39,10 @@ module.exports.getChaptersByCourse = function(slug, lang, complete) {
     },
     // Get data from the API 
     function getFromAPI() {      
-
+      console.log( config.api.hostname + "/category/" + slug + "/?json=1&post_type=jquest_chapter&count=50&order_by=parent&order=ASC" );
       // get_category_index request from the external "WordPress API"
-      rest.get(config.api.hostname + "/category/" + slug + "/?lang=" + lang   + "&json=1&post_type=jquest_chapter&count=50&order_by=parent&order=ASC").on("complete", function(data) {
+      rest.get(config.api.hostname + "/category/" + slug + "/?json=1&post_type=jquest_chapter&count=50&order_by=parent&order=ASC").on("complete", function(data) {
         
-
         // Put the data in the cache 
         cache.put(cacheSlug, data.posts || []);
 
@@ -62,7 +61,7 @@ module.exports.getChaptersByCourse = function(slug, lang, complete) {
  */
 module.exports.getChapterBySlug = function(id, lang, complete) {
 
-  var slug = "chapters--" + lang + "-" + id;
+  var slug = "chapters--" + id;
 
   async.series([
     // Get data from cache first
@@ -77,7 +76,7 @@ module.exports.getChapterBySlug = function(id, lang, complete) {
 
       // get_category_index request from the external "WordPress API"
       rest
-        .get(config.api.hostname + "/jquest_chapter/" + id + "?json=get_post&post_type=jquest_chapter&lang="+lang)
+        .get(config.api.hostname + "/jquest_chapter/" + id + "?json=get_post&post_type=jquest_chapter")
         .on("complete", function(data) {
                     
           // Put the data in the cache 

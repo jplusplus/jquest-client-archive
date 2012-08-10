@@ -5,7 +5,7 @@
 				a(href="/") jQuest
 			ul.nav.pull-right
 				
-				- var mainLinks = [{path:"/",label:_("Home")}, {path:"/courses",label:_("Courses")}, {path:"/help",label:_("Find help")}]
+				- var mainLinks = [{path:"/",label:_("Home")}, {path:_("/courses"),label:_("Courses")}, {path:"/help",label:_("Find help")}]
 
 				each link in mainLinks				
 					if currentRoute.path == link.path
