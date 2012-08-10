@@ -54,3 +54,30 @@
 .tr { text-align: right }
 .tc { text-align: center }
 .tj { text-align: justify }
+
+hr.soften {
+	position:relative;
+  height: 1px;
+  margin: 40px 0;
+  background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.2), rgba(0,0,0,0));
+  background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.2), rgba(0,0,0,0));
+  background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.2), rgba(0,0,0,0));
+  background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,.2), rgba(0,0,0,0));
+  border: 0;
+
+  &:after {
+  	content:"";    	
+
+  	position:absolute;
+  	left:0;
+  	bottom:-1px;
+
+  	display: block;
+	  background-image: -webkit-linear-gradient(left, fade(white,0%), fade(white,100%), fade(white,0%));
+	  background-image:    -moz-linear-gradient(left, fade(white,0%), fade(white,100%), fade(white,0%));
+	  background-image:     -ms-linear-gradient(left, fade(white,0%), fade(white,100%), fade(white,0%));
+	  background-image:      -o-linear-gradient(left, fade(white,0%), fade(white,100%), fade(white,0%));
+  	height: 1px;
+  	width:100%;
+  }
+}

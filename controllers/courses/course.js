@@ -1,6 +1,8 @@
 var coursesCtrl = require('./')
  , chaptersCtrl = require('../chapters')
- 				, async = require('async');
+ 				, async = require('async')
+			 , config = require("config")
+ 				, users = require("../users");
 
 /**
  * @author Pirhoo
@@ -19,7 +21,7 @@ module.exports = function(app, sequelize) {
         "/stylesheets/vendor/bootstrap-build/bootstrap.min.css",
         "/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css",
         "http://fonts.googleapis.com/css?family=Share:400,700",
-        "/stylesheets/style.less"
+        "/stylesheets/style.css"
       ], 
       javascripts: [
         "/javascripts/vendor/bootstrap/bootstrap.min.js",
@@ -27,11 +29,13 @@ module.exports = function(app, sequelize) {
       ]
     }; 
 
+    req.session.language = users.getUserLang(req);
+
 		async.waterfall([
 			// First, finds the course
 			function getCourse(callback) {
 				// There is a function for that.
-				coursesCtrl.getCourseBySlug(req.params.slug, function(course) {
+				coursesCtrl.getCourseBySlug(req.params.slug, req.session.language, function(course) {
 					// Next step...
 					callback(null, course);
 				});
@@ -43,7 +47,7 @@ module.exports = function(app, sequelize) {
 	    	if(course === null) return callback();
 
 				// Get chapters ? There is also a function for that
-				chaptersCtrl.getChaptersByCourse(course.id, function(chapters) {
+				chaptersCtrl.getChaptersByCourse(course.slug, req.session.language, function(chapters) {
 
 					// This is the end (my only friend).
 					callback(null, [course, chapters])
@@ -53,7 +57,7 @@ module.exports = function(app, sequelize) {
 	  ], function render(error, results) {
 
 	  		// Switchs to the 404 page if we didn't find the category
-	  		if(results.length !== 2) return res.render('404', defaultData); 
+	  		if(!results || results.length < 2) return res.render('404', defaultData); 
 
 				// Add the given course to the default data
 				var data = defaultData;

@@ -3,17 +3,18 @@
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {  	 
-      "express"       : "2.5.10"
-    , "less"          : "latest"
-    , "jade"          : "latest"
-    , "oauth"         : ">= 0.9.7"
-    , "pg"            : "0.7.2"
-    , "sequelize"     : ">= 1.4.1"
-    , "enc"           : "0.0.1"
-    , "restler"       : "latest"
-    , "memory-cache"  : "latest"
-    , "async"         : "latest"
-    , "i18n"          : "latest"
+      "express"         : "2.5.10"
+    , "less-middleware" : "latest"
+    , "jade"            : "latest"
+    , "oauth"           : ">= 0.9.7"
+    , "pg"              : "0.7.2"
+    , "sequelize"       : ">= 1.4.1"
+    , "enc"             : "0.0.1"
+    , "restler"         : "latest"
+    , "memory-cache"    : "latest"
+    , "async"           : "latest"
+    , "i18n"            : "latest"
+    , "config"          : "latest"
   }
   , "engines": {
     "node": "0.6.18",

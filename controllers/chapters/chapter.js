@@ -1,7 +1,8 @@
 var coursesCtrl = require('../courses')
  , chaptersCtrl = require('./')
- 				, async = require('async');
-
+ 				, async = require('async')
+			 , config = require("config")
+ 				, users = require("../users");
 
 /**
  * @author Pirhoo
@@ -10,6 +11,7 @@ var coursesCtrl = require('../courses')
  */
 module.exports = function(app, sequelize) {
 
+  config = app.config;
 	/*
 	 * GET chapter page.
 	 */
@@ -20,7 +22,7 @@ module.exports = function(app, sequelize) {
         "/stylesheets/vendor/bootstrap-build/bootstrap.min.css",
         "/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css",
         "http://fonts.googleapis.com/css?family=Share:400,700",
-        "/stylesheets/style.less"
+        "/stylesheets/style.css"
       ], 
       javascripts: [
         "/javascripts/vendor/bootstrap/bootstrap.min.js",
@@ -28,11 +30,13 @@ module.exports = function(app, sequelize) {
       ]
     }; 
 
+    req.session.language = users.getUserLang(req);
+
 		async.parallel([
 			// Finds the course
 			function getCourse(callback) {
 				// There is a function for that.
-				coursesCtrl.getCourseBySlug(req.params.course_slug, function(course) {					
+				coursesCtrl.getCourseBySlug(req.params.course_slug, req.session.language, function(course) {					
     			
 					// Next step...
 					callback(null, course);
@@ -43,7 +47,7 @@ module.exports = function(app, sequelize) {
 			function getChapter(callback) {
 
 				// Get chapter ? There is also a function for that
-				chaptersCtrl.getChapterBySlug(req.params.chapter_slug, function(chapter) {
+				chaptersCtrl.getChapterBySlug(req.params.chapter_slug, req.session.language, function(chapter) {
 
 					// This is the end (my only friend).
 					callback(null, chapter);
@@ -53,7 +57,8 @@ module.exports = function(app, sequelize) {
 	  ], function render(error, results) {
 
 	  		// Switchs to the 404 page if an error happends
-	  		if(results.length < 2 
+	  		if( !results
+	  		|| results.length < 2 
 	  		|| results[0] === undefined 
 	  		|| results[1] === undefined) return res.render('404', defaultData); 
 

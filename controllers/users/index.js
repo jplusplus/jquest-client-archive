@@ -1,6 +1,7 @@
 var util = require("util")
  , oauth = require("oauth")
- ,  i18n = require("i18n");
+ ,  i18n = require("i18n")
+, config = require("config");
 
 /**
  * @author Pirhoo
@@ -24,7 +25,7 @@ module.exports = function(app, sequelize) {
 					"/stylesheets/vendor/bootstrap-build/bootstrap.min.css",
 					"/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css",
 					"http://fonts.googleapis.com/css?family=Share:400,700",
-					"/stylesheets/style.less"
+					"/stylesheets/style.css"
 				], 
 				javascripts: [
 					"/javascripts/vendor/bootstrap/bootstrap.min.js"								
@@ -33,6 +34,14 @@ module.exports = function(app, sequelize) {
 		);
 	});
 
+};
+
+/**
+ * @author Pirhoo
+ * @description Get the current user lang according to the given request
+ */
+module.exports.getUserLang = function(request) {	
+	return request.session.language || i18n.getLocale(request) || config.locale.default;
 };
 
 /**

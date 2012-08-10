@@ -1,0 +1,13 @@
+{
+	"port": 3000,
+	"db": {
+	  "uri": "postgres://pirhoo:pirhoo@localhost:5432/jquest_orm"	  
+	},
+	"locale": {
+	  "available": ["fr", "en"],
+		"default": "fr"
+	},
+	"api":{
+		"hostname": "http://jquest.oeildupirate.com"
+	}
+}

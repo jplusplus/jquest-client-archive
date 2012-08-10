@@ -5,7 +5,7 @@
 				a(href="/") jQuest
 			ul.nav.pull-right
 				
-				- var mainLinks = [{path:"/",label:"Home"}, {path:"/courses",label:"Courses"}, {path:"/help",label:"Find help"}]
+				- var mainLinks = [{path:"/",label:_("Home")}, {path:"/courses",label:_("Courses")}, {path:"/help",label:_("Find help")}]
 
 				each link in mainLinks				
 					if currentRoute.path == link.path
@@ -15,6 +15,21 @@
 						li.main-link
 							a(href=link.path)=link.label
 				
+				li.divider-vertical
+				li.dropdown.select-lang
+						a.dropdown-toggle.main-link(href="#",data-toggle="dropdown")
+							span.right05
+								=_("Language")
+							b.caret
+						ul.dropdown-menu
+							each lang in config.locale.available.sort()
+								li
+									a(href="/lang/"+lang)
+										if(lang === userLang)
+											b.icon-ok.pull-right
+										=getLanguageName(lang)
+
+
 				-if( currentUser )
 					li.user-avatar.dropdown
 						a.dropdown-toggle(href="#",data-toggle="dropdown")
@@ -22,17 +37,18 @@
 							b.caret
 						ul.dropdown-menu
 							li 
-								a(href="/users/"+currentUser.username) Profil
+								a(href="/users/"+currentUser.username)=_("Profil")
 							li 
-								a(href="/users/"+currentUser.username+"/scores") My scores
+								a(href="/users/"+currentUser.username+"/scores")=_("My scores")
 							li 
-								a(href="/users/settings") Settings
+								a(href="/users/settings")=_("Settings")
 							li.divider
 							li 
-								a(href="/users/logout") Log out
+								a(href="/users/logout")=_("Log out")
 				- else
 					li.dropdown
 						a.padding0(href="/users/twitter-connect")
-							span.btn.btn-primary Log in
+							span.btn.btn-primary=_("Log in")
+
 
 							
