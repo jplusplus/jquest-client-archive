@@ -10,7 +10,6 @@ var rest = require('restler')
  *
  */
 module.exports = function(app, sequelize) {
-
 	/*
 	 * GET chapters page.
 	 */
@@ -25,7 +24,7 @@ module.exports = function(app, sequelize) {
  * @author Pirhoo
  * @description Get a course using its slug
  */
-module.exports.getChaptersByCourse = function(slug, lang, complete) {
+module.exports.getChaptersByCourse = function(slug, complete) {
 
   var cacheSlug = "chapters-list--" + slug;
 
@@ -39,7 +38,7 @@ module.exports.getChaptersByCourse = function(slug, lang, complete) {
     },
     // Get data from the API 
     function getFromAPI() {      
-      console.log( config.api.hostname + "/category/" + slug + "/?json=1&post_type=jquest_chapter&count=50&order_by=parent&order=ASC" );
+
       // get_category_index request from the external "WordPress API"
       rest.get(config.api.hostname + "/category/" + slug + "/?json=1&post_type=jquest_chapter&count=50&order_by=parent&order=ASC").on("complete", function(data) {
         
@@ -59,7 +58,7 @@ module.exports.getChaptersByCourse = function(slug, lang, complete) {
  * @author Pirhoo
  * @description Get a chapter using its slug
  */
-module.exports.getChapterBySlug = function(id, lang, complete) {
+module.exports.getChapterBySlug = function(id, complete) {
 
   var slug = "chapters--" + id;
 

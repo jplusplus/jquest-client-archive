@@ -17,22 +17,15 @@ module.exports = function(app, sequelize) {
 	 */
 	app.get(/^\/(courses|cours)$/, function(req, res){
 
-    req.session.language = users.getUserLang(req);
+    // Get and update the language
+    res.cookie("language", users.getUserLang(req) );
 
-    module.exports.getCourses(req.session.language, function(courses) {
+    module.exports.getCourses(req.cookies.language, function(courses) {
 
       res.render('courses', 
         {
           title: 'Courses',
-          stylesheets: [
-            "/stylesheets/vendor/bootstrap-build/bootstrap.min.css",
-            "/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css",
-            "http://fonts.googleapis.com/css?family=Share:400,700",
-            "/stylesheets/style.css"
-          ], 
-          javascripts: [
-            "/javascripts/vendor/bootstrap/bootstrap.min.js"                
-          ],
+          path:"/courses",
           courses: courses
         }
       );
@@ -81,7 +74,7 @@ module.exports.getCourses = function(lang, complete) {
  * @author Pirhoo
  * @description Get a course using its slug
  */
-module.exports.getCourseBySlug = function(slug, lang, complete) {
+module.exports.getCourseBySlug = function(slug, complete) {
 
   async.series([
     // Get data from cache first

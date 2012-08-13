@@ -1,79 +1,93 @@
-include ../layouts/menu
-.page-header
+extends ../layout
+
+block stylesheets
+  link(href="/stylesheets/vendor/bootstrap-build/bootstrap.min.css", type='text/css', rel="stylesheet")
+  link(href="/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css", type='text/css', rel="stylesheet")
+  link(href="http://fonts.googleapis.com/css?family=Share:400,700", type='text/css', rel="stylesheet")
+  link(href="/stylesheets/style.css", type='text/css', rel="stylesheet")
+
+block scripts
+  script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
+  script(src="/javascripts/courses.js", type="text/javascript")
+      
+block body
+
+  include ../layouts/menu
+  .page-header
+    .container
+      h1=course.title
+      p=course.description
+
   .container
-    h1=course.title
-    p=course.description
 
-.container
+    .row
+      .span9
+        //- This list must be invisible on phone
+        ul.row.no-bullet.hidden-phone#chapters
+          each chapter, key in chaptersOrdered
 
-  .row
-    .span9
-      //- This list must be invisible on phone
-      ul.row.no-bullet.hidden-phone#chapters
-        each chapter, key in chaptersOrdered
+            //- Breaks line after 3 chapters 
+            if(key > 0 && key%3 === 0)
+              li.span9
 
-          //- Breaks line after 3 chapters 
-          if(key > 0 && key%3 === 0)
-            li.span9
-
-          if(chapter == null)        
-            //- Draws an empty case
-            li.span3
-          else
-            //- Draws a chapter with its ID
-            li.span3.chapter(data-id=chapter.id)        
-              .well.well-small
-                .thumb
-                  img(src=chapter.thumbnail)  
-                h4
-                  a(href=_("/courses/")+course.slug+"/"+chapter.slug)=chapter.title
-              //- After the first element, every chapter has a parent
-              if(key > 0)
-                //- Draws an arrow related to the parent chapter
-                .arrow(data-parent=chapter.parent)
+            if(chapter == null)        
+              //- Draws an empty case
+              li.span3
+            else
+              //- Draws a chapter with its ID
+              li.span3.chapter(data-id=chapter.id)        
+                .well.well-small
+                  .thumb
+                    img(src=chapter.thumbnail)  
+                  h4
+                    a(href=_("/courses/")+course.slug+"/"+chapter.slug)=chapter.title
+                //- After the first element, every chapter has a parent
+                if(key > 0)
+                  //- Draws an arrow related to the parent chapter
+                  .arrow(data-parent=chapter.parent)
 
 
-      //- This list must be visible only on phone
-      ul.unstyled.visible-phone#chapters
-        each chapter, key in chapters
-            //- Draws a chapter with its ID
-            li.span9.chapter(data-id=chapter.id)    
-              .well.well-small
-                .thumb
-                  img(src=chapter.thumbnail)    
-                h4
-                  a(href=_("/courses/")+course.slug+"/"+chapter.slug)=chapter.title
-              //- After the first element, every chapter has a parent
-              if(key > 0)
-                //- Draws an arrow related to the parent chapter
-                .arrow.equal.north
+        //- This list must be visible only on phone
+        ul.unstyled.visible-phone#chapters
+          each chapter, key in chapters
+              //- Draws a chapter with its ID
+              li.span9.chapter(data-id=chapter.id)    
+                .well.well-small
+                  .thumb
+                    img(src=chapter.thumbnail)    
+                  h4
+                    a(href=_("/courses/")+course.slug+"/"+chapter.slug)=chapter.title
+                //- After the first element, every chapter has a parent
+                if(key > 0)
+                  //- Draws an arrow related to the parent chapter
+                  .arrow.equal.north
 
-    .span3
-      section
-        h3=_("My points")
-        span.label no implemented
-        .progress.top10
-          .bar(style="width: 60%;")
-        p.tc=_("%s points / 100", 60)
+      .span3
+        section
+          h3=_("My points")
+          span.label no implemented
+          .progress.top10
+            .bar(style="width: 60%;")
+          p.tc=_("%s points / 100", 60)
 
-      section.top20
-        h3=_("My badges")
-        span.label no implemented
-        ul.row.no-bullet.top10
-          li.span1
-            img.thumbnail
-          li.span1
-            img.thumbnail
-          li.span1
-            img.thumbnail
+        section.top20
+          h3=_("My badges")
+          span.label no implemented
+          ul.row.no-bullet.top10
+            li.span1
+              img.thumbnail
+            li.span1
+              img.thumbnail
+            li.span1
+              img.thumbnail
 
-      section.top20        
-        h3=_("Invite a friend to %s", course.title)
-        span.label no implemented
-        .input-prepend.input-append.top10          
-          .add-on
-            i.icon-envelope
-          input.input-small(type="text")
-          button.btn=_("Go!")
+        section.top20        
+          h3=_("Invite a friend to %s", course.title)
+          span.label no implemented
+          .input-prepend.input-append.top10          
+            .add-on
+              i.icon-envelope
+            input.input-small(type="text")
+            button.btn=_("Go!")
 
-include ../layouts/footer
+  include ../layouts/footer

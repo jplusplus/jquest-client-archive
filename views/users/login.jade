@@ -1,42 +1,55 @@
-include ../layouts/menu
-.container.top40
-	.row
-		.span5.offset1
-			form.form-horizontal.well(action="/user/login",method="POST")
-				fieldset 
-					legend Log in to your account
+extends layout
 
-					if(email)
-						.alert.alert-error Your <b>email</b> or your <b>password</b> is incorrect.
+block stylesheets
+	link(href="/stylesheets/vendor/bootstrap-build/bootstrap.min.css", type='text/css', rel="stylesheet")
+	link(href="/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css", type='text/css', rel="stylesheet")
+	link(href="http://fonts.googleapis.com/css?family=Share:400,700", type='text/css', rel="stylesheet")
+	link(href="/stylesheets/style.css", type='text/css', rel="stylesheet")
 
-					.control-group
-						label.control-label(for="input-email") Your email
-						.controls
-							if(typeof email != "undefined")
-								input(type="text",name="email",id="input-email",value=email)
-							else
-								input(type="password",name="email",id="input-email")
-					.control-group
-						label.control-label(for="input-password") Your password
-						.controls
-							input(type="password",name="password",id="input-password")
-							p.help-block 
-								a(href="/user/forgotten") You forgot your password ?
-					.control-group
-						.control-label 
-						label.controls.checkbox
-							input(type="checkbox")
-							| Remember me on that computer
-					.form-actions
-						button.btn.btn-primary.btn-large(type="submit") Log in
+block scripts
+	script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
 
-		.span4.offset1
-			blockquote.top90
-				p 
-					| "jQuest is the most beautiful way to improve your skills about the Internets" 
-					small Larry Page, New York Time, 2012
+block body
 
-			big.top20 Need an accout ?
-				a.btn.btn-large.left10 Sign up!
+	include ../layouts/menu
+	.container.top40
+		.row
+			.span5.offset1
+				form.form-horizontal.well(action="/user/login",method="POST")
+					fieldset 
+						legend Log in to your account
 
-include ../layouts/footer
+						if(email)
+							.alert.alert-error Your <b>email</b> or your <b>password</b> is incorrect.
+
+						.control-group
+							label.control-label(for="input-email") Your email
+							.controls
+								if(typeof email != "undefined")
+									input(type="text",name="email",id="input-email",value=email)
+								else
+									input(type="password",name="email",id="input-email")
+						.control-group
+							label.control-label(for="input-password") Your password
+							.controls
+								input(type="password",name="password",id="input-password")
+								p.help-block 
+									a(href="/user/forgotten") You forgot your password ?
+						.control-group
+							.control-label 
+							label.controls.checkbox
+								input(type="checkbox")
+								| Remember me on that computer
+						.form-actions
+							button.btn.btn-primary.btn-large(type="submit") Log in
+
+			.span4.offset1
+				blockquote.top90
+					p 
+						| "jQuest is the most beautiful way to improve your skills about the Internets" 
+						small Larry Page, New York Time, 2012
+
+				big.top20 Need an accout ?
+					a.btn.btn-large.left10 Sign up!
+
+	include ../layouts/footer

@@ -7,8 +7,8 @@
 				
 				- var mainLinks = [{path:"/",label:_("Home")}, {path:_("/courses"),label:_("Courses")}, {path:"/help",label:_("Find help")}]
 
-				each link in mainLinks				
-					if currentRoute.path == link.path
+				each link in mainLinks
+					if typeof path !== "undefined" && _(path) == link.path
 						li.main-link.active
 							a(href=link.path)=link.label
 					else
@@ -25,7 +25,7 @@
 							each lang in config.locale.available.sort()
 								li
 									a(href="/lang/"+lang)
-										if(lang === userLang)
+										if(lang === language)
 											b.icon-ok.pull-right
 										=getLanguageName(lang)
 

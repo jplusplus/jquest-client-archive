@@ -18,20 +18,7 @@ module.exports = function(app, sequelize) {
 		// Redirects not logged users
 		if(!req.session.currentUser) return res.redirect("/users/login");
 
-		res.render('users', 
-			{ 
-				title: i18n.__('User'), 
-				stylesheets: [
-					"/stylesheets/vendor/bootstrap-build/bootstrap.min.css",
-					"/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css",
-					"http://fonts.googleapis.com/css?family=Share:400,700",
-					"/stylesheets/style.css"
-				], 
-				javascripts: [
-					"/javascripts/vendor/bootstrap/bootstrap.min.js"								
-				]
-			}
-		);
+		res.render('users', { title: i18n.__('User'), path:"/" } );
 	});
 
 };
@@ -41,7 +28,7 @@ module.exports = function(app, sequelize) {
  * @description Get the current user lang according to the given request
  */
 module.exports.getUserLang = function(request) {	
-	return request.session.language || i18n.getLocale(request) || config.locale.default;
+	return request.cookies.language || i18n.getLocale(request) || config.locale.default;
 };
 
 /**

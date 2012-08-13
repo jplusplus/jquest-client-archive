@@ -3,7 +3,7 @@
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {  	 
-      "express"         : "2.5.10"
+      "express"         : "3.0.0rc2"
     , "less-middleware" : "latest"
     , "jade"            : "latest"
     , "oauth"           : ">= 0.9.7"

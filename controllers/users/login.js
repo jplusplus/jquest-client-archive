@@ -36,17 +36,9 @@ function loginForm(req, res){
 	if(req.session.currentUser) return res.redirect("/");	
 
 	var params = { 
-		title: 'jQuest', 
-		stylesheets: [
-			"/stylesheets/vendor/bootstrap-build/bootstrap.min.css",
-			"/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css",
-			"http://fonts.googleapis.com/css?family=Share:400,700",
-			"/stylesheets/style.css"
-		], 
-		javascripts: [
-			"/javascripts/vendor/bootstrap/bootstrap.min.js"								
-		],
-		email: req.param('email', false)
+		title: 'jQuest',
+		email: req.param('email', false), 
+		path:"/" 
 	};
 
 	res.render('users/login.jade', params);

@@ -9,9 +9,9 @@ module.exports = function(app, db, controllers) {
 	/*
 	 * GET home page.
 	 */
-	app.get('/lang/:ln', function(req, res) {
-		req.session.language = req.params.ln.toLowerCase();
-		res.redirect('/');
+	app.get('/lang/:ln', function(req, res) {		
+		res.cookie("language", req.params.ln.toLowerCase() );		
+		res.redirect("/");
 	});
 
 };

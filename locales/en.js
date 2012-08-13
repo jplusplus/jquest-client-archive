@@ -24,5 +24,10 @@
 	"Do you Twitter ? Part I ‹ Tweet School": "Do you Twitter ? Part I ‹ Tweet School",
 	"Tweet School @en": "Tweet School @en",
 	"The Tweet School": "The Tweet School",
-	"La Tweet School": "La Tweet School"
+	"La Tweet School": "La Tweet School",
+	"The Secure School": "The Secure School",
+	"Profil": "Profil",
+	"My scores": "My scores",
+	"Settings": "Settings",
+	"Log out": "Log out"
 }

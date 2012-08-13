@@ -17,13 +17,11 @@ html(class='no-js', lang='en')
     meta(name='description', content='')
     meta(name='viewport', content='width=device-width')
     
-    - if(typeof stylesheets !== "undefined")
-      - stylesheets.forEach(function(item) {
-        - var rel = item.indexOf(".less") > -1 ? 'stylesheet/less' : 'stylesheet';
-        link(href=item, type='text/css', rel=rel)
-      - })
+    block stylesheets
 
-  body!= body
+  body
+
+    block body
 
     //if lt IE 7
       p.chromeframe.
@@ -32,15 +30,11 @@ html(class='no-js', lang='en')
         <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a>
         to experience this site.
 
+    script(src='/javascripts/vendor/modernizr.custom.js')
     script(src='//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
     script window.jQuery || document.write('<script src=/javascripts/vendor/jquery.min.js><\\/script>')
 
-    script(src='/javascripts/vendor/modernizr.custom.js')
-
-    - if(typeof javascripts !== "undefined")
-      - javascripts.forEach(function(item) {
-        script(src=item, type='text/javascript')
-      - }) 
+    block scripts
 
     script
       var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];

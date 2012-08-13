@@ -87,7 +87,12 @@ function importAllModels(dirname, where) {
   });
 }
 
-
+/**
+* @author Pirhoo
+*
+* @function
+* @description Parse the DNS url to extract fields
+*/
 function getDbConfigFromURL(url) {
   
   var regex  =  /(\w*)\:\/\/(([a-zA-Z0-9_\-.]*)\:([a-zA-Z0-9_\-.]*))?@([a-zA-Z0-9_\-.]*)(\:(\d+))?\/([a-zA-Z0-9_\-.]*)/
@@ -119,33 +124,27 @@ function getDbConfigFromURL(url) {
 */
 exports.boot = function(){
 
-  // Environement configuration
-  process.env.DATABASE_URL = process.env.DATABASE_URL || config.db.uri;
-  process.env.PORT = process.env.PORT || config.port;
-
   // Creates Express server
-  app = module.exports = express.createServer();
+  app = module.exports = express();   
   
-  // Database configuration
-  var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL);  
-  // Database instance 
-  sequelize  = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);      
-
   // Configuration
   app.configure(function(){
     
     app.set('views', __dirname + '/views');
     app.set('view engine', 'jade');
+
+    // add the config object to the app to be accessible in the sub modules
+    app.config = config;
     
-    // using 'accept-language' header to guess language settings
-    app.use(i18n.init);
+    
+    /************************************
+     * Client requests
+     ************************************/  
 
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(express.cookieParser());
-    app.use(express.session({ secret: 'L7mdcS4k5JzIepqwTaVdTGp4uZi4iIYF0ht2bkET' }));
-    
-    app.use(app.router);
+    app.use(express.cookieParser('L7mdcS4k5JzIepqwTaVdTGp4uZi4iIYF0ht2bkET'));
+    app.use(express.session());     
 
     // Less middle ware to auto-compile less files
     app.use(lessMiddleware({
@@ -156,7 +155,71 @@ exports.boot = function(){
 
     // Public directory
     app.use(express.static(__dirname + '/public'));
+
+
+    /************************************
+     * Configure router      
+     ************************************/   
+
+    // Temporary solution to avoid a bug on config module
+    var arr = [];
+    // The config module convert the array to object for a curious reason
+    for(var ln in config.locale.available) {
+      arr.push( config.locale.available[ln] );
+    }
+
+    // So we convert it and set the new values
+    config.locale.available = arr;  
+
+    // using 'accept-language' header to guess language settings
+    app.use(i18n.init);
+
+    i18n.configure({
+      // setup some locales
+      locales  : config.locale.available
+      // allow the use of a cookie to define the language
+      , cookie : "language"
+    });
+
+
+
+    /************************************
+     * Views helpers
+     ************************************/   
+    // Register helpers for use in view's
+    app.locals({    
+      // Configuration variables
+      config: config,
+      getLanguageName: function(lang) {
+        return {
+          "fr": i18n.__("French"),
+          "en": i18n.__("English")
+        }[lang.toLowerCase()] || lang;
+      },
+        // Language helpers
+      _ : i18n.__,
+      _n: i18n.__n
+    });
+
+    app.use(function(req, res, next) {
+      // Current session
+      res.locals.session      = req.session;
+      // Current language
+      res.locals.language     = req.cookies.language || i18n.getLocale(req) || config.locale.default;  
+      // Current user    
+      res.locals.currentUser  = req.session.currentUser || false;
+      next();
+    });
+
+
+    /************************************
+     * Configure router      
+     ************************************/   
+    // @warning Needs to be after the helpers
+    app.use(app.router);
+
   });
+
 
   app.configure('development', function(){
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
@@ -166,78 +229,35 @@ exports.boot = function(){
     app.use( express.errorHandler() );
   });
 
-  // Temporary solution to avoid a bug on config module
-  var arr = [];
-  // The config module convert the array to object for a curious reason
-  for(var ln in config.locale.available) {
-    arr.push( config.locale.available[ln] );
-  }
-  // So we convert it and set the new values
-  config.locale.available = arr;
 
-  i18n.configure({
-    // setup some locales
-    locales: config.locale.available
-  });
+  /************************************
+   * Database synchronisation
+   ************************************/    
+  // Database configuration
+  var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
+  // Database instance 
+  sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
+  // Sync the database with the object models
+  sequelize.sync({force: process.env.PORT ? true : false});
 
-  // Register helpers for use in view's
-  app.helpers({
-    _: function(msg) {
-      i18n.setLocale(this.session.language || config.locale.default);
-      return i18n.__(msg);
-    },
-    _n: function(singular, plural, count) {
-      i18n.setLocale(this.session.language || config.locale.default);
-      return i18n.__n(singular, plural, count);
-    },
-    getLanguageName: function(lang) {
-      return {
-        "fr": i18n.__("French"),
-        "en": i18n.__("English")
-      }[lang.toLowerCase()] || lang;
-    }
-  });
 
-  // Dynamic view's helpers
-  app.dynamicHelpers({
-    // Current user
-    currentUser: function (req, res) {
-      return req.session.currentUser;
-    },
-    // Current route
-    currentRoute: function(req, res) {
-      return req.route;
-    },
-    // Current request session
-    session: function(req, res){
-      return req.session;
-    },
-    // Configuration variables
-    config:function() {
-      return config;
-    },
-    // User language
-    userLang: function(req) {
-      return req.session.language || i18n.getLocale(req) || config.locale.default;
-    }
-  });
-
+  /************************************
+   * Models and views encapsulation
+   ************************************/  
   // all models and controller on this scope
   app.controllers = app.models = {};
-  // add the config object to the app to be accessible in the sub modules
-  app.config = config;
-
   // Import all models from the /models directory
+  // @warning Needs the Sequelize database instanced before 
   importAllModels(__dirname + "/models", app.models);
   // Load all controllers from the /controllers directory
   loadAllRequires(__dirname + "/controllers", app.controllers);
 
-  // Sync the database with the object models
-  sequelize.sync({force: process.env.PORT ? true : false});
-
   return app;
+
 };
 
-exports.boot().listen(process.env.PORT, function(){
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+
+
+exports.boot().listen(process.env.PORT || config.port, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });

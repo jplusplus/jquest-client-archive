@@ -1,19 +1,32 @@
-include ../layouts/menu
-.page-header
-	.container
-		h1
-			a(href=_("/courses/") + course.slug)=course.title
-			=" › " + chapter.title
-		p=chapter.excerpt
-		
-.container
-	.row
-		//- chapter.content must be read as an HTML content
-		.span8
-			| !{chapter.content}
-			p.tr.top20
-				a.btn.btn-large.btn-primary(href="")=_("Start the mission!") 
+extends ../layout
 
-		.span4
+block stylesheets
+	link(href="/stylesheets/vendor/bootstrap-build/bootstrap.min.css", type='text/css', rel="stylesheet")
+	link(href="/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css", type='text/css', rel="stylesheet")
+	link(href="http://fonts.googleapis.com/css?family=Share:400,700", type='text/css', rel="stylesheet")
+	link(href="/stylesheets/style.css", type='text/css', rel="stylesheet")
+
+block scripts
+	script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
+
+block body
+
+	include ../layouts/menu
+	.page-header
+		.container
+			h1
+				a(href=_("/courses/") + course.slug)=course.title
+				=" › " + chapter.title
+			p=chapter.excerpt
 			
-include ../layouts/footer
+	.container
+		.row
+			//- chapter.content must be read as an HTML content
+			.span8
+				!=chapter.content
+				p.tr.top20
+					a.btn.btn-large.btn-primary(href="")=_("Start the mission!") 
+
+			.span4
+				
+	include ../layouts/footer

@@ -33,5 +33,12 @@
 	"The Tweet School": "The Tweet School",
 	"La Tweet School": "La Tweet School",
 	"The Secure School": "The Secure School",
-	"Parlez vous Twitter ? I ‹ La Tweet School": "Parlez vous Twitter ? I ‹ La Tweet School"
+	"Parlez vous Twitter ? I ‹ La Tweet School": "Parlez vous Twitter ? I ‹ La Tweet School",
+	"Profil": "Profil",
+	"My scores": "My scores",
+	"Settings": "Settings",
+	"Log out": "Log out",
+	"/": "/",
+	"/course": "/course",
+	"Inscription sur Twitter ‹ La Tweet School": "Inscription sur Twitter ‹ La Tweet School"
 }
