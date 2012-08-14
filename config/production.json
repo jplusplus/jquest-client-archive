@@ -1,0 +1,21 @@
+{
+	"port": false,
+	"host": "http://jquest.herokuapp.com",
+	"db": {
+	  "uri": false
+	},
+	"locale": {
+	  "available": ["fr", "en"],
+		"default"	 : "fr"
+	},
+	"api":{
+		"hostname": "http://jquest.oeildupirate.com"
+	},
+	"oauth":{
+		"twitter": {
+			"consumer_key"	  : "mkZ4S7psHzfkDCfOzQTOg",
+			"consumer_secret" : "ah1B8CYFt8uaIR9J1DiGV5gLwEifdEliJmNrOtOs",
+			"callback"				: "/user/twitter-callback"
+		}
+	}
+}
