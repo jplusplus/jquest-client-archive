@@ -45,7 +45,8 @@ module.exports.getCourses = function(lang, complete) {
 
   async.series([
     // Get data from cache first
-    function getFromCache(fallback) {      
+    function getFromCache(fallback) { 
+
       // Get the course from the cache
       if( !! cache.get('courses-list--'+lang) ) complete( cache.get('courses-list--'+lang) );
       // Or get the colletion from the fallback function

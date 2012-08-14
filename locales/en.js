@@ -29,5 +29,8 @@
 	"Profil": "Profil",
 	"My scores": "My scores",
 	"Settings": "Settings",
-	"Log out": "Log out"
+	"Log out": "Log out",
+	"/": "/",
+	"Welcome to jQuest!": "Welcome to jQuest!",
+	"Where the Journalist training done right.": "Where the Journalist training done right."
 }

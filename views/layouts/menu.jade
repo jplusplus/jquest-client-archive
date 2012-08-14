@@ -30,16 +30,16 @@
 										=getLanguageName(lang)
 
 
-				-if( currentUser )
+				-if( user )
 					li.user-avatar.dropdown
 						a.dropdown-toggle(href="#",data-toggle="dropdown")
-							img(src="http://twitter.com/api/users/profile_image/"+currentUser.username)
+							img(src="http://twitter.com/api/users/profile_image/"+user.username)
 							b.caret
 						ul.dropdown-menu
 							li 
-								a(href="/users/"+currentUser.username)=_("Profil")
+								a(href="/users/"+user.username)=_("Profil")
 							li 
-								a(href="/users/"+currentUser.username+"/scores")=_("My scores")
+								a(href="/users/"+user.username+"/scores")=_("My scores")
 							li 
 								a(href="/users/settings")=_("Settings")
 							li.divider

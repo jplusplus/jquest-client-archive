@@ -6,7 +6,7 @@ var i18n = require("i18n");
  *
  */
 module.exports = function(app, db, controllers) {
-
+	
 	// Remove ending slash of every URL 
 	app.get(/^(\/(.+))\/$/, function(req, res){	
 		res.redirect(req.params[0]);
@@ -16,7 +16,8 @@ module.exports = function(app, db, controllers) {
 	 * GET home page.
 	 */
 	app.get('/', function(req, res){
-	  res.render('index.jade', { title: 'Home', path:"/" });
+		//console.log(app.user);
+	  res.render('index.jade', { path:"/" });
 	});
 
 };

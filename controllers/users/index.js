@@ -1,5 +1,4 @@
 var util = require("util")
- , oauth = require("oauth")
  ,  i18n = require("i18n")
 , config = require("config");
 
@@ -16,9 +15,9 @@ module.exports = function(app, sequelize) {
 	app.get('/users', function(req, res){
 
 		// Redirects not logged users
-		if(!req.session.currentUser) return res.redirect("/users/login");
+		if(!req.user) return res.redirect("/users/login");
+		res.redirect("/");
 
-		res.render('users', { title: i18n.__('User'), path:"/" } );
 	});
 
 };
@@ -30,23 +29,3 @@ module.exports = function(app, sequelize) {
 module.exports.getUserLang = function(request) {	
 	return request.cookies.language || i18n.getLocale(request) || config.locale.default;
 };
-
-/**
- * @author Pirhoo
- * @description Get a new Twitter consumer instance
- * @return oauth.OAuth
- */
-module.exports.getTwitterConsumer = function(request) {
-	
-	return new oauth.OAuth(
-		"https://api.twitter.com/oauth/request_token",
-		"https://api.twitter.com/oauth/access_token",
-	  	"mkZ4S7psHzfkDCfOzQTOg",//_twitterConsumerKey, 
-	  	"ah1B8CYFt8uaIR9J1DiGV5gLwEifdEliJmNrOtOs",//_twitterConsumerSecret, 
-	  	"1.0A",
-	  	"http://" + request.headers.host + "/users/twitter-callback",
-	  	"HMAC-SHA1"
-  );
-}
-
-

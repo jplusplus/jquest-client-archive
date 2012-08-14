@@ -1,13 +1,21 @@
 {
 	"port": 3000,
+	"host": "http://pirhoo.dev:3000",
 	"db": {
 	  "uri": "postgres://pirhoo:pirhoo@localhost:5432/jquest_orm"	  
 	},
 	"locale": {
 	  "available": ["fr", "en"],
-		"default": "fr"
+		"default"	 : "fr"
 	},
 	"api":{
 		"hostname": "http://jquest.oeildupirate.com"
+	},
+	"oauth":{
+		"twitter": {
+			"consumer_key"	  : "mkZ4S7psHzfkDCfOzQTOg",
+			"consumer_secret" : "ah1B8CYFt8uaIR9J1DiGV5gLwEifdEliJmNrOtOs",
+			"callback"				: "/user/twitter-callback"
+		}
 	}
 }

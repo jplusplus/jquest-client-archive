@@ -9,7 +9,9 @@ var express        = require('express')
   // Less middle ware
   , lessMiddleware = require("less-middleware")
   // Environement configuration
-  , config         = require("config");
+  , config         = require("config")
+  // Authentification module
+  , passport       = require("passport");
   // Stop watching for file changes
   config.watchForConfigFileChanges(0);
 
@@ -140,11 +142,31 @@ exports.boot = function(){
     /************************************
      * Client requests
      ************************************/  
-
     app.use(express.bodyParser());
     app.use(express.methodOverride());
     app.use(express.cookieParser('L7mdcS4k5JzIepqwTaVdTGp4uZi4iIYF0ht2bkET'));
-    app.use(express.session());     
+    app.use(express.session());   
+
+    // Authentification with passport
+    app.use(passport.initialize());
+    app.use(passport.session());  
+
+    // Passport session setup.
+    // To support persistent login sessions, Passport needs to be able to
+    // serialize users into and deserialize users out of the session. Typically,
+    // this will be as simple as storing the user ID when serializing, and finding
+    // the user by ID when deserializing. However, since this example does not
+    // have a database of user records, the complete Twitter profile is serialized
+    // and deserialized.
+    passport.serializeUser(function(user, done) {
+      done(null, user.id);
+    });
+
+    passport.deserializeUser(function(obj, done) {      
+      app.models.User.find(obj).complete(done);
+    });
+
+
 
     // Less middle ware to auto-compile less files
     app.use(lessMiddleware({
@@ -202,8 +224,8 @@ exports.boot = function(){
     });
 
     app.use(function(req, res, next) {
-      // Current session
-      res.locals.session      = req.session;
+      // Current user
+      res.locals.user         = req.user;
       // Current language
       res.locals.language     = req.cookies.language || i18n.getLocale(req) || config.locale.default;  
       // Current user    
@@ -238,7 +260,7 @@ exports.boot = function(){
   // Database instance 
   sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
   // Sync the database with the object models
-  sequelize.sync({force: process.env.PORT ? true : false});
+  sequelize.sync({force: false});
 
 
   /************************************
@@ -257,7 +279,10 @@ exports.boot = function(){
 };
 
 
-
+/************************************
+ * Creates the app and listen on
+ * the default port.
+ ************************************/  
 exports.boot().listen(process.env.PORT || config.port, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
 });

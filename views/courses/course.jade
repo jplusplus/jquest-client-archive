@@ -63,31 +63,6 @@ block body
                   .arrow.equal.north
 
       .span3
-        section
-          h3=_("My points")
-          span.label no implemented
-          .progress.top10
-            .bar(style="width: 60%;")
-          p.tc=_("%s points / 100", 60)
-
-        section.top20
-          h3=_("My badges")
-          span.label no implemented
-          ul.row.no-bullet.top10
-            li.span1
-              img.thumbnail
-            li.span1
-              img.thumbnail
-            li.span1
-              img.thumbnail
-
-        section.top20        
-          h3=_("Invite a friend to %s", course.title)
-          span.label no implemented
-          .input-prepend.input-append.top10          
-            .add-on
-              i.icon-envelope
-            input.input-small(type="text")
-            button.btn=_("Go!")
+        include ../layouts/progress-menu
 
   include ../layouts/footer
