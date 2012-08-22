@@ -3,9 +3,8 @@ var util = require("util")
 , config = require("config");
 
 /**
- * @author Pirhoo
- * @description Home route binder
- *
+ * Home route binder
+ * @author Pirhoo  
  */
 module.exports = function(app, sequelize) {
 
@@ -23,8 +22,8 @@ module.exports = function(app, sequelize) {
 };
 
 /**
- * @author Pirhoo
- * @description Get the current user lang according to the given request
+ * Get the current user lang according to the given request
+ * @author Pirhoo 
  */
 module.exports.getUserLang = function(request) {	
 	return request.cookies.language || i18n.getLocale(request) || config.locale.default;

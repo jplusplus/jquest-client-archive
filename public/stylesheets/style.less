@@ -80,10 +80,32 @@ h1, h2, h3, h4, .brand, fieldset legend {
 	}
 }
 
+
+
 .chapter {
 
 	position: relative;
-	padding-bottom:10px;
+	margin-bottom:10px;
+
+	&.disabled {
+
+		// Add an overlay for the disabled chapter
+		.well:before {
+			z-index:100;
+			content:"";
+			display:block;
+			position:absolute;
+			top:0;
+			left:0;
+
+			width:100%;
+			height:100%;
+			#gradient > .striped( fade(#ccc, 80%) );
+		}
+
+	}
+
+
 
 	.well {
 		min-height:22px;
@@ -111,11 +133,20 @@ h1, h2, h3, h4, .brand, fieldset legend {
   		img {
   			height:100%;
   			width:auto;
+  			max-width: 400%;
 
 				position:absolute;
 				top:0;
 				left:0;
   		}
+		}
+
+		.points {
+			display:block;
+			margin-left:40px;
+			font-size:10px;
+			color:@gray;
+			text-transform: uppercase;			
 		}
 
 	}
@@ -147,14 +178,16 @@ h1, h2, h3, h4, .brand, fieldset legend {
 		}
 
 		&.west.equal {
-			top:22px;
+			top:50%;
 			left:-61px;
+			margin-top:-12px;
 		}
 
 		&.east.equal {
-			top:22px;
+			top:50%;
 			right:-61px;
-			.rotate(180deg)
+			.rotate(180deg);
+			margin-top:-12px;
 		}
 
 		&.equal.north {

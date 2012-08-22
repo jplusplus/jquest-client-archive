@@ -32,5 +32,30 @@
 	"Welcome to jQuest!": "Bienvenue sur jQuest !",
 	"Where the Journalist training done right.": "Where the Journalist training done right.",
 	"Get ready!": "C'est parti !",
-	"User": "User"
+	"User": "User",
+	"1 point obtenu": {
+		"one": "1 point obtenu",
+		"other": "%s points obtenu"
+	},
+	"1 point obtained": {
+		"one": "1 point obtained",
+		"other": "%s points obtained"
+	},
+	"1 obtained point": {
+		"one": "1 obtained point",
+		"other": "%s obtained points"
+	},
+	"1 point": {
+		"one": "1 point",
+		"other": "%s points"
+	},
+	"0 point": "0 point",
+	"%s point": {
+		"one": "%s point",
+		"other": "%s points"
+	},
+	"%s point / 100": {
+		"one": "%s point / 100",
+		"other": "%s points / 100"
+	}
 }

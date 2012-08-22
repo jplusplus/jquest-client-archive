@@ -1,9 +1,9 @@
 section
-  h3=_("My points")
-  span.label no implemented
-  .progress.top10
-    .bar(style="width: 60%;")
-  p.tc=_("%s points / 100", 60)
+  if(typeof userPoints == "number" && typeof ttPoints == "number")
+    h3=_("My points")
+    .progress.top10
+      .bar(style="width: " + Math.round(userPoints/ttPoints*100) + "%")
+    p.tc=_n("%s point", "%s points", userPoints) + " / " + ttPoints
 
 section.top20
   h3=_("My badges")

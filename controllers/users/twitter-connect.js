@@ -52,7 +52,7 @@ module.exports = function(app, sequelize) {
 				// The user already exists
 				if(userOauth !== null) {
 
-					done(null, {id: userOauth.user_id});			
+					done(null, {id: userOauth.userId});			
 
 				// The user do not exists yet
 				} else{

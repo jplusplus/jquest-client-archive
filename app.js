@@ -10,7 +10,7 @@ var express        = require('express')
   , lessMiddleware = require("less-middleware")
   // Environement configuration
   , config         = require("config")
-  // Authentification module
+  // Authentification module  
   , passport       = require("passport");
   // Stop watching for file changes
   config.watchForConfigFileChanges(0);
@@ -20,13 +20,12 @@ var express        = require('express')
  */
 var app = sequelize = null;
 
-
 /**
-* @author Pirhoo
-*
-* @function
-* @description Loads all requires automaticly from a directory
-*/
+ * @author Pirhoo
+ *
+ * @function
+ * @description Loads all requires automaticly from a directory
+ */
 function loadAllRequires(dirname, where) {  
   // Change the root of the directory to analyse following the given parameter
   var dir = dirname || __dirname;
@@ -58,11 +57,11 @@ function loadAllRequires(dirname, where) {
 
 
 /**
-* @author Pirhoo
-*
-* @function
-* @description Loads all models automaticly from the /models directory
-*/
+ * @author Pirhoo
+ *
+ * @function
+ * @description Loads all models automaticly from the /models directory
+ */
 function importAllModels(dirname, where) {  
   // Change the root of the directory to analyse following the given parameter
   var dir = dirname || __dirname + "/models";   
@@ -162,7 +161,7 @@ exports.boot = function(){
       done(null, user.id);
     });
 
-    passport.deserializeUser(function(obj, done) {      
+    passport.deserializeUser(function(obj, done) {           
       app.models.User.find(obj).complete(done);
     });
 
