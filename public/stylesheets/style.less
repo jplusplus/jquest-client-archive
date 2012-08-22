@@ -103,6 +103,11 @@ h1, h2, h3, h4, .brand, fieldset legend {
 			#gradient > .striped( fade(#ccc, 80%) );
 		}
 
+		.arrow {
+			border-style:dashed;
+			.opacity(60);
+		}
+
 	}
 
 
@@ -153,8 +158,9 @@ h1, h2, h3, h4, .brand, fieldset legend {
 
 	.arrow {
 		width:60px;
-		height:2px;
-		background:#bbb;
+		height:0px;
+		border:0;
+		border-bottom:2px #bbb solid;		
 
 		position:absolute;
 		z-index:-1;

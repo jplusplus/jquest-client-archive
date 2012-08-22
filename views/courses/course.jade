@@ -41,7 +41,7 @@ block body
                   .well.well-small
                     .thumb
                       img(src=chapter.thumbnail)  
-                    h4=chapter.title                    
+                    h4=chapter.title            
                     .points=_("0 point")
                   //- After the first element, every chapter has a parent
                   if(key > 0)
@@ -54,7 +54,7 @@ block body
                     .thumb
                       img(src=chapter.thumbnail)  
                     h4
-                      a(href=_("/courses/")+course.slug+"/"+chapter.slug)=chapter.title 
+                      a(tabindex=chapter.parent||chapter.id, href=_("/courses/")+course.slug+"/"+chapter.slug)=chapter.title 
                     .points=_n("%s point", "%s points", getUserPoints(chapter) )
                   //- After the first element, every chapter has a parent
                   if(key > 0)
