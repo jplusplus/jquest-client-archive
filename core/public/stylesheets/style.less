@@ -110,6 +110,14 @@ h1, h2, h3, h4, .brand, fieldset legend {
 
 	}
 
+	&.highlight {
+
+		.well {
+			.box-shadow(0 0 6px 0 #FFEE00);
+			.animation( shadow-pulse 4s linear infinite )
+		}
+	}
+
 
 
 	.well {
@@ -179,7 +187,7 @@ h1, h2, h3, h4, .brand, fieldset legend {
 			border-left:0;
 			border-bottom:0;
 
-			.rotate(45deg);			
+			.rotate(45deg);	
 
 		}
 
@@ -199,7 +207,8 @@ h1, h2, h3, h4, .brand, fieldset legend {
 		&.equal.north {
 			top:-32px;
 			left:50%;
-			.rotate(90deg)
+			margin-left:-12px;		
+			.rotate(90deg);
 		}
 
 	}

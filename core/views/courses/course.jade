@@ -48,8 +48,8 @@ block body
                     //- Draws an arrow related to the parent chapter
                     .arrow(data-parent=chapter.parent)
               - } else {
-                //- Draws a chapter with its ID
-                li.span3.chapter(data-id=chapter.id)
+                //- Draws a chapter with its ID and adds a class "highlight" to the ones with 0 point
+                li.span3.chapter(data-id=chapter.id, class=getUserPoints(chapter) === 0 ? "highlight" : "")
                   .well.well-small
                     .thumb
                       img(src=chapter.thumbnail)  

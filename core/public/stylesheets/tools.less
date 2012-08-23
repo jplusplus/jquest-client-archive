@@ -1,6 +1,52 @@
 @import "vendor/bootstrap/variables.less";
 @import "vendor/bootstrap/mixins.less";
 
+.animation(@animation) {
+  -webkit-animation: @animation;
+     -moz-animation: @animation;
+      -ms-animation: @animation;
+       -o-animation: @animation;
+          animation: @animation;
+}
+
+// ANIMATIONS
+// ----------
+
+// Webkit
+@-webkit-keyframes shadow-pulse {
+  0%    { .box-shadow(0 0 0 0 #FFEE00); }
+  50%   { .box-shadow(0 0 6px 0 #FFEE00); }
+  100%  { .box-shadow(0 0 0 0 #FFEE00); }
+}
+
+// Firefox
+@-moz-keyframes shadow-pulse {
+  0%    { .box-shadow(0 0 0 0 #FFEE00); }
+  50%   { .box-shadow(0 0 6px 0 #FFEE00); }
+  100%  { .box-shadow(0 0 0 0 #FFEE00); }
+}
+
+// IE9
+@-ms-keyframes shadow-pulse {
+  0%    { .box-shadow(0 0 0 0 #FFEE00); }
+  50%   { .box-shadow(0 0 6px 0 #FFEE00); }
+  100%  { .box-shadow(0 0 0 0 #FFEE00); }
+}
+
+// Opera
+@-o-keyframes shadow-pulse {
+  0%    { .box-shadow(0 0 0 0 #FFEE00); }
+  50%   { .box-shadow(0 0 6px 0 #FFEE00); }
+  100%  { .box-shadow(0 0 0 0 #FFEE00); }
+}
+
+// Spec
+@keyframes shadow-pulse {
+  0%    { .box-shadow(0 0 0 0 #FFEE00); }
+  50%   { .box-shadow(0 0 6px 0 #FFEE00); }
+  100%  { .box-shadow(0 0 0 0 #FFEE00); }
+}
+
 .no-bullet { list-style: none; }
 
 .top05 { margin-top:05px; }

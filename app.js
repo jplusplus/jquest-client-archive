@@ -131,7 +131,7 @@ exports.boot = function(){
   // Configuration
   app.configure(function(){
     
-    app.set('views', __dirname + '/views');
+    app.set('views', __dirname + '/core/views');
     app.set('view engine', 'jade');
 
     // add the config object to the app to be accessible in the sub modules
@@ -169,13 +169,13 @@ exports.boot = function(){
 
     // Less middle ware to auto-compile less files
     app.use(lessMiddleware({
-      src: __dirname + '/public',
+      src: __dirname + '/core/public',
       // Compress the files
       compress: true
     }));
 
     // Public directory
-    app.use(express.static(__dirname + '/public'));
+    app.use(express.static(__dirname + '/core/public'));
 
 
     /************************************
@@ -197,9 +197,11 @@ exports.boot = function(){
 
     i18n.configure({
       // setup some locales
-      locales  : config.locale.available
+      locales     : config.locale.available
       // allow the use of a cookie to define the language
-      , cookie : "language"
+      , cookie    : "language"
+      // locales directory
+      , directory :  "core/locales/"
     });
 
 
@@ -269,9 +271,9 @@ exports.boot = function(){
   app.controllers = app.models = {};
   // Import all models from the /models directory
   // @warning Needs the Sequelize database instanced before 
-  importAllModels(__dirname + "/models", app.models);
+  importAllModels(__dirname + "/core/models", app.models);
   // Load all controllers from the /controllers directory
-  loadAllRequires(__dirname + "/controllers", app.controllers);
+  loadAllRequires(__dirname + "/core/controllers", app.controllers);
 
   return app;
 

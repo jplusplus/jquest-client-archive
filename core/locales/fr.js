@@ -57,5 +57,6 @@
 	"%s point / 100": {
 		"one": "%s point / 100",
 		"other": "%s points / 100"
-	}
+	},
+	"Sign in with Twitter": "Connexion avec Twitter"
 }
