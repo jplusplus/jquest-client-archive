@@ -1,2 +1,2 @@
-./core/public/*    # public files
-./README.md  			 # a specific file
+./core/public    # public files
+./README.md  		 # a specific file

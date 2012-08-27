@@ -25,7 +25,7 @@ block body
 			.span8
 				!=chapter.content
 				p.tr.top20
-					a.btn.btn-large.btn-primary(href="")=_("Start the mission!") 
+					a.btn.btn-large.btn-primary(href=_("/courses/") + course.slug + "/" + chapter.slug + "/mission")=_("Start the mission!") 
 			
 			.span3.offset1
 				include ../layouts/progress-menu

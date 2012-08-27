@@ -120,7 +120,7 @@ module.exports = function(_app, _sequelize) {
 						var parent = false;
 						// Fetch the progress list
 						results[2].forEach(function(progress) {
-							parent = progress.chapterId == chapter.parent ? true : parent;
+							parent = progress.chapterId == chapter.parent && !! progress.succeed ? true : parent;
 						});
 
 						return parent;						

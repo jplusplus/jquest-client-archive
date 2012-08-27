@@ -15,12 +15,18 @@
 	// UserProgression class
 	var UserProgression = sequelize.define("UserProgression", {
 		  // Pseudo-foreign-key refering to a chapter in the external db
-		  chapterId : { type: DataTypes.INTEGER, primaryKey: true }			
+		  chapterId : DataTypes.INTEGER
 			// Foreign key to User
-		, userId 	  : { type: DataTypes.INTEGER, primaryKey: true }		
+		, userId 	  : DataTypes.INTEGER
 			// Total point for this record		  
 		, points		: DataTypes.INTEGER
-	});
+			// Mission Succeed ?
+		, succeed 	: { type: DataTypes.BOOLEAN, defaultValue: false}
+			// Succeed date
+		, succeedAt : DataTypes.DATE
+
+	// Options	
+	}, { underscored: false });
 
 	// Foreign key to User
 	User.hasMany(UserProgression,  {foreignKey:'userId'});

@@ -15,6 +15,7 @@ var express        = require('express')
   // Stop watching for file changes
   config.watchForConfigFileChanges(0);
 
+
 /**
  * Global objects
  */
@@ -179,7 +180,7 @@ exports.boot = function(){
 
 
     /************************************
-     * Configure router      
+     * Configure languages   
      ************************************/   
 
     // Temporary solution to avoid a bug on config module
@@ -285,5 +286,7 @@ exports.boot = function(){
  * the default port.
  ************************************/  
 exports.boot().listen(process.env.PORT || config.port, function(){
+
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+
 });
