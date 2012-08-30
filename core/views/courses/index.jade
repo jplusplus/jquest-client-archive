@@ -1,5 +1,8 @@
 extends ../layout
 
+block title
+	=_("Courses")
+
 block stylesheets
 	link(href="/stylesheets/vendor/bootstrap-build/bootstrap.min.css", type='text/css', rel="stylesheet")
 	link(href="/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css", type='text/css', rel="stylesheet")
@@ -14,7 +17,7 @@ block body
 	include ../layouts/menu
 	.page-header
 		.container
-			h1=_("Courses")	
+			h1=_("Courses")
 			
 	.container
 		ul.row.no-bullet		

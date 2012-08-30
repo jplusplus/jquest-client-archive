@@ -4,7 +4,7 @@
   , "private": true
   , "main": "app.js"
   , "dependencies": {  	 
-      "express"           : "3.0.0rc2"
+      "express"           : "3.0.0rc2"    
     , "less-middleware"   : "latest"
     , "jade"              : "latest"
     , "pg"                : "0.7.2"
@@ -16,7 +16,9 @@
     , "i18n"              : "latest"
     , "config"            : "latest"
     , "passport"          : "latest"
+    , "passport-local"    : "latest"
     , "passport-twitter"  : "latest"
+    , "pkginfo"           : "latest"
   }
   , "engines": {
     "node": "0.6.18",

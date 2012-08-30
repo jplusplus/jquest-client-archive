@@ -1,16 +1,16 @@
-var rest = require('restler')
- , async = require('async')
- , cache = require('memory-cache')
- ,  i18n = require("i18n")
-, config = require("config")
- , users = require("../users");
+   var rest = require('restler')
+    , async = require('async')
+    , cache = require('memory-cache')
+    ,  i18n = require("i18n")
+   , config = require("config")
+, usersCtrl = require("../users");
 
 /**
  * @author Pirhoo
  * @description Courses route binder
  *
  */
-module.exports = function(app, sequelize) {
+module.exports = function(app) {
 
 	/*
 	 * GET topics page.
@@ -18,13 +18,12 @@ module.exports = function(app, sequelize) {
 	app.get(/^\/(courses|cours)$/, function(req, res){
 
     // Get and update the language
-    res.cookie("language", users.getUserLang(req) );
+  res.cookie("language", usersCtrl.getUserLang(req) );
 
     module.exports.getCourses(req.cookies.language, function(courses) {
 
       res.render('courses', 
         {
-          title: 'Courses',
           path:"/courses",
           courses: courses
         }
@@ -89,7 +88,7 @@ module.exports.getCourseBySlug = function(slug, complete) {
     function getFromAPI() {
 
       // get_category_index request from the external "WordPress API"
-      rest.get(config.api.hostname + "/category/"+slug+"?lang=auto&json=1&post_type=jquest_chapter&count=10&order_by=parent&order=ASC").on("complete", function(data) {
+      rest.get(config.api.hostname + "/category/"+slug+"?lang=auto&json=1&post_type=jquest_chapter&count=10000&order_by=parent&order=ASC").on("complete", function(data) {
 
         // Put the data in the cache 
         cache.put('course--'+slug, data.category || null);

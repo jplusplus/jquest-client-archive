@@ -1,15 +1,15 @@
 var coursesCtrl = require('../courses')
  , chaptersCtrl = require('./')
+ 		, usersCtrl = require("../users")
  				, async = require('async')
-			 , config = require("config")
- 				, users = require("../users");
+			 , config = require("config");
 
 /**
  * @author Pirhoo
  * @description Chapter route binder
  *
  */
-module.exports = function(app, sequelize) {
+module.exports = function(app) {
 
 	/*
 	 * GET chapter page.
@@ -17,14 +17,16 @@ module.exports = function(app, sequelize) {
 	app.get(/^\/(courses|cours)\/([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+)$/, function(req, res){
 
 		var course_slug  = req.params[1],
-				chapter_slug = req.params[2]; 
+				chapter_slug = req.params[2],
+        // Needs to be accessible in all functions of the serie
+        chapter; 
 
 		// Get and update the language
-    res.cookie("language", users.getUserLang(req) );
+    res.cookie("language", usersCtrl.getUserLang(req) );
 
-		async.parallel([
+		async.series({
 			// Finds the course
-			function getCourse(callback) {
+			course : function(callback) {
 				// There is a function for that.
 				coursesCtrl.getCourseBySlug(course_slug, function(course) {					
     			
@@ -34,30 +36,56 @@ module.exports = function(app, sequelize) {
 				});
 			},
 			// Finds the chapter with the given slug
-			function getChapter(callback) {
+			chapter : function(callback) {
 
 				// Get chapter ? There is also a function for that
-				chaptersCtrl.getChapterBySlug(chapter_slug, function(chapter) {
+				chaptersCtrl.getChapterBySlug(chapter_slug, function(chap) {
+					
+					// We have to save the chapter into another variable 
+          // for the next step of that serie
+          chapter = chap;
 
 					// This is the end (my only friend).
-					callback(null, chapter);
+					callback(null, chap);
 
 				});
-			}		
-	  ], function render(error, results) {
+			},
+			// Finds the user progression for this mission
+			userProgression : function(callback) {
+
+				// No user, we stop now
+				if(!req.user) return callback(null, null);
+
+				app.models.UserProgression.find({ 
+			    where: { 
+			      userId    : req.user.id,
+			      chapterId : chapter.parent
+			    }
+			  // Request complete
+			  }).complete(callback);
+			}
+	  }, function render(error, results) {
 
 	  		// Switchs to the 404 page if an error happends
 	  		if( !results
 	  		|| results.length < 2 
-	  		|| results[0] === undefined 
-	  		|| results[1] === undefined) return res.render('404'); 
+	  		|| results.course  === undefined 
+	  		|| results.chapter === undefined) return res.render('404'); 	
 
-				// Render on the course view
-				res.render('chapters/chapter', {				
-					title: 		results[1].title + " ‹ " + results[0].title,
-					course: 	results[0],
-					chapter: 	results[1]
-				});
+		    if( ! usersCtrl.isAllowed(results.chapter, req.user, results.userProgression) ) {
+
+		    	res.render('401'); // Authentification required !
+
+		    } else {
+
+					// Render on the course view
+					res.render('chapters/chapter', {				
+						title: 		results.chapter.title + " ‹ " + results.course.title,
+						course: 	results.course,
+						chapter: 	results.chapter
+					});
+
+		    }
 	  });
 
 

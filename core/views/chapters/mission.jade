@@ -19,14 +19,33 @@ block body
         =" › "
         a(href=_("/courses/") + course.slug + "/" + chapter.slug)=chapter.title
         =" › Mission"
-      p=chapter.excerpt
+      p=mission.config.description
       
   .container
     .row
       //- chapter.content must be read as an HTML content
-      .span8 Test        
-      
-      .span3.offset1
+      .span9
+        form(method="POST")          
+          .well
+            !=mission.compileTemplate();
+
+          .well.well-small
+            .pull-left
+              a(class="btn right10", href=_("/courses/") + course.slug )=_("Back to the list")   
+            .tr
+              case mission.state
+                when "game"
+                  button(type="submit",class="btn btn-primary")=_("Next")
+                when "failed"
+                  a(class="btn right10", href=_("/courses/") + course.slug + "/" + chapter.slug )=_("Read the chapter again")                
+                  button(type="submit",class="btn btn-primary")=_("Try again!")
+                when "succeed"
+                  if(nextChapter)
+                    a(href=_("/courses/") + course.slug + "/" + nextChapter.slug, class="btn btn-primary")=_("Next chapter")
+            .clearfix
+
+    
+      .span3
         include ../layouts/progress-menu
         
   include ../layouts/footer

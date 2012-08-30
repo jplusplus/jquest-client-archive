@@ -58,5 +58,20 @@
 		"one": "%s point / 100",
 		"other": "%s points / 100"
 	},
-	"Sign in with Twitter": "Connexion avec Twitter"
+	"Sign in with Twitter": "Connexion avec Twitter",
+	"Read the chapter again": "Read the chapter again",
+	"Try again!": "Try again!",
+	"Read the chapter again ": "Read the chapter again ",
+	"Next": "Next",
+	"Next chapter": "Next chapter",
+	"Back to the list": "Back to the list",
+	"Forbidden!": "Forbidden!",
+	"Authentication required": "Authentication required",
+	"Please, <a href='/user/login'>sign in</> to access to this page.": "Please, <a href='/user/login'>sign in</> to access to this page.",
+	"Please, <a href='/user/login'>sign in</a> to access to this page.": "Please, <a href='/user/login'>sign in</a> to access to this page.",
+	"Please, <a href='/users/login'>sign in</a> to access to this page.": "Please, <a href='/users/login'>sign in</a> to access to this page.",
+	"Forbidden": "Forbidden",
+	"Your are not allowed to access to this page.": "Your are not allowed to access to this page.",
+	"jQuest!": "jQuest!",
+	"jQuest": "jQuest"
 }

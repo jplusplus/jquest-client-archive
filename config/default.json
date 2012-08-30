@@ -9,7 +9,7 @@
 		"default"	 : "fr"
 	},
 	"api":{
-		"hostname": "http://jquest.oeildupirate.com"
+		"hostname": "http://jquest.oeildupirate.dev"
 	},
 	"oauth":{
 		"twitter": {

@@ -20,10 +20,8 @@
 		, userId 	  : DataTypes.INTEGER
 			// Total point for this record		  
 		, points		: DataTypes.INTEGER
-			// Mission Succeed ?
-		, succeed 	: { type: DataTypes.BOOLEAN, defaultValue: false}
-			// Succeed date
-		, succeedAt : DataTypes.DATE
+			// Mission state (game, succeed, failed)
+		, state 	  : { type: DataTypes.STRING, defaultValue: "game"}
 
 	// Options	
 	}, { underscored: false });

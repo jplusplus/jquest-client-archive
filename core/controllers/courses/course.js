@@ -6,18 +6,17 @@ var coursesCtrl = require('./')
  				, users = require("../users");
 
 // Global variables
-var app = sequelize = null;
+var app = null;
 
 /**
  * @author Pirhoo
  * @description Topics route binder
  *
  */
-module.exports = function(_app, _sequelize) {
+module.exports = function(_app) {
 
 	// Set the global variables with the right values
 	app 			= _app;
-	sequelize = _sequelize;
  
 	// GET courses page
 	app.get(/^\/(courses|cours)\/([a-zA-Z0-9_.-]+)$/, function(req, res){
@@ -44,7 +43,7 @@ module.exports = function(_app, _sequelize) {
 				chaptersCtrl.getChaptersByCourse(req.params[1], function(chapters) {
 
 					// This is the end (my only friend).
-					callback(null, [course, chapters])
+					callback(null, [course, chapters]);
 
 				});
 			},
@@ -120,10 +119,10 @@ module.exports = function(_app, _sequelize) {
 						var parent = false;
 						// Fetch the progress list
 						results[2].forEach(function(progress) {
-							parent = progress.chapterId == chapter.parent && !! progress.succeed ? true : parent;
+							parent = progress.chapterId == chapter.parent ? progress : parent;
 						});
 
-						return parent;						
+						return parent && parent.state == "succeed";						
 					},
 					/**
 					 * Get the point obtained by the user for the given chapter

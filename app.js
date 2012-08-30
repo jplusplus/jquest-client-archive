@@ -11,7 +11,9 @@ var express        = require('express')
   // Environement configuration
   , config         = require("config")
   // Authentification module  
-  , passport       = require("passport");
+  , passport       = require("passport")
+  // Package explore
+  , pkginfo        = require("pkginfo");  
   // Stop watching for file changes
   config.watchForConfigFileChanges(0);
 
@@ -27,31 +29,61 @@ var app = sequelize = null;
  * @function
  * @description Loads all requires automaticly from a directory
  */
-function loadAllRequires(dirname, where) {  
+function loadAllRequires(dirname, where, instance) {  
   // Change the root of the directory to analyse following the given parameter
   var dir = dirname || __dirname;
   // Var to record the require
-  where = typeof(where) === "object" ? where : {};    
+  where = typeof(where) === "object" ? where : {};
   
   // Grab a list of our route files/directories
   fs.readdirSync(dir).forEach(function(name){
-    
+
     // Find the file path
     var path = dir + '/' + name
     // Query the entry
      , stats = fs.lstatSync(path)
     // Name simplitfy
-     , slug  = name.replace(/(\.js)/, "");
+     , slug  = name.replace(/(\.js)/, "");     
 
     // If it's a directory...
     if( stats.isDirectory() ) {
       // Recursive calling
-      loadAllRequires(path);      
+      loadAllRequires(path, where, instance);      
     // If it's a regular file...
-    }else {      
-      // Require the route file with app and sequelize variables
-      where[slug] = require(path)(app, sequelize);    
+    } else {      
+      // Require the module with app in parameter
+      where[slug] = instance ? require(path)(app) : require(path);
     }
+  });
+}
+
+/**
+ * @author Pirhoo
+ *
+ * @function
+ * @description Loads all missions (as module) automaticly from a directory
+ */
+function loadAllMissions(dirname, where) {
+
+  // Var to record the require
+  var where = typeof(where) === "object" ? where : {},
+      index = 0;
+  
+  // Grab a list of our route files/directories
+  fs.readdirSync(dirname).forEach(function(name){
+    
+    // Find the file path
+    var path = dirname + '/' + name
+    // Query the entry
+     , stats = fs.lstatSync(path);  
+
+    // If it's a directory...
+    if( stats.isDirectory() ) {          
+      // Require the mission file
+      console.log( require("pkginfo")(module) );
+      where[index++] = require(path);
+    }
+
   });
 }
 
@@ -162,7 +194,7 @@ exports.boot = function(){
       done(null, user.id);
     });
 
-    passport.deserializeUser(function(obj, done) {           
+    passport.deserializeUser(function(obj, done) {
       app.models.User.find(obj).complete(done);
     });
 
@@ -227,11 +259,10 @@ exports.boot = function(){
 
     app.use(function(req, res, next) {
       // Current user
-      res.locals.user         = req.user;
+      res.locals.user         = req.user && req.user.ugroup != "tmp" ? req.user : false;
       // Current language
       res.locals.language     = req.cookies.language || i18n.getLocale(req) || config.locale.default;  
-      // Current user    
-      res.locals.currentUser  = req.session.currentUser || false;
+
       next();
     });
 
@@ -265,16 +296,19 @@ exports.boot = function(){
   sequelize.sync({force: false});
 
 
-  /************************************
-   * Models and views encapsulation
-   ************************************/  
-  // all models and controller on this scope
-  app.controllers = app.models = {};
+  /*****************************************
+   * Models, views and mission encapsulation
+   *****************************************/  
+  app.controllers = {};
+  app.models      = {};
+  app.missions    = {};
   // Import all models from the /models directory
   // @warning Needs the Sequelize database instanced before 
   importAllModels(__dirname + "/core/models", app.models);
   // Load all controllers from the /controllers directory
-  loadAllRequires(__dirname + "/core/controllers", app.controllers);
+  loadAllRequires(__dirname + "/core/controllers", app.controllers, true);
+  // Load all mission's class
+  loadAllMissions(__dirname + "/custom", app.missions);
 
   return app;
 

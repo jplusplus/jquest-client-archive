@@ -9,7 +9,7 @@ var rest = require('restler')
  * @description Chapters route binder
  *
  */
-module.exports = function(app, sequelize) {
+module.exports = function(app) {
 	/*
 	 * GET chapters page.
 	 */
@@ -75,7 +75,7 @@ module.exports.getChapterBySlug = function(id, complete) {
 
       // get_category_index request from the external "WordPress API"
       rest
-        .get(config.api.hostname + "/jquest_chapter/" + id + "?json=get_post&post_type=jquest_chapter")
+        .get(config.api.hostname + "/?json=get_post&post_type=jquest_chapter&slug="+id)
         .on("complete", function(data) {
                     
           // Put the data in the cache 
@@ -90,7 +90,28 @@ module.exports.getChapterBySlug = function(id, complete) {
 
 };
 
+/**
+ * Finds the next chapter
+ * @param  {Object} chapter  Current chapter
+ * @param  {Function} complete Callback function (async style)
+ */
+module.exports.getNextChapter = function(chapter, complete) {
 
+  // Find all the chapter for the current course
+  module.exports.getChaptersByCourse(chapter.categories[0].slug, function(chapters) {
+
+    var next = null;
+
+    // Find the chapter that has the current as parent
+    for(var index in chapters) {
+      next = chapters[index].parent && chapters[index].parent == chapter.id ? chapters[index] : next;
+    }
+    
+    if(typeof complete === "function") complete(null, next);    
+
+  });
+
+};
 
 
 /**

@@ -4,7 +4,7 @@ var config = require("config");
  * @description Language contr
  *
  */
-module.exports = function(app, db, controllers) {
+module.exports = function(app) {
 
 	/*
 	 * GET home page.

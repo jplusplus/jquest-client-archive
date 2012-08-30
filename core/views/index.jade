@@ -1,5 +1,8 @@
 extends layout
 
+block title
+	=_("Welcome to jQuest!")
+	
 block stylesheets
 	link(href="/stylesheets/vendor/bootstrap-build/bootstrap.min.css", type='text/css', rel="stylesheet")
 	link(href="/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css", type='text/css', rel="stylesheet")
@@ -17,7 +20,8 @@ block body
 			.row		
 				.span8
 					h1=_("Welcome to jQuest!")
-					p=_("Where the Journalist training done right.")
+					p=_("Where the Journalist training done right.")		
+					
 				.span4
-					a(href="/users/twitter-connect").btn.btn-large.btn-primary=_("Get ready!")
+					a(href="/users/login").btn.btn-large.btn-primary=_("Get ready!")
 	include layouts/footer

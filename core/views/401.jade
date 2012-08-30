@@ -1,7 +1,7 @@
 extends layout
 
 block title
-  | 404
+  = user ? _("Forbidden") : _("Authentication required")
 
 block stylesheets
   link(href="/stylesheets/vendor/bootstrap-build/bootstrap.min.css", type='text/css', rel="stylesheet")
@@ -19,5 +19,9 @@ block body
     .container
       .row    
         .span8
-          h1=_("Well... It's ambarassing!")
-          p=_("We didn't find the page you are looking for.")
+          if(user)            
+            h1=_("Forbidden")
+            p!=_("Your are not allowed to access to this page.")
+          else
+            h1=_("Authentication required")
+            p!=_("Please, <a href='/users/login'>sign in</a> to access to this page.")

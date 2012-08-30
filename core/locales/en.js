@@ -32,5 +32,7 @@
 	"Log out": "Log out",
 	"/": "/",
 	"Welcome to jQuest!": "Welcome to jQuest!",
-	"Where the Journalist training done right.": "Where the Journalist training done right."
+	"Where the Journalist training done right.": "Where the Journalist training done right.",
+	"Get ready!": "Get ready!",
+	"Sign in with Twitter": "Sign in with Twitter"
 }

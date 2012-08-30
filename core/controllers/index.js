@@ -1,11 +1,12 @@
-var i18n = require("i18n");
+var i18n	  = require("i18n")
+, usersCtrl = require("./users");
 
  /**
  * @author Pirhoo
  * @description Home route binder
  *
  */
-module.exports = function(app, db, controllers) {
+module.exports = function(app) {
 	
 	// Remove ending slash of every URL 
 	app.get(/^(\/(.+))\/$/, function(req, res){	
@@ -16,7 +17,6 @@ module.exports = function(app, db, controllers) {
 	 * GET home page.
 	 */
 	app.get('/', function(req, res){
-		//console.log(app.user);
 	  res.render('index.jade', { path:"/" });
 	});
 
