@@ -16,9 +16,7 @@
     , "i18n"              : "latest"
     , "config"            : "latest"
     , "passport"          : "latest"
-    , "passport-local"    : "latest"
     , "passport-twitter"  : "latest"
-    , "pkginfo"           : "latest"
   }
   , "engines": {
     "node": "0.6.18",

@@ -82,11 +82,13 @@ module.exports = function(_app) {
 
         });
 
-        // If we didn't find the mission
-        if( typeof mission !== "object" ) {
+        // If we didn't find the mission but the mission class is available
+        if( typeof mission !== "object" && app.missions[chapter.slug] ) {
 
-          // Instances the mission and call the render callback
-          mission = new app.missions[0](app.models, req.user.id, chapter.id, function() {
+          // Instances the mission 
+          // (use the chapter slug to find the good one) 
+          // and call the render callback
+          mission = new app.missions[chapter.slug](app.models, req.user.id, chapter.id, function() {
             
             // Add this instance to the list of available instances
             app.userMissions.push(this);

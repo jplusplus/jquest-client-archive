@@ -11,9 +11,7 @@ var express        = require('express')
   // Environement configuration
   , config         = require("config")
   // Authentification module  
-  , passport       = require("passport")
-  // Package explore
-  , pkginfo        = require("pkginfo");  
+  , passport       = require("passport");  
   // Stop watching for file changes
   config.watchForConfigFileChanges(0);
 
@@ -75,13 +73,19 @@ function loadAllMissions(dirname, where) {
     // Find the file path
     var path = dirname + '/' + name
     // Query the entry
-     , stats = fs.lstatSync(path);  
+     , stats = fs.lstatSync(path)
+    // Package path
+    ,pkgPath = path + '/package.json';  
 
     // If it's a directory...
-    if( stats.isDirectory() ) {          
-      // Require the mission file
-      console.log( require("pkginfo")(module) );
-      where[index++] = require(path);
+    if( stats.isDirectory() && fs.existsSync(pkgPath) ) {        
+      // Load and parse the JSON package
+      var pkg = JSON.parse( fs.readFileSync(pkgPath, 'utf8') );
+      // If the package specifies its chapter
+      if( pkg.jquest && pkg.jquest.chapter) {
+        // Require the mission file (use the chapter as key)
+        where[pkg.jquest.chapter] = require(path);
+      }
     }
 
   });
