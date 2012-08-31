@@ -9,6 +9,16 @@
           animation: @animation;
 }
 
+.well-header(@margin) {
+  margin:-1px * @margin;
+  margin-bottom:@margin;
+  padding:@margin;
+  padding-bottom:0;
+  border-bottom:1px solid rgba(0, 0, 0, 0.1); 
+  position:relative;
+  .box-shadow(0 1px 0 0 white)
+}
+
 // ANIMATIONS
 // ----------
 
@@ -47,7 +57,9 @@
   100%  { .box-shadow(0 0 0 0 #FFEE00); }
 }
 
+
 .no-bullet { list-style: none; }
+.relative { position:relative; }
 
 .top0 { margin-top:0px; }
 .top05 { margin-top:05px; }

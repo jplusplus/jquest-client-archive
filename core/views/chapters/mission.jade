@@ -8,6 +8,7 @@ block stylesheets
 
 block scripts
   script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
+  script(src="/javascripts/mission.js", type="text/javascript")
 
 block body
 
@@ -25,24 +26,27 @@ block body
     .row
       //- chapter.content must be read as an HTML content
       .span9
-        form(method="POST")          
+        form(method="POST", class="mission-"+mission.type, data-type=mission.type)#mission
           .well
-            !=mission.compileTemplate();
+            !=mission.getContent();            
 
-          .well.well-small
-            .pull-left
-              a(class="btn right10", href=_("/courses/") + course.slug )=_("Back to the list")   
-            .tr
-              case mission.state
-                when "game"
-                  button(type="submit",class="btn btn-primary")=_("Next")
-                when "failed"
-                  a(class="btn right10", href=_("/courses/") + course.slug + "/" + chapter.slug )=_("Read the chapter again")                
-                  button(type="submit",class="btn btn-primary")=_("Try again!")
-                when "succeed"
-                  if(nextChapter)
-                    a(href=_("/courses/") + course.slug + "/" + nextChapter.slug, class="btn btn-primary")=_("Next chapter")
-            .clearfix
+          //- Hides the quiz navigation toolbar 
+          //- if we are not playing a classic game 
+          if(mission.type == "classic" || mission.state != "game")
+            .well.well-small
+              .pull-left
+                a(class="btn right10", href=_("/courses/") + course.slug )=_("Back to the list")   
+              .tr
+                case mission.state
+                  when "game"
+                    button(type="submit",class="btn btn-primary")=_("Next")
+                  when "failed"
+                    a(class="btn right10", href=_("/courses/") + course.slug + "/" + chapter.slug )=_("Read the chapter again")                
+                    button(type="submit",class="btn btn-primary")=_("Try again!")
+                  when "succeed"
+                    if(nextChapter)
+                      a(href=_("/courses/") + course.slug + "/" + nextChapter.slug, class="btn btn-primary")=_("Next chapter")
+              .clearfix
 
     
       .span3

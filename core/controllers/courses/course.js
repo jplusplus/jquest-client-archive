@@ -47,7 +47,7 @@ module.exports = function(_app) {
 
 				});
 			},
-			// Third finds the User progression
+			// Third, finds the User progressions
 			function getUserProgression(data, callback) {
 
 				// If the user is authentificate
@@ -56,7 +56,7 @@ module.exports = function(_app) {
 					// Find the user whith the given id and for Twitter
 					app.models.UserProgression.findAll({ 
 						where: { 
-							userId: 1
+							userId: req.user.id
 						}
 					// If success
 					}).complete(function(error, UserProgression) {

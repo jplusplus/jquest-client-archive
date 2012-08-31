@@ -22,6 +22,7 @@ module.exports = function(_app) {
    */
   app.all(/^\/(courses|cours)\/([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+)\/mission$/, function(req, res){
 
+
     var course_slug  = req.params[1],
         chapter_slug = req.params[2],
         // Needs to be accessible in all functions of the serie
@@ -70,7 +71,8 @@ module.exports = function(_app) {
         var mission;
 
         // Create the missions array if unexists
-        if(typeof app.userMissions !== "array") app.userMissions = [];          
+        if(typeof app.userMissions !== "array") app.userMissions = [];   
+
         // Looks for the mission for this chapter and user
         app.userMissions.forEach(function(m) {
           
@@ -83,21 +85,20 @@ module.exports = function(_app) {
         });
 
         // If we didn't find the mission but the mission class is available
-        if( typeof mission !== "object" && app.missions[chapter.slug] ) {
+        if( typeof mission !== "object" ) {
 
           // Instances the mission 
-          // (use the chapter slug to find the good one) 
+          // (uses the chapter slug to find the good one) 
           // and call the render callback
-          mission = new app.missions[chapter.slug](app.models, req.user.id, chapter.id, function() {
-            
+          mission = new app.missions[chapter.slug](app.models, req.user.id, chapter.id, function() {            
             // Add this instance to the list of available instances
-            app.userMissions.push(this);
-
+            app.userMissions.push(this);                      
             callback(null, this);
           }); 
 
         } else {
-          callback(null, mission);
+          // Prepare the mission
+          mission.prepare( callback(null, mission) );
         }
 
       },
@@ -105,7 +106,7 @@ module.exports = function(_app) {
       parentUserProgression : function(callback) {
 
         // No user, we stop now
-        if(!req.user) return callback(null, null);
+        if(!req.user || !chapter.parent || chapter.parent == null) return callback(null, null);
 
         app.models.UserProgression.find({ 
           where: { 
@@ -132,7 +133,6 @@ module.exports.missionRender = function (error, data, req, res) {
 
   // Switchs to the 404 page if an error happends
   if( !data
-  || data.length < 4
   || data.course      === undefined 
   || data.chapter     === undefined
   || data.mission     === undefined

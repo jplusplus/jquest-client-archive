@@ -1,5 +1,5 @@
 {
-  "name": "jquest-mission-twitter",
+  "name": "fr-twitter-signup",
   "version": "0.0.1",
   "description": "Test jQuest's mission.",
   "engines": { "node": ">= 0.6.22" },
@@ -24,6 +24,6 @@
   ],
   "keywords": ["express", "jquest", "sdk", "mission", "e-learning", "twitter"],
   "jquest": {
-    "chapter": "parlez-vous-twitter"
+    "chapter": "inscription-sur-twitter"
   }
 }

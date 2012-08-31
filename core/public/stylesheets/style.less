@@ -5,6 +5,22 @@ h1, h2, h3, h4, .brand, fieldset legend {
 	text-shadow:1px 1px 0 white;
 }
 
+// Hides input in button
+.btn input{ display: none }
+
+
+.well-header {
+	.well-header(19px);
+
+	&.well-large {
+		.well-header(24px)
+	}
+
+	&.well-small {
+		.well-header(9px)
+	}	
+}
+
 .navbar {
 
 	margin-bottom:0;
@@ -209,6 +225,42 @@ h1, h2, h3, h4, .brand, fieldset legend {
 			left:50%;
 			margin-left:-12px;		
 			.rotate(90deg);
+		}
+
+	}
+
+}
+
+#mission {
+
+	&.mission-quiz {
+		
+		.content {
+			position:relative;
+		}
+
+		.steps {
+			font-family: 'Share', sans-serif;
+			font-size:20px;
+			color:@grayLight;
+			font-weight:bold;
+			text-shadow:1px 1px 0 white;
+
+			background:rgba(100,100,100,0.1);
+			.no-rgba & { background:#E6E6E6; }
+
+			position:absolute;
+			border:rgba(0,0,0,0.1) 1px solid;
+			border-right:0;
+			border-top:0;
+			padding:4px 8px;
+
+			position:absolute;
+			top:-19px;
+			right:-19px;
+
+			.border-radius(0 0 0 4px);
+			.box-shadow(-1px 1px 0 0 white);
 		}
 
 	}

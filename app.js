@@ -78,17 +78,19 @@ function loadAllMissions(dirname, where) {
     ,pkgPath = path + '/package.json';  
 
     // If it's a directory...
-    if( stats.isDirectory() && fs.existsSync(pkgPath) ) {        
+    if( stats.isDirectory() && fs.existsSync(pkgPath) ) {  
+
       // Load and parse the JSON package
       var pkg = JSON.parse( fs.readFileSync(pkgPath, 'utf8') );
       // If the package specifies its chapter
-      if( pkg.jquest && pkg.jquest.chapter) {
+      if( pkg.jquest && pkg.jquest.chapter) {        
         // Require the mission file (use the chapter as key)
         where[pkg.jquest.chapter] = require(path);
       }
     }
 
   });
+
 }
 
 
@@ -297,7 +299,7 @@ exports.boot = function(){
   // Database instance 
   sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
   // Sync the database with the object models
-  sequelize.sync({force: false});
+  sequelize.sync({force: true});
 
 
   /*****************************************
