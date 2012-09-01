@@ -182,7 +182,7 @@ exports.boot = function(){
      ************************************/  
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(express.cookieParser('L7mdcS4k5JzIepqwTaVdTGp4uZi4iIYF0ht2bkET'));
+    app.use(express.cookieParser(config.salts.cookies));
     app.use(express.session());   
 
     // Authentification with passport

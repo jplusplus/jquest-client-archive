@@ -233,6 +233,63 @@ h1, h2, h3, h4, .brand, fieldset legend {
 
 #mission {
 
+	position:relative;	
+	overflow: hidden;	
+	padding-top:0;
+
+	.well-header {
+		margin-top:0;
+
+		.bar {
+			.transition(1s);
+		}
+	}
+
+	.splashscreen {
+		position:absolute;
+		top:0;
+		left:0;
+
+		width:100%;
+		height:100%;
+
+		overflow:hidden;
+  	background-color: #f5f5f5;
+
+		.transition(top 0.7s);
+  	.box-shadow(0 -5px 5px 0 fade(#000, 10));
+
+		.countdown,.instruction {
+			width:100%;
+
+			position:absolute;
+			left:0;
+			z-index:10;
+
+			text-align:center;
+			text-shadow:1px 1px 0 white;
+		}
+
+		.countdown {			
+  		top:25%;
+			font-family: 'Share', sans-serif;
+			font-size:25px;
+			color:@linkColor;
+		}
+
+		.instruction {
+			top:70%;
+			font-weight:bold;
+		}
+
+  	&.hide {
+  		display:block;
+  		top:110%;
+  	}
+
+
+	}	
+
 	&.mission-quiz {
 		
 		.content {

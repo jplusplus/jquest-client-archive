@@ -6,14 +6,13 @@ module.exports = function(models, userId, chapterId, callback) {
 
   var self = this;
 
-  // Change the template directory name
-  self.templateDirname = __dirname;
-
   // Add several questions 
-
+  // 
   self.addQuestion(function(callback) {
     callback({
-      question: "Quel est le nom de l'auteur de ce Tweet ?",
+      content : "",
+      duration: 10,
+      label   : "Quel est le nom de l'auteur de ce Tweet ?",
       solution: "Pierre Romera",
       answers : ["Pierre Romera", "Nicolas Kayser-Bril", "Anne-lise Bouyer", "Bertrand De Vericourt"]
     });
@@ -21,7 +20,8 @@ module.exports = function(models, userId, chapterId, callback) {
 
   self.addQuestion(function(callback) {
     callback({
-      question: "Quel est le sujet de ce Tweet ?",
+      label   : "Quel est le sujet de ce Tweet ?",
+      duration: 10,
       solution: "Football",
       answers : ["Basketball", "Kung-Fu", "Football", "Surf"]
     });
@@ -29,7 +29,8 @@ module.exports = function(models, userId, chapterId, callback) {
 
   self.addQuestion(function(callback) {
     callback({
-      question: "Ce tweet est-il un RT ?",
+      label   : "Ce tweet est-il un RT ?",
+      duration: 20,
       solution: "Oui",
       answers : ["Oui", "Non"]
     });

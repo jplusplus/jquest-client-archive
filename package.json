@@ -9,7 +9,7 @@
     , "jade"              : "latest"
     , "pg"                : "0.7.2"
     , "sequelize"         : ">= 1.4.1"
-    , "enc"               : "0.0.1"
+    , "enc"               : "0.2.0"
     , "restler"           : "latest"
     , "memory-cache"      : "latest"
     , "async"             : "latest"

@@ -58,6 +58,7 @@
 }
 
 
+
 .no-bullet { list-style: none; }
 .relative { position:relative; }
 
@@ -141,5 +142,30 @@ hr.soften {
 	  background-image:      -o-linear-gradient(left, fade(white,0%), fade(white,100%), fade(white,0%));
   	height: 1px;
   	width:100%;
+  }
+}
+
+.js-loading-overlay {
+  position:absolute;
+  top:0; bottom:0;
+  left:0; right:0;
+
+  height:100%;
+  width:100%;
+
+  background:url("/images/loading.gif") center center no-repeat #fff;
+  .opacity(50);
+
+  display:block;  
+  z-index:199;
+
+  border-radius: inherit;
+
+  &.black {
+    background:url("/images/loading-black.gif") center center no-repeat #000;    
+  }
+
+  &.transparent {
+    background-color:transparent;
   }
 }

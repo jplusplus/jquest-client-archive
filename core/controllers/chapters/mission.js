@@ -68,37 +68,24 @@ module.exports = function(_app) {
         if(! req.user) return callback(null, null);
           
         // Future mission instance
-        var mission;
-
-        // Create the missions array if unexists
-        if(typeof app.userMissions !== "array") app.userMissions = [];   
-
-        // Looks for the mission for this chapter and user
-        app.userMissions.forEach(function(m) {
-          
-          // Chapter and user must be the same  
-          if( m.chapterId == chapter.id
-          &&  m.userId    == req.user.id ) {
-            mission = m;
-          }
-
-        });
+        var mission = module.exports.getMission(req.user.id, chapter.id);
 
         // If we didn't find the mission but the mission class is available
-        if( typeof mission !== "object" ) {
+        if(mission === false) {
 
           // Instances the mission 
           // (uses the chapter slug to find the good one) 
           // and call the render callback
           mission = new app.missions[chapter.slug](app.models, req.user.id, chapter.id, function() {            
             // Add this instance to the list of available instances
-            app.userMissions.push(this);                      
+            app.userMissions.push(this);  
+            // Final callback                    
             callback(null, this);
           }); 
 
         } else {
-          // Prepare the mission
-          mission.prepare( callback(null, mission) );
+          // Prepare the mission with the body data (POST)
+          mission.prepare(req, res, function() { callback(null, mission) });
         }
 
       },
@@ -145,32 +132,36 @@ module.exports.missionRender = function (error, data, req, res) {
 
   // Change the render following the method
   if(req.method === "POST") {
+    
+      // Redirect to the mission without POST data
+      res.redirect(req.url);  
 
-    switch(data.mission.state) {
 
-      // We lost the mission      
-      case "failed":
-        // Open the mission again
-        data.mission.open(function() {
+      /*switch(data.mission.state) {
+
+        // We lost the mission      
+        case "failed":
+          // Open the mission again
+          data.mission.open(function() {
+            // Redirect to the mission without POST data
+            res.redirect(req.url);
+          });
+          break;
+
+        // We are playing the mission
+        case "game":       
+          data.mission.points = 50 + Math.round( Math.random() * 50);
+          // Check if we should close the mission
+          data.mission.close(function() {
+            // Redirect to the mission without POST data
+            res.redirect(req.url);
+          });   
+          break;
+
+        default:
           // Redirect to the mission without POST data
-          res.redirect(req.url);
-        });
-        break;
-
-      // We are playing the mission
-      case "game":       
-        data.mission.points = 50 + Math.round( Math.random() * 50);
-        // Check if we should close the mission
-        data.mission.close(function() {
-          // Redirect to the mission without POST data
-          res.redirect(req.url);
-        });   
-        break;
-
-      default:
-        // Redirect to the mission without POST data
-        res.redirect(req.url);  
-    }
+          res.redirect(req.url);  
+      }*/
 
   } else {       
 
@@ -186,4 +177,30 @@ module.exports.missionRender = function (error, data, req, res) {
 
   }
 
+}
+
+/**
+ * Get a mission instance for the given user and chapter
+ * @param  {Number} userId
+ * @param  {Number} chapterId
+ * @return {Object} The mission instance, false if not found
+ */
+module.exports.getMission = function(userId, chapterId) {
+
+  var mission = false;
+
+  // Create the missions array if unexists
+  if(typeof app.userMissions == "undefined") app.userMissions = [];   
+
+  // Looks for the mission for this chapter and user
+  app.userMissions.forEach(function(m) {
+    
+    // Chapter and user must be the same  
+    if( m.chapterId == chapterId
+    &&  m.userId    == userId ) {
+      mission = m;
+    }
+  });
+
+  return mission;
 }

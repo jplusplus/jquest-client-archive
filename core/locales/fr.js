@@ -73,5 +73,10 @@
 	"Forbidden": "Forbidden",
 	"Your are not allowed to access to this page.": "Your are not allowed to access to this page.",
 	"jQuest!": "jQuest!",
-	"jQuest": "jQuest"
+	"jQuest": "jQuest",
+	"The mission begins in % seconds": "The mission begins in % seconds",
+	"The mission begins in 4 seconds": "The mission begins in 4 seconds",
+	"Push a button to select an answer": "Push a button to select an answer",
+	"The mission is about to begin in % seconds.": "The mission is about to begin in % seconds.",
+	"The mission is about to begin in % second.": "The mission is about to begin in % second."
 }
