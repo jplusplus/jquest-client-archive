@@ -47,13 +47,4 @@ module.exports = function(models, userId, chapterId, callback) {
 util.inherits(module.exports, MissionQuiz);
 
 
-/**
-* Checks the advancement of the user
-* @return {Boolean}   Returns true if the mission is completed
-*/
-module.exports.prototype.isCompleted = function() {
-  return true; 
-};
-
-
 exports = module.exports;

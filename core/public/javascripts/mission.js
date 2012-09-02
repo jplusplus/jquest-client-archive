@@ -108,6 +108,10 @@
 
     // Gets the duration of the question
     var duration = that.el.$countdown.data("duration");
+  
+    // Saves the current date
+    that.startTime = new Date();
+
 
     // if the duraction is valid
     if( duration ) {
@@ -118,68 +122,76 @@
     }
   };
 
+
+  that.submitForm = function(e) {
+    
+    // Disables the sending of the data (and page loading)
+    e.preventDefault();
+
+    // Stop the countdown
+    if(that.countdownTimeout) clearTimeout(that.countdownTimeout);
+
+    // Shortcut
+    var $form = that.el.$mission;
+    
+    // Gets the whole form's values
+    // BEFORE loading mode that disabled input        
+    var values = {};
+    $.each( $form.serializeArray(), function(i, field) {
+      values[field.name] = field.value;
+    });
+
+    // The time to answer to the question
+    if(that.startTime) {
+      // Seconds convertion
+      values.duration = new Date().getTime() - that.startTime.getTime();
+      values.duration = ~~values.duration/1000;
+    }
+
+    // launch "loading mode" on the mission
+    $form.loading();
+
+    // Send the values to know 
+    // if the user is correct
+    $.post("", values, function(data) {
+      
+      // remove "loading mode" on the mission
+      $form.loading(false);
+
+      // Show the solution
+      that.showSolution(data.solution);
+
+      // Wait a few seconds
+      setTimeout(function() {
+        // There is questions left, pass to a new question
+        if( ! data.isComplete ) that.newQuestion();
+        // Reload the page to display the final one
+        else window.location.reload()
+      }, 3000);
+
+    }, "json");
+
+  };
+
   
   $(that.init = function() {    
 
     that.initElements();  
 
     // Remove the splashscreen in a few second
-    setTimeout(function() { that.updateSplashscreen(1) }, 1000);
+    if(that.el.$splashscreen.length) setTimeout(function() { that.updateSplashscreen(1) }, 1000);
 
     // Auto-submit for the quiz forms
     that.el.$mission.on('change', function() {        
-      $(this).submit();
+      that.el.$mission.submit();
     });
 
     // Behavior different following 
     // the type of the question
     if( that.el.$mission.data("type") === "quiz"  ) {
 
-
       // When we submit the form
-      that.el.$mission.on('submit', function(event) {
-
-        // Disables the sending of the data (and page loading)
-        event.preventDefault();
-
-        // Stop the countdown
-        if(that.countdownTimeout) clearTimeout(that.countdownTimeout);
-
-        // Shortcut
-        var $form = that.el.$mission;
-        
-        // Gets the whole form's values
-        // BEFORE loading mode that disabled input        
-        var values = {};
-        that.el.$mission.find("input").each(function(i, input) {
-            values[ $(input).attr("name") ] = $(input).val();
-        });
-
-        // launch "loading mode" on the mission
-        that.el.$mission.loading();
-
-        // Send the values to know 
-        // if the user is correct
-        $.post("", values, function(data) {
-          
-          // remove "loading mode" on the mission
-          that.el.$mission.loading(false);
-
-          // Show the solution
-          that.showSolution(data.solution);
-
-          // Wait a few seconds
-          setTimeout(function() {
-            // There is questions left, pass to a new question
-            if( ! data.isComplete ) that.newQuestion();
-            // Reload the page to display the final one
-            else window.location.reload()
-          }, 3000);
-
-        }, "json");
-                
-      });
-
+      that.el.$mission.on('submit', function(e) { that.submitForm(e); });
     }
 
   });
