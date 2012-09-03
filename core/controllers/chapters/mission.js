@@ -78,13 +78,13 @@ module.exports = function(_app) {
           // and call the render callback
           mission = new app.missions[chapter.slug](app.models, req.user.id, chapter.id, function() {            
             // Add this instance to the list of available instances
-            app.userMissions.push(this);  
+            app.userMissions.push(this);    
             // Final callback                    
             callback(null, this);
           }); 
 
         } else {
-          // Prepare the mission with the body data (POST)
+          // Prepare the mission to play
           mission.prepare(req, res, function() { callback(null, mission) });
         }
 
