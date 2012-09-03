@@ -1,0 +1,26 @@
+section  
+  if(typeof userPoints == "number" && typeof ttPoints == "number")
+    h3=_("My points")
+    .progress.top10
+      .bar(style="width: " + Math.round(userPoints/ttPoints*100) + "%")
+    p.tc=_n("%s point", "%s points", userPoints) + " / " + ttPoints
+
+section.top20
+  h3=_("My badges")
+  span.label no implemented
+  ul.row.no-bullet.top10
+    li.span1
+      img.thumbnail(src="/images/badge-icon.png")
+    li.span1
+      img.thumbnail(src="/images/badge-icon.png")
+    li.span1
+      img.thumbnail(src="/images/badge-icon.png")
+
+section.top20        
+  h3=_("Invite a friend to %s", course.title)
+  span.label no implemented
+  .input-prepend.input-append.top10          
+    .add-on
+      i.icon-envelope
+    input.span1(type="text")
+    button.btn=_("Go!")

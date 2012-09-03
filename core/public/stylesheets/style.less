@@ -1,0 +1,329 @@
+@import "tools.less";
+
+h1, h2, h3, h4, .brand, fieldset legend {
+	font-family: 'Share', sans-serif;
+	text-shadow:1px 1px 0 white;
+}
+
+// Hides input in button
+.btn input{ display: none }
+
+
+.well-header {
+	.well-header(19px);
+
+	&.well-large {
+		.well-header(24px)
+	}
+
+	&.well-small {
+		.well-header(9px)
+	}	
+}
+
+.navbar {
+
+	margin-bottom:0;
+
+	a.padding0 {
+		padding:0 !important;
+	}
+
+	.main-link {
+		font-family: 'Share', sans-serif;
+		font-size:16px;
+		margin-right:10px;
+	}
+
+	.log-in {
+		white-space: nowrap;
+		padding:10px;
+
+		label {
+			margin:0;
+			margin-bottom:5px;
+			display: block;
+			color:@grayDark;
+
+			&.checkbox {
+				margin-top:5px;
+				margin-bottom:0px;
+			}
+		}
+
+		a {
+			color:@linkColor;
+			padding-top:0;
+		}
+
+		.btn {
+			margin-top:0;
+			margin-bottom:0;
+		}
+
+	}
+
+	.user-avatar {
+
+		img {
+			height:30px;
+			clip:rect(0, 30px, 30px, 0);		
+			.border-radius(50%);
+
+		    border: #DFDFDF 1px solid;
+		    border-bottom-width:2px;
+		    .box-shadow(0 2px 1px 0 darken(#DFDFDF, 10%));
+
+		    float:left;
+		    margin-right:5px;
+		    position:relative;
+		    top:-6px;
+		}
+	}
+}
+
+
+.page-header {
+	background:@grayLighter;
+	border-bottom:darken(@grayLighter, 10%) solid 1px;
+	.box-shadow(inset 0 -1px 0 0 fade(white, 20%) );
+	
+	margin-top:0;
+	padding-top:30px;
+
+	h1 {
+		padding-bottom:10px;
+	}
+}
+
+
+
+.chapter {
+
+	position: relative;
+	margin-bottom:10px;
+
+	&.disabled {
+
+		// Add an overlay for the disabled chapter
+		.well:before {
+			z-index:100;
+			content:"";
+			display:block;
+			position:absolute;
+			top:0;
+			left:0;
+
+			width:100%;
+			height:100%;
+			#gradient > .striped( fade(#ccc, 80%) );
+		}
+
+		.arrow {
+			border-style:dashed;
+			.opacity(60);
+		}
+
+	}
+
+	&.highlight {
+
+		.well {
+			.box-shadow(0 0 6px 0 #FFEE00);
+			.animation( shadow-pulse 4s linear infinite )
+		}
+	}
+
+
+
+	.well {
+		min-height:22px;
+		position: relative;
+
+		h4 {
+			margin-left:40px;
+		}
+
+		.thumb {
+			float:left;
+			width:40px;
+			height:100%;
+			background:white;
+			overflow: hidden;
+			
+			position:absolute;
+			top:0;
+			left:0;
+
+			border-right:1px solid #ccc;
+			.box-shadow(2px 0 2px 0 fade(#000, 10%) );
+  		.border-radius(3px 0 0 3px);
+
+  		img {
+  			height:100%;
+  			width:auto;
+  			max-width: 400%;
+
+				position:absolute;
+				top:0;
+				left:0;
+  		}
+		}
+
+		.points {
+			display:block;
+			margin-left:40px;
+			font-size:10px;
+			color:@gray;
+			text-transform: uppercase;			
+		}
+
+	}
+
+	.arrow {
+		width:60px;
+		height:0px;
+		border:0;
+		border-bottom:2px #bbb solid;		
+
+		position:absolute;
+		z-index:-1;
+
+		&:after {			
+			display:block;
+			content:"";
+
+			position:absolute;
+			top:-3px; right:0px;
+
+			height:6px;
+			width:6px;
+
+			border:2px solid #bbb;
+			border-left:0;
+			border-bottom:0;
+
+			.rotate(45deg);	
+
+		}
+
+		&.west.equal {
+			top:50%;
+			left:-61px;
+			margin-top:-12px;
+		}
+
+		&.east.equal {
+			top:50%;
+			right:-61px;
+			.rotate(180deg);
+			margin-top:-12px;
+		}
+
+		&.equal.north {
+			top:-32px;
+			left:50%;
+			margin-left:-12px;		
+			.rotate(90deg);
+		}
+
+	}
+
+}
+
+#mission {
+
+	position:relative;	
+	overflow: hidden;	
+	padding-top:0;
+
+	.well-header {
+		margin-top:0;
+
+		.bar {
+			.transition(1s);
+		}
+	}
+
+	.splashscreen {
+		position:absolute;
+		top:0;
+		left:0;
+
+		width:100%;
+		height:100%;
+
+		overflow:hidden;
+  	background-color: #f5f5f5;
+
+		.transition(top 0.7s);
+  	.box-shadow(0 -5px 5px 0 fade(#000, 10));
+
+		.countdown,.instruction {
+			width:100%;
+
+			position:absolute;
+			left:0;
+			z-index:10;
+
+			text-align:center;
+			text-shadow:1px 1px 0 white;
+		}
+
+		.countdown {			
+  		top:25%;
+			font-family: 'Share', sans-serif;
+			font-size:25px;
+			color:@linkColor;
+		}
+
+		.instruction {
+			top:70%;
+			font-weight:bold;
+		}
+
+  	&.hide {
+  		display:block;
+  		top:110%;
+  	}
+
+
+	}	
+
+	&.mission-quiz {
+		
+		.content {
+			position:relative;
+		}
+
+		.steps {
+			font-family: 'Share', sans-serif;
+			font-size:20px;
+			color:@grayLight;
+			font-weight:bold;
+			text-shadow:1px 1px 0 white;
+
+			background:rgba(100,100,100,0.1);
+			.no-rgba & { background:#E6E6E6; }
+
+			position:absolute;
+			border:rgba(0,0,0,0.1) 1px solid;
+			border-right:0;
+			border-top:0;
+			padding:4px 8px;
+
+			position:absolute;
+			top:-19px;
+			right:-19px;
+
+			.border-radius(0 0 0 4px);
+			.box-shadow(-1px 1px 0 0 white);
+		}
+
+	}
+
+}
+
+footer {
+	color:@gray;
+}

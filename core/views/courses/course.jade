@@ -1,0 +1,91 @@
+extends ../layout
+
+block title
+  =title
+
+block stylesheets
+  link(href="/stylesheets/vendor/bootstrap-build/bootstrap.min.css", type='text/css', rel="stylesheet")
+  link(href="/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css", type='text/css', rel="stylesheet")
+  link(href="http://fonts.googleapis.com/css?family=Share:400,700", type='text/css', rel="stylesheet")
+  link(href="/stylesheets/style.css", type='text/css', rel="stylesheet")
+
+block scripts
+  script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
+  script(src="/javascripts/courses.js", type="text/javascript")
+      
+block body
+
+  include ../layouts/menu
+  .page-header
+    .container
+      h1=course.title
+      p=course.description
+
+  .container
+
+    .row
+      .span9
+        //- This list must be invisible on phone
+        ul.row.no-bullet.hidden-phone#chapters
+          each chapter, key in chaptersOrdered
+
+            //- Breaks line after 3 chapters 
+            if(key > 0 && key%3 === 0)              
+              li.span9
+
+            if(chapter == null)       
+              //- Draws an empty case
+              li.span3
+            else              
+              //- chapter can be disabled
+              - if( ! isChapterEnabled(chapter) ) {
+                //- Draws a chapter with its ID
+                li.span3.chapter.disabled(data-id=chapter.id)
+                  .well.well-small
+                    .thumb
+                      img(src=chapter.thumbnail)  
+                    h4=chapter.title            
+                    .points=_("0 point")
+                  //- After the first element, every chapter has a parent
+                  if(key > 0)
+                    //- Draws an arrow related to the parent chapter
+                    .arrow(data-parent=chapter.parent)
+              - } else {
+                //- Draws a chapter with its ID and adds a class "highlight" to the ones with 0 point
+                li.span3.chapter(data-id=chapter.id, class=chapter.points === 0 ? "highlight" : "")
+                  .well.well-small
+                    .thumb
+                      img(src=chapter.thumbnail)  
+                    h4
+                      a(tabindex=chapter.parent||chapter.id, href=_("/courses/")+course.slug+"/"+chapter.slug)=chapter.title 
+                    .points=_n("%s point", "%s points", getUserPoints(chapter) )
+                  //- After the first element, every chapter has a parent
+                  if(key > 0)
+                    //- Draws an arrow related to the parent chapter
+                    .arrow(data-parent=chapter.parent)
+              - }
+
+
+        //- This list must be visible only on phone
+        ul.unstyled.visible-phone#chapters
+          each chapter, key in chapters
+
+              //- chapter can be disabled
+              - var chapterClasses  = ! isChapterEnabled(chapter) ? "disabled" : ""              
+              //- Draws a chapter with its ID
+              li.span9.chapter(data-id=chapter.id, class=chapterClasses)      
+                .well.well-small
+                  .thumb
+                    img(src=chapter.thumbnail)    
+                  h4
+                    a(href=_("/courses/")+course.slug+"/"+chapter.slug)=chapter.title
+                  .points=_n("%s point", "%s points", getUserPoints(chapter) )
+                //- After the first element, every chapter has a parent
+                if(key > 0)
+                  //- Draws an arrow related to the parent chapter
+                  .arrow.equal.north
+
+      .span3
+        include ../layouts/progress-menu
+
+  include ../layouts/footer

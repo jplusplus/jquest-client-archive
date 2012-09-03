@@ -1,0 +1,10 @@
+{
+	"port": false,
+	"host": "http://jquest.herokuapp.com",	
+	"db": {
+	  "uri": false
+	},
+	"api":{
+		"hostname": "http://jquest.oeildupirate.com"
+	}
+}

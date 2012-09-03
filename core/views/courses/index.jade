@@ -1,0 +1,33 @@
+extends ../layout
+
+block title
+	=_("Courses")
+
+block stylesheets
+	link(href="/stylesheets/vendor/bootstrap-build/bootstrap.min.css", type='text/css', rel="stylesheet")
+	link(href="/stylesheets/vendor/bootstrap-build/bootstrap-responsive.min.css", type='text/css', rel="stylesheet")
+	link(href="http://fonts.googleapis.com/css?family=Share:400,700", type='text/css', rel="stylesheet")
+	link(href="/stylesheets/style.css", type='text/css', rel="stylesheet")
+
+block scripts
+	script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
+
+block body
+
+	include ../layouts/menu
+	.page-header
+		.container
+			h1=_("Courses")
+			
+	.container
+		ul.row.no-bullet		
+			each cour in courses
+				li.span4
+					a(href=_("/courses/")+cour.slug)
+						h3
+							=cour.title
+						p 
+							em
+								=cour.description	
+
+	include ../layouts/footer
