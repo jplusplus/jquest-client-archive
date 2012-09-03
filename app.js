@@ -1,3 +1,15 @@
+/**
+ * @fileOverview Main application script that initialize and configure 
+ * the Express Framework, the database ORM (sequelize), the multi-language
+ * support, the configuration loader and the user authentification.
+ *
+ * Also, that script loads every controllers (from /core/controllers), 
+ * data models (from /core/models) and custom missions (from /custom).
+ *
+ * @name app
+ * @author  Pirhoo <pirhoo@jplusplus.org>
+ */
+
   // Express Framework
 var express        = require('express')
   // Filesystem manager
@@ -22,10 +34,10 @@ var express        = require('express')
 var app = sequelize = null;
 
 /**
- * @author Pirhoo
- *
- * @function
- * @description Loads all requires automaticly from a directory
+ * Loads all requires automaticly from a directory
+ * @param  {String} dirname   Directory where look for the file
+ * @param  {Object} where     Object where save the instances
+ * @param  {Boolean} instance Should we instanciate each module ? 
  */
 function loadAllRequires(dirname, where, instance) {  
   // Change the root of the directory to analyse following the given parameter
@@ -56,10 +68,10 @@ function loadAllRequires(dirname, where, instance) {
 }
 
 /**
- * @author Pirhoo
- *
- * @function
- * @description Loads all missions (as module) automaticly from a directory
+ * Loads all missions (as module) automaticly from a directory
+ * @param  {String} dirname   Directory where look for the file
+ * @param  {Object} where     Object where save the instances
+ * @param  {Boolean} instance Should we instanciate each module ? 
  */
 function loadAllMissions(dirname, where) {
 
@@ -96,10 +108,9 @@ function loadAllMissions(dirname, where) {
 
 
 /**
- * @author Pirhoo
- *
- * @function
- * @description Loads all models automaticly from the /models directory
+ * Loads all models automaticly from the /models directory
+ * @param  {String} dirname   Directory where look for the file
+ * @param  {Object} where     Object where save the instances
  */
 function importAllModels(dirname, where) {  
   // Change the root of the directory to analyse following the given parameter
@@ -128,11 +139,10 @@ function importAllModels(dirname, where) {
 }
 
 /**
-* @author Pirhoo
-*
-* @function
-* @description Parse the DNS url to extract fields
-*/
+ * Parses the DNS url to extract fields
+ * @param  {String} url The URL to parse
+ * @return {Object}     The fields extracted from the URL
+ */
 function getDbConfigFromURL(url) {
   
   var regex  =  /(\w*)\:\/\/(([a-zA-Z0-9_\-.]*)\:([a-zA-Z0-9_\-.]*))?@([a-zA-Z0-9_\-.]*)(\:(\d+))?\/([a-zA-Z0-9_\-.]*)/
@@ -157,11 +167,9 @@ function getDbConfigFromURL(url) {
 
 
 /**
-* @author Pirhoo
-*
-* @function
-* @description
-*/
+ * Boots the app
+ * @return {Object} The app instance
+ */
 exports.boot = function(){
 
   // Creates Express server
@@ -265,9 +273,9 @@ exports.boot = function(){
 
     app.use(function(req, res, next) {
       // Current user
-      res.locals.user         = req.user && req.user.ugroup != "tmp" ? req.user : false;
+      res.locals.user      = req.user && req.user.ugroup != "tmp" ? req.user : false;
       // Current language
-      res.locals.language     = req.cookies.language || i18n.getLocale(req) || config.locale.default;  
+      res.locals.language  = req.cookies.language || i18n.getLocale(req) || config.locale.default;  
 
       next();
     });
