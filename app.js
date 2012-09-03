@@ -29,7 +29,7 @@ var express        = require('express')
 
 
 /**
- * Global objects
+ * @type {Object}
  */
 var app = sequelize = null;
 

@@ -179,7 +179,7 @@
     that.initElements();  
 
     // Remove the splashscreen in a few second
-    if(that.el.$splashscreen.length) setTimeout(function() { that.updateSplashscreen(0) }, 1000);
+    if(that.el.$splashscreen.length) setTimeout(function() { that.updateSplashscreen(4) }, 1000);
 
     // Auto-submit for the quiz forms
     that.el.$mission.on('change', function() {        
