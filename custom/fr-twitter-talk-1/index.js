@@ -30,7 +30,7 @@ module.exports = function(models, userId, chapterId, callback) {
   self.addQuestion(function(callback) {
     callback({
       label   : "Ce tweet est-il un RT ?",
-      duration: 20,
+      //duration: 20,
       solution: "Oui",
       answers : ["Oui", "Non"]
     });

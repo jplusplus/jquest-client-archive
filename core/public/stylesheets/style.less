@@ -235,14 +235,22 @@ h1, h2, h3, h4, .brand, fieldset legend {
 
 	position:relative;	
 	overflow: hidden;	
-	padding-top:0;
+	
+	.well {		
+		position:relative;	
+		overflow: hidden;	
+	}
 
 	.well-header {
-		margin-top:0;
 
+		margin-bottom:19px*2px; // To compensate the negative margin-top of the .content div bellow
 		.bar {
 			.transition(1s);
 		}
+	}
+
+	.content {
+		margin-top:-19px; // default well padding
 	}
 
 	.splashscreen {
@@ -258,6 +266,7 @@ h1, h2, h3, h4, .brand, fieldset legend {
 
 		.transition(top 0.7s);
   	.box-shadow(0 -5px 5px 0 fade(#000, 10));
+  	.border-radius(inherit);
 
 		.countdown,.instruction {
 			width:100%;

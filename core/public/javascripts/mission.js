@@ -179,7 +179,7 @@
     that.initElements();  
 
     // Remove the splashscreen in a few second
-    if(that.el.$splashscreen.length) setTimeout(function() { that.updateSplashscreen(1) }, 1000);
+    if(that.el.$splashscreen.length) setTimeout(function() { that.updateSplashscreen(4) }, 1000);
 
     // Auto-submit for the quiz forms
     that.el.$mission.on('change', function() {        
@@ -187,8 +187,10 @@
     });
 
     // Behavior different following 
-    // the type of the question
-    if( that.el.$mission.data("type") === "quiz"  ) {
+    // the type of the question (quiz)
+    // and the state of the mission (game)
+    if( that.el.$mission.data("type")  === "quiz" 
+    &&  that.el.$mission.data("state") === "game") {
 
       // When we submit the form
       that.el.$mission.on('submit', function(e) { that.submitForm(e); });
