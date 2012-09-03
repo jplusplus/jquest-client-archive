@@ -299,7 +299,7 @@ exports.boot = function(){
   // Database instance 
   sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
   // Sync the database with the object models
-  sequelize.sync({force: true});
+  sequelize.sync({force: app.settings.env == "development"});
 
 
   /*****************************************
