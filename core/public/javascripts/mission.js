@@ -18,15 +18,15 @@
     var $checked = that.el.$mission.find("input[name=quiz-answer]:checked")
     // Find the input with the solution
      , $solution = that.el.$mission.find("input[name=quiz-answer]").filter(function() {
-        return $(this).val() == solution;
+        return $.inArray($(this).val(), solution) > -1;
      });
 
     // Disabled all inputs
     that.el.$mission.find("input,button,.btn").addClass("disabled").prop("disabled", true);
 
     // Toggle the classes on the btn
-    $checked.parents(".btn").toggleClass("btn-danger", $checked.val() != solution );
     $solution.parents(".btn").addClass("btn-success");
+    $checked.parents(".btn").toggleClass("btn-danger",  ! $checked.hasClass("btn-success") );
   };
 
   that.newQuestion = function() {
@@ -179,7 +179,7 @@
     that.initElements();  
 
     // Remove the splashscreen in a few second
-    if(that.el.$splashscreen.length) setTimeout(function() { that.updateSplashscreen(4) }, 1000);
+    if(that.el.$splashscreen.length) setTimeout(function() { that.updateSplashscreen(0) }, 1000);
 
     // Auto-submit for the quiz forms
     that.el.$mission.on('change', function() {        

@@ -17,7 +17,6 @@ module.exports = function(models, userId, chapterId, callback) {
     });
   });
 
-  /*
   self.addQuestion(function(callback) {
     callback({
       content : "",
@@ -65,7 +64,7 @@ module.exports = function(models, userId, chapterId, callback) {
   });
 
 
-  /* self.addQuestion(function(callback) {
+  self.addQuestion(function(callback) {
     callback({
       label   : "A qui est destiné ce tweet ?",
       duration: 10,
@@ -90,7 +89,7 @@ module.exports = function(models, userId, chapterId, callback) {
       solution: "morandiniblog",
       answers : ["pirhoo", "morandiniblog", "620", "Journaliste Animateur"]
     });
-  }); */
+  });
 
 
   // Call the parent constructor
