@@ -78,13 +78,13 @@ module.exports = function(_app) {
           // and call the render callback
           mission = new app.missions[chapter.slug](app.models, req.user.id, chapter.id, function() {            
             // Add this instance to the list of available instances
-            app.userMissions.push(this);  
+            app.userMissions.push(this);    
             // Final callback                    
             callback(null, this);
           }); 
 
         } else {
-          // Prepare the mission with the body data (POST)
+          // Prepare the mission to play
           mission.prepare(req, res, function() { callback(null, mission) });
         }
 
@@ -133,11 +133,7 @@ module.exports.missionRender = function (error, data, req, res) {
   // Change the render following the method
   if(req.method === "POST") {
     
-      // Redirect to the mission without POST data
-      res.redirect(req.url);  
-
-
-      /*switch(data.mission.state) {
+      switch(data.mission.state) {
 
         // We lost the mission      
         case "failed":
@@ -148,20 +144,10 @@ module.exports.missionRender = function (error, data, req, res) {
           });
           break;
 
-        // We are playing the mission
-        case "game":       
-          data.mission.points = 50 + Math.round( Math.random() * 50);
-          // Check if we should close the mission
-          data.mission.close(function() {
-            // Redirect to the mission without POST data
-            res.redirect(req.url);
-          });   
-          break;
-
         default:
           // Redirect to the mission without POST data
           res.redirect(req.url);  
-      }*/
+      }
 
   } else {       
 
