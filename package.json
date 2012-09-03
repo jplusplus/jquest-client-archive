@@ -17,7 +17,7 @@
     , "config"            : "latest"
     , "passport"          : "latest"
     , "passport-twitter"  : "latest"
-    , "jquest-mission"    : "0.0.1"
+    , "jquest-mission"    : "latest"
   }
   , "engines": {
     "node": "0.8.7",
