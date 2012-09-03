@@ -26,7 +26,7 @@
 
     // Toggle the classes on the btn
     $solution.parents(".btn").addClass("btn-success");
-    $checked.parents(".btn").toggleClass("btn-danger",  ! $checked.hasClass("btn-success") );
+    $checked.parents(".btn").filter(":not(.btn-success)").addClass("btn-danger");
   };
 
   that.newQuestion = function() {
