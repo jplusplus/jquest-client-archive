@@ -13,9 +13,11 @@
 	},
 	"oauth":{
 		"twitter": {
-			"consumer_key"	  : "mkZ4S7psHzfkDCfOzQTOg",
-			"consumer_secret" : "ah1B8CYFt8uaIR9J1DiGV5gLwEifdEliJmNrOtOs",
-			"callback"				: "/user/twitter-callback"
+			"consumer_key"	  		: "mkZ4S7psHzfkDCfOzQTOg",
+			"consumer_secret" 		: "ah1B8CYFt8uaIR9J1DiGV5gLwEifdEliJmNrOtOs",
+			"access_token"				: "41570792-VIbpmAEg593lc80SQr3HDlyWyCa0HySyWnE2wN4",
+			"access_token_secret"	: "SlQs3Gqz3Nq86q5pemAVodiRN9lBAY0XIKlyLlnaQ",
+			"callback"						: "/user/twitter-callback"
 		}
 	},
 	"salts": {
