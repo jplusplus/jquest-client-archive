@@ -6,6 +6,7 @@
   , "dependencies": {  	 
       "express"           : "3.0.0rc2"    
     , "less-middleware"   : "latest"
+    , "underscore"        : "latest"    
     , "jade"              : "latest"
     , "pg"                : "0.7.2"
     , "sequelize"         : ">= 1.4.1"
@@ -16,7 +17,8 @@
     , "i18n"              : "latest"
     , "config"            : "latest"
     , "passport"          : "latest"
-    , "passport-twitter"  : "latest"
+    , "passport-twitter"  : "latest"    
+    , "twit"              : "latest"
     , "jquest-mission"    : "latest"
   }
   , "engines": {

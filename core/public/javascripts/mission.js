@@ -36,6 +36,8 @@
       that.initElements();
       that.hideSplashscreen();
       that.startQuestionCountdown();
+      // Loads twitter widgets
+      if(window.twttr) window.twttr.widgets.load();        
     });
 
   };
