@@ -10,21 +10,50 @@
  * @author  Pirhoo <pirhoo@jplusplus.org>
  */
 
-  // Express Framework
+   /**
+    * Express Framework
+    * @type {Object}
+    */
 var express        = require('express')
-  // Filesystem manager
+   /**
+    * Filesystem manager
+    * @type {Object}
+    */
   , fs             = require('fs')
-  // Data ORM
+   /**
+    * Data ORM
+    * @type {Sequelize}
+    */
   , Sequelize      = require('sequelize')  
-  // Locales manager
+   /**
+    * Locales manager
+    * @type {Object}
+    */
   , i18n           = require("i18n")
-  // Less middle ware
+   /**
+    * Less middle ware
+    * @type {Object}
+    */
   , lessMiddleware = require("less-middleware")
-  // Environement configuration
+   /**
+    * Environement configuration from 
+    * a singleton instance of Config.
+    *
+    * The configurationfile is now accessible 
+    * from global.NODE_CONFIG.
+    * 
+    * @type {Object}
+    */
   , config         = require("config")
-  // Authentification module  
+   /**
+    * Authentification module  
+    * @type {Object}
+    */
   , passport       = require("passport");  
-  // Stop watching for file changes
+   /**
+    * Stop watching for file changes
+    * @type {Object}
+    */
   config.watchForConfigFileChanges(0);
 
 
@@ -180,10 +209,6 @@ exports.boot = function(){
     
     app.set('views', __dirname + '/core/views');
     app.set('view engine', 'jade');
-
-    // add the config object to the app to be accessible in the sub modules
-    app.config = config;
-    
     
     /************************************
      * Client requests
@@ -211,8 +236,6 @@ exports.boot = function(){
     passport.deserializeUser(function(obj, done) {
       app.models.User.find(obj).complete(done);
     });
-
-
 
     // Less middle ware to auto-compile less files
     app.use(lessMiddleware({
