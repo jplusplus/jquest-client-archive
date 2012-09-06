@@ -327,6 +327,8 @@ exports.boot = function(){
    ************************************/    
   // Database configuration
   var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
+  // Set query logging to false
+  dbConfig.logging = false;
   // Database instance 
   sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
   // Sync the database with the object models

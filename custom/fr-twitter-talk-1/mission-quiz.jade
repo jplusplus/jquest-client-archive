@@ -11,7 +11,7 @@ case mission.state
         .pull-left.right20.time 00:00
         //- Display as progress bar        
         .progress
-          .bar 
+          .bar
 
     .content
       
@@ -30,6 +30,8 @@ case mission.state
 
       //- Encrypted solution
       input(type="hidden", name="quiz-solution", value=question.solution)
+      //- Id of the current question
+      input(type="hidden", name="question", value=question.id)
 
       //- Answers list
       .row.answers
@@ -53,10 +55,15 @@ case mission.state
       }(document, "script", "twitter-wjs"));      
 
   when "succeed"
-      h2 Congratulations!
-      p You win buddy!              
+    h2 Congratulations!
+    p You win buddy!              
 
   when "failed"
-      h2 Oh my gosh dude, you did something realy bad
-      p You should try again
-
+    - var qs = mission.countQuestionSuccess();
+    if qs == 0
+      h2="O " + qs + " question correcte sur " + mission.questionsNumber
+    else if qs == 1
+      h2="Seulement " + qs + " question correcte sur " + mission.questionsNumber
+    else
+      h2="Seulement " + qs + " questions correctes sur " + mission.questionsNumber
+    p Il faudrait mieux réviser avant de relacer le test

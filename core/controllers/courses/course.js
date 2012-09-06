@@ -98,7 +98,7 @@ module.exports = function(_app) {
 					course    			: results[0],
 					// Every chapters in this course
 					chapters  			: results[1],
-					// Ordering chapters (Z order, ie : 1,2,3, 6,5,4, 7,8,9, 12,11,10,...)
+					// Ordering chapters (Z order, ie : 1,2, 4,3, 5,6, 8,7, 9,10...)
 					chaptersOrdered : chaptersCtrl.getZOrder( results[1] ),
 					// User's progression array
 					progress  			: results[2],

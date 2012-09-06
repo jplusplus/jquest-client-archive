@@ -9,6 +9,7 @@ block stylesheets
 block scripts
   script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
   script(src="/javascripts/functions.utils.js", type="text/javascript")
+  script(src="/javascripts/courses.js", type="text/javascript")
   script(src="/javascripts/mission.js", type="text/javascript")
 
 block body
@@ -40,19 +41,44 @@ block body
           //- if we are not playing a classic game 
           if mission.type == "classic" || mission.state != "game"
             .well.well-small
-              .pull-left
-                a(class="btn right10", href=_("/courses/") + course.slug )=_("Back to the list")   
-              .tr
+              .row              
                 case mission.state
+                  
                   when "game"
-                    button(type="submit",class="btn btn-primary")=_("Next")
-                  when "failed"
-                    a(class="btn right10", href=_("/courses/") + course.slug + "/" + chapter.slug )=_("Read the chapter again")                
-                    button(type="submit",class="btn btn-primary")=_("Try again!")
-                  when "succeed"
+                    .pull-right
+                      button.btn.btn-primary(type="submit")
+                        =_("Next")
+                        i.icon-arrow-right.icon-white.left05
+                  
+                  when "success"
+                    .span3.tl                      
+                      a.btn.btn-primary(href=_("/courses/") + course.slug + "/" + chapter.slug )
+                        i.icon-arrow-left.icon-white.right05
+                        =_("Read the chapter again")  
+                    .span3.tc 
+                      button.btn(type="submit")                       
+                        i.icon-repeat.right05                      
+                        =_("Play again")
                     if(nextChapter)
-                      a(href=_("/courses/") + course.slug + "/" + nextChapter.slug, class="btn btn-primary")=_("Next chapter")
+                      .pull-right
+                        a.btn.btn-primary(href=_("/courses/") + course.slug + "/" + nextChapter.slug)
+                          =_("Next chapter")
+                          i.icon-arrow-right.icon-white.left05
+
+                  when "failed"
+                    .span3.tl                      
+                      a.btn.btn-primary(href=_("/courses/") + course.slug + "/" + chapter.slug )
+                        i.icon-arrow-left.icon-white.right05
+                        =_("Read the chapter again")                
+                    .span3.tc
+                      button.btn(type="submit")
+                        i.icon-repeat.right05                      
+                        =_("Try again")
+                  
               .clearfix
+
+        h2=_("My journey")
+        .my-journey.row.top20(data-course=course.slug)
 
     
       .span3

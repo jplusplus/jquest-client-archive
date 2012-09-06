@@ -1,4 +1,4 @@
-(function(window, undefined) {
+new (function(window, undefined) {
 
   var that = this;
 
@@ -169,7 +169,7 @@
         if( ! data.isComplete ) that.newQuestion();
         // Reload the page to display the final one
         else window.location.reload()
-      }, 3000);
+      }, 1000);
 
     }, "json");
 

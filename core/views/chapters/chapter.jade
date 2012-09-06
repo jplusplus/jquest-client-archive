@@ -7,6 +7,8 @@ block stylesheets
   link(href="/stylesheets/style.css", type='text/css', rel="stylesheet")
 
 block scripts
+  script(src="/javascripts/functions.utils.js", type="text/javascript")
+  script(src="/javascripts/courses.js", type="text/javascript")
   script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
 
 block body
@@ -22,12 +24,15 @@ block body
   .container
     .row
       //- chapter.content must be read as an HTML content
-      .span8
+      .span9
         !=chapter.content
         p.tr.top20
           a.btn.btn-large.btn-primary(href=_("/courses/") + course.slug + "/" + chapter.slug + "/mission")=_("Start the mission!") 
+
+        h2=_("My journey")
+        .my-journey.row.top20(data-course=course.slug)
       
-      .span3.offset1
+      .span3
         include ../layouts/progress-menu
         
   include ../layouts/footer

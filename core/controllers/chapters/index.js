@@ -122,9 +122,10 @@ module.exports.getNextChapter = function(chapter, complete) {
  *    1,2,3, 6,5,4, 7,8,9, null,11,10
  * @return array
  */
-module.exports.getZOrder = function(chapters) {
+module.exports.getZOrder = function(chapters, lineLength) {
 
-  var finalChapters = [];  
+  var finalChapters = [];      
+  if(typeof lineLength !== "number") lineLength = 2;
 
   // First, record the parent of every chapter
   for(var index in chapters) {
@@ -136,16 +137,16 @@ module.exports.getZOrder = function(chapters) {
   // Second, sets the Z order
   for(index = 0; index < chapters.length; index++) {
 
-    for(step = 0; step < 3 && index + step < chapters.length; step++) {
+    for(step = 0; step < lineLength && index + step < chapters.length; step++) {
       finalChapters.push( chapters[index + step] );
     }
 
-    index += 3;
+    index += lineLength;
     if(index < chapters.length) {
 
-      index += 2;
+      index += lineLength-1;
 
-      for(step = 0; step < 3; step++) {
+      for(step = 0; step < lineLength; step++) {
         if(index - step < chapters.length) 
           finalChapters.push( chapters[index - step] );
         else
