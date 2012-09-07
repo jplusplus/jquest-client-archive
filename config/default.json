@@ -22,5 +22,11 @@
 	},
 	"salts": {
 		"cookies" : "L7mdcS4k5JzIepqwTaVdTGp4uZi4iIYF0ht2bkET"
+	},
+	"memcached": {
+		"servers"  : "127.0.0.1",
+ 		"username" : "GS7xVa3BFwAH3ftb5Uau9am",
+ 		"password" : "GS7xVa3BFwAH3ftb5Uau9am",
+ 		"expires"	 : 120
 	}
 }

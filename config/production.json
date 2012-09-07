@@ -6,5 +6,11 @@
 	},
 	"api":{
 		"hostname": "http://jquest.oeildupirate.com"
-	}
+	},
+  "memcached": {
+    "servers"  : "mc1.eu.ec2.memcachier.com",
+    "username" : "ecd17f",
+    "password" : "3eaf2c351a6cc6458be2",
+    "expires"  : 3600
+  }
 }

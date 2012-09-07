@@ -45,11 +45,17 @@ var express        = require('express')
     * @type {Object}
     */
   , config         = require("config")
+  /**
+   * Memcached class to instanciate a memcached client
+   * @type {Object}
+   */
+  , memjs          = require('memjs')
    /**
     * Authentification module  
     * @type {Object}
     */
-  , passport       = require("passport");  
+  , passport       = require("passport");
+
    /**
     * Stop watching for file changes
     * @type {Object}
@@ -305,10 +311,46 @@ exports.boot = function(){
 
 
     /************************************
+     * Database synchronisation
+     ************************************/    
+    // Database configuration
+    var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
+    // Set query logging to false
+    dbConfig.logging = false;
+    // Database instance 
+    sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
+    // Sync the database with the object models
+    sequelize.sync({force: false && app.settings.env == "development"});
+
+
+    /************************************
+     * Cache client
+     ************************************/    
+    // Creates the memcached client
+    app.memcached = new memjs.Client.create();
+    //app.memcached.flush();
+
+    /*****************************************
+     * Models, views and mission encapsulation
+     *****************************************/  
+    app.controllers = {};
+    app.models      = {};
+    app.missions    = {};
+    // Import all models from the /models directory
+    // @warning Needs the Sequelize database instanced before 
+    importAllModels(__dirname + "/core/models", app.models);
+    // Load all controllers from the /controllers directory
+    loadAllRequires(__dirname + "/core/controllers", app.controllers, true);
+    // Load all mission's class
+    loadAllMissions(__dirname + "/custom", app.missions);
+
+
+    /************************************
      * Configure router      
      ************************************/   
     // @warning Needs to be after the helpers
     app.use(app.router);
+
 
   });
 
@@ -321,33 +363,6 @@ exports.boot = function(){
     app.use( express.errorHandler() );
   });
 
-
-  /************************************
-   * Database synchronisation
-   ************************************/    
-  // Database configuration
-  var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
-  // Set query logging to false
-  dbConfig.logging = false;
-  // Database instance 
-  sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
-  // Sync the database with the object models
-  sequelize.sync({force: false && app.settings.env == "development"});
-
-
-  /*****************************************
-   * Models, views and mission encapsulation
-   *****************************************/  
-  app.controllers = {};
-  app.models      = {};
-  app.missions    = {};
-  // Import all models from the /models directory
-  // @warning Needs the Sequelize database instanced before 
-  importAllModels(__dirname + "/core/models", app.models);
-  // Load all controllers from the /controllers directory
-  loadAllRequires(__dirname + "/core/controllers", app.controllers, true);
-  // Load all mission's class
-  loadAllMissions(__dirname + "/custom", app.missions);
 
   return app;
 

@@ -10,6 +10,7 @@
     , "jade"              : "latest"
     , "pg"                : "0.7.2"
     , "sequelize"         : ">= 1.4.1"
+    , "memjs"             : "latest"
     , "enc"               : "0.2.0"
     , "restler"           : "latest"
     , "memory-cache"      : "latest"
