@@ -327,7 +327,7 @@ exports.boot = function(){
      * Cache client
      ************************************/    
     // Creates the memcached client
-    app.memcached = new memjs.Client.create();
+    app.memcached = new memjs.Client.create(config.memcached.servers, config.memcached);
     //app.memcached.flush();
 
     /*****************************************
