@@ -224,6 +224,23 @@ exports.boot = function(){
     app.use(express.cookieParser(config.salts.cookies));
     app.use(express.session());   
 
+    // Less middle ware to auto-compile less files
+    app.use(lessMiddleware({
+      src: __dirname + '/core/public',
+      // Compress the files
+      compress: true
+    }));
+
+    // Public directory
+    // This line must be above the passport binding
+    // to avoid multiple Passport deserialization.
+    app.use(express.static(__dirname + '/core/public'));
+
+
+    /************************************
+     * User authentification
+     ************************************/ 
+
     // Authentification with passport
     app.use(passport.initialize());
     app.use(passport.session());  
@@ -242,16 +259,6 @@ exports.boot = function(){
     passport.deserializeUser(function(obj, done) {
       app.models.User.find(obj).complete(done);
     });
-
-    // Less middle ware to auto-compile less files
-    app.use(lessMiddleware({
-      src: __dirname + '/core/public',
-      // Compress the files
-      compress: true
-    }));
-
-    // Public directory
-    app.use(express.static(__dirname + '/core/public'));
 
 
     /************************************
@@ -315,12 +322,12 @@ exports.boot = function(){
      ************************************/    
     // Database configuration
     var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
-    // Set query logging to false
-    dbConfig.logging = false;
+    // Set query logging on for development mode
+    dbConfig.logging = app.settings.env == "development" ? console.log : false;
     // Database instance 
     sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
     // Sync the database with the object models
-    sequelize.sync({force: false && app.settings.env == "development"});
+    sequelize.sync({force: false&&app.settings.env == "development"});
 
 
     /************************************
