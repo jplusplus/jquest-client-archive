@@ -141,12 +141,16 @@ h1, h2, h3, h4, .brand, fieldset legend {
 		position: relative;
 
 		h4 {
-			margin-left:40px;
+			margin-left:60px;
+		}
+
+		&:hover .thumb img {
+			height:110%;
 		}
 
 		.thumb {
 			float:left;
-			width:40px;
+			width:50px;
 			height:100%;
 			background:white;
 			overflow: hidden;
@@ -167,12 +171,13 @@ h1, h2, h3, h4, .brand, fieldset legend {
 				position:absolute;
 				top:0;
 				left:0;
+				.transition(3s);
   		}
 		}
 
 		.points {
 			display:block;
-			margin-left:40px;
+			margin-left:60px;
 			font-size:10px;
 			color:@gray;
 			text-transform: uppercase;			
@@ -213,6 +218,13 @@ h1, h2, h3, h4, .brand, fieldset legend {
 			margin-top:-12px;
 		}
 
+		&.west.north {
+			top:-32px;
+			left:50%;
+			margin-left:-12px;		
+			.rotate(90deg);
+		}
+
 		&.east.equal {
 			top:50%;
 			right:-61px;
@@ -226,6 +238,8 @@ h1, h2, h3, h4, .brand, fieldset legend {
 			margin-left:-12px;		
 			.rotate(90deg);
 		}
+
+
 
 	}
 

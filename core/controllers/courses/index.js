@@ -1,16 +1,21 @@
    var rest = require('restler')
     , async = require('async')
-    , cache = require('memory-cache')
     ,  i18n = require("i18n")
    , config = require("config")
 , usersCtrl = require("../users");
+
+// Global app
+var app = null;
 
 /**
  * @author Pirhoo
  * @description Courses route binder
  *
  */
-module.exports = function(app) {
+module.exports = function(_app) {
+
+  // Save app
+  app = _app;
 
 	/*
 	 * GET topics page.
@@ -46,10 +51,16 @@ module.exports.getCourses = function(lang, complete) {
     // Get data from cache first
     function getFromCache(fallback) { 
 
-      // Get the course from the cache
-      if( !! cache.get('courses-list--'+lang) ) complete( cache.get('courses-list--'+lang) );
-      // Or get the colletion from the fallback function
-      else fallback();
+      // Get the courses from the cache
+      app.memcached.get('courses-list--'+lang, function(err, value) {            
+
+        // Gets the colletion from the fallback function
+        if(err != null || value == null) fallback();
+        // Parse the received string
+        else complete( JSON.parse( unescape(value.toString()) ) );        
+
+      });
+
     },
     // Get data from the API 
     function getFromAPI() {
@@ -57,8 +68,11 @@ module.exports.getCourses = function(lang, complete) {
       // get_category_index request from the external "WordPress API"
       rest.get(config.api.hostname + "/api/get_category_index/?lang="+lang).on("complete", function(data) {
 
+        // Escapes and stringify the categories
+        var categories = escape( JSON.stringify( data.categories || [] ) );
+
         // Put the data in the cache 
-        cache.put('courses-list--'+lang, data.categories || []);
+        app.memcached.set('courses-list--'+lang, categories);
 
         // Call the complete function
         complete( data.categories  || []);
@@ -80,9 +94,13 @@ module.exports.getCourseBySlug = function(slug, complete) {
     // Get data from cache first
     function getFromCache(fallback) {      
       // Get the course from the cache
-      if( !! cache.get('course--'+slug) ) complete( cache.get('course--'+slug) );
-      // Or get the colletion from the fallback function
-      else fallback();
+      app.memcached.get('course--'+slug, function(err, value) {
+
+        // Gets the colletion from the fallback function
+        if(err != null || value == null) fallback();
+        // Parse the received string
+        else complete( JSON.parse( unescape(value.toString()) ) );
+      });
     },
     // Get data from the API 
     function getFromAPI() {
@@ -90,8 +108,11 @@ module.exports.getCourseBySlug = function(slug, complete) {
       // get_category_index request from the external "WordPress API"
       rest.get(config.api.hostname + "/category/"+slug+"?lang=auto&json=1&post_type=jquest_chapter&count=10000&order_by=parent&order=ASC").on("complete", function(data) {
 
+        // Escapes and stringify the category
+        var category = escape( JSON.stringify( data.category || []) );
+
         // Put the data in the cache 
-        cache.put('course--'+slug, data.category || null);
+        app.memcached.set('course--'+slug, category);
 
         // Call the complete function
         complete( data.category  || null);

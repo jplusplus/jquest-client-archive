@@ -80,9 +80,9 @@ module.exports = function(app) {
 
 					// Render on the course view
 					res.render('chapters/chapter', {				
-						title: 		results.chapter.title + " ‹ " + results.course.title,
-						course: 	results.course,
-						chapter: 	results.chapter
+						title 	 				: results.chapter.title + " ‹ " + results.course.title,
+						course  				: results.course,
+						chapter 				: results.chapter
 					});
 
 		    }

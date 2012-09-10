@@ -1,15 +1,20 @@
 var rest = require('restler')
  , async = require('async')
- , cache = require('memory-cache')
 , config = require("config")
  , users = require("../users");
+
+// app global object
+var app;
 
 /**
  * @author Pirhoo
  * @description Chapters route binder
  *
  */
-module.exports = function(app) {
+module.exports = function(_app) {  
+
+  app = _app;
+
 	/*
 	 * GET chapters page.
 	 */
@@ -30,20 +35,25 @@ module.exports.getChaptersByCourse = function(slug, complete) {
 
   async.series([
     // Get data from cache first
-    function getFromCache(fallback) {      
-      // Get the course from the cache
-      if( !! cache.get(cacheSlug) ) complete( cache.get(cacheSlug) );
-      // Or get the colletion from the fallback function
-      else fallback();
+    function getFromCache(fallback) {
+      // Get the chapters from the cache
+      app.memcached.get(cacheSlug, function(err, value) {    
+        // Gets the chapters from the fallback function
+        if(err != null || value == null ) fallback();
+        // Parse the received string
+        else complete( JSON.parse( unescape(value.toString()) ) );
+      });
     },
     // Get data from the API 
     function getFromAPI() {      
-
       // get_category_index request from the external "WordPress API"
       rest.get(config.api.hostname + "/category/" + slug + "/?json=1&post_type=jquest_chapter&count=50&order_by=parent&order=ASC").on("complete", function(data) {
         
+        // Escapes and stringify the chapters
+        var chapters = escape( JSON.stringify( data.posts || []) );
+
         // Put the data in the cache 
-        cache.put(cacheSlug, data.posts || []);
+        app.memcached.set(cacheSlug, chapters);
 
         // Call the complete functions
         complete( data.posts  || []);
@@ -65,10 +75,13 @@ module.exports.getChapterBySlug = function(id, complete) {
   async.series([
     // Get data from cache first
     function getFromCache(fallback) {      
-      // Get the course from the cache
-      if( !! cache.get(slug) ) complete( cache.get(slug) );
-      // Or get the colletion from the fallback function
-      else fallback();
+      // Get the chapter from the cache
+      app.memcached.get(slug, function(err, value) {
+        // Gets the chapter from the fallback function
+        if(err != null || value == null) fallback();
+        // Parse the received string
+        else complete( JSON.parse( unescape(value.toString()) ) );
+      });
     },
     // Get data from the API 
     function getFromAPI() {      
@@ -77,9 +90,12 @@ module.exports.getChapterBySlug = function(id, complete) {
       rest
         .get(config.api.hostname + "/?json=get_post&post_type=jquest_chapter&slug="+id)
         .on("complete", function(data) {
-                    
+          
+          // Escapes and stringify the chapter
+          var chapter = escape( JSON.stringify( data.post || []) );
+
           // Put the data in the cache 
-          cache.put(slug, data.post || []);
+          app.memcached.set(slug, chapter);
 
           // Call the complete functions
           complete( data.post  || []);
@@ -122,9 +138,10 @@ module.exports.getNextChapter = function(chapter, complete) {
  *    1,2,3, 6,5,4, 7,8,9, null,11,10
  * @return array
  */
-module.exports.getZOrder = function(chapters) {
+module.exports.getZOrder = function(chapters, lineLength) {
 
-  var finalChapters = [];  
+  var finalChapters = [];      
+  if(typeof lineLength !== "number") lineLength = 2;
 
   // First, record the parent of every chapter
   for(var index in chapters) {
@@ -136,16 +153,16 @@ module.exports.getZOrder = function(chapters) {
   // Second, sets the Z order
   for(index = 0; index < chapters.length; index++) {
 
-    for(step = 0; step < 3 && index + step < chapters.length; step++) {
+    for(step = 0; step < lineLength && index + step < chapters.length; step++) {
       finalChapters.push( chapters[index + step] );
     }
 
-    index += 3;
+    index += lineLength;
     if(index < chapters.length) {
 
-      index += 2;
+      index += lineLength-1;
 
-      for(step = 0; step < 3; step++) {
+      for(step = 0; step < lineLength; step++) {
         if(index - step < chapters.length) 
           finalChapters.push( chapters[index - step] );
         else

@@ -1,4 +1,4 @@
-(function(window, undefined) {
+new (function(window, undefined) {
 
   var that = this;
 
@@ -26,7 +26,7 @@
 
     // Toggle the classes on the btn
     $solution.parents(".btn").addClass("btn-success");
-    $checked.parents(".btn").toggleClass("btn-danger",  ! $checked.hasClass("btn-success") );
+    $checked.parents(".btn").filter(":not(.btn-success)").addClass("btn-danger");
   };
 
   that.newQuestion = function() {
@@ -36,6 +36,8 @@
       that.initElements();
       that.hideSplashscreen();
       that.startQuestionCountdown();
+      // Loads twitter widgets
+      if(window.twttr) window.twttr.widgets.load();        
     });
 
   };
@@ -167,7 +169,7 @@
         if( ! data.isComplete ) that.newQuestion();
         // Reload the page to display the final one
         else window.location.reload()
-      }, 3000);
+      }, 1000);
 
     }, "json");
 
@@ -179,7 +181,7 @@
     that.initElements();  
 
     // Remove the splashscreen in a few second
-    if(that.el.$splashscreen.length) setTimeout(function() { that.updateSplashscreen(0) }, 1000);
+    if(that.el.$splashscreen.length) setTimeout(function() { that.updateSplashscreen(4) }, 1000);
 
     // Auto-submit for the quiz forms
     that.el.$mission.on('change', function() {        

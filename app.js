@@ -10,26 +10,61 @@
  * @author  Pirhoo <pirhoo@jplusplus.org>
  */
 
-  // Express Framework
+   /**
+    * Express Framework
+    * @type {Object}
+    */
 var express        = require('express')
-  // Filesystem manager
+   /**
+    * Filesystem manager
+    * @type {Object}
+    */
   , fs             = require('fs')
-  // Data ORM
+   /**
+    * Data ORM
+    * @type {Sequelize}
+    */
   , Sequelize      = require('sequelize')  
-  // Locales manager
+   /**
+    * Locales manager
+    * @type {Object}
+    */
   , i18n           = require("i18n")
-  // Less middle ware
+   /**
+    * Less middle ware
+    * @type {Object}
+    */
   , lessMiddleware = require("less-middleware")
-  // Environement configuration
+   /**
+    * Environement configuration from 
+    * a singleton instance of Config.
+    *
+    * The configurationfile is now accessible 
+    * from global.NODE_CONFIG.
+    * 
+    * @type {Object}
+    */
   , config         = require("config")
-  // Authentification module  
-  , passport       = require("passport");  
-  // Stop watching for file changes
+  /**
+   * Memcached class to instanciate a memcached client
+   * @type {Object}
+   */
+  , memjs          = require('memjs')
+   /**
+    * Authentification module  
+    * @type {Object}
+    */
+  , passport       = require("passport");
+
+   /**
+    * Stop watching for file changes
+    * @type {Object}
+    */
   config.watchForConfigFileChanges(0);
 
 
 /**
- * Global objects
+ * @type {Object}
  */
 var app = sequelize = null;
 
@@ -180,10 +215,6 @@ exports.boot = function(){
     
     app.set('views', __dirname + '/core/views');
     app.set('view engine', 'jade');
-
-    // add the config object to the app to be accessible in the sub modules
-    app.config = config;
-    
     
     /************************************
      * Client requests
@@ -192,6 +223,23 @@ exports.boot = function(){
     app.use(express.methodOverride());
     app.use(express.cookieParser(config.salts.cookies));
     app.use(express.session());   
+
+    // Less middle ware to auto-compile less files
+    app.use(lessMiddleware({
+      src: __dirname + '/core/public',
+      // Compress the files
+      compress: true
+    }));
+
+    // Public directory
+    // This line must be above the passport binding
+    // to avoid multiple Passport deserialization.
+    app.use(express.static(__dirname + '/core/public'));
+
+
+    /************************************
+     * User authentification
+     ************************************/ 
 
     // Authentification with passport
     app.use(passport.initialize());
@@ -211,18 +259,6 @@ exports.boot = function(){
     passport.deserializeUser(function(obj, done) {
       app.models.User.find(obj).complete(done);
     });
-
-
-
-    // Less middle ware to auto-compile less files
-    app.use(lessMiddleware({
-      src: __dirname + '/core/public',
-      // Compress the files
-      compress: true
-    }));
-
-    // Public directory
-    app.use(express.static(__dirname + '/core/public'));
 
 
     /************************************
@@ -282,10 +318,46 @@ exports.boot = function(){
 
 
     /************************************
+     * Database synchronisation
+     ************************************/    
+    // Database configuration
+    var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
+    // Set query logging on for development mode
+    dbConfig.logging = app.settings.env == "development" ? console.log : false;
+    // Database instance 
+    sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
+    // Sync the database with the object models
+    sequelize.sync({force: false&&app.settings.env == "development"});
+
+
+    /************************************
+     * Cache client
+     ************************************/    
+    // Creates the memcached client
+    app.memcached = new memjs.Client.create(config.memcached.servers, config.memcached);
+    //app.memcached.flush();
+
+    /*****************************************
+     * Models, views and mission encapsulation
+     *****************************************/  
+    app.controllers = {};
+    app.models      = {};
+    app.missions    = {};
+    // Import all models from the /models directory
+    // @warning Needs the Sequelize database instanced before 
+    importAllModels(__dirname + "/core/models", app.models);
+    // Load all controllers from the /controllers directory
+    loadAllRequires(__dirname + "/core/controllers", app.controllers, true);
+    // Load all mission's class
+    loadAllMissions(__dirname + "/custom", app.missions);
+
+
+    /************************************
      * Configure router      
      ************************************/   
     // @warning Needs to be after the helpers
     app.use(app.router);
+
 
   });
 
@@ -298,31 +370,6 @@ exports.boot = function(){
     app.use( express.errorHandler() );
   });
 
-
-  /************************************
-   * Database synchronisation
-   ************************************/    
-  // Database configuration
-  var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
-  // Database instance 
-  sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
-  // Sync the database with the object models
-  sequelize.sync({force: app.settings.env == "development"});
-
-
-  /*****************************************
-   * Models, views and mission encapsulation
-   *****************************************/  
-  app.controllers = {};
-  app.models      = {};
-  app.missions    = {};
-  // Import all models from the /models directory
-  // @warning Needs the Sequelize database instanced before 
-  importAllModels(__dirname + "/core/models", app.models);
-  // Load all controllers from the /controllers directory
-  loadAllRequires(__dirname + "/core/controllers", app.controllers, true);
-  // Load all mission's class
-  loadAllMissions(__dirname + "/custom", app.missions);
 
   return app;
 

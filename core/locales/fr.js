@@ -78,5 +78,8 @@
 	"The mission begins in 4 seconds": "The mission begins in 4 seconds",
 	"Push a button to select an answer": "Push a button to select an answer",
 	"The mission is about to begin in % seconds.": "The mission is about to begin in % seconds.",
-	"The mission is about to begin in % second.": "The mission is about to begin in % second."
+	"The mission is about to begin in % second.": "The mission is about to begin in % second.",
+	"My journey": "My journey",
+	"Try again": "Try again",
+	"Play again": "Play again"
 }
