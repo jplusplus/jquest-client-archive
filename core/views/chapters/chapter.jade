@@ -29,13 +29,15 @@ block body
         p.tr.top20
           a.btn.btn-large.btn-primary(href=_("/courses/") + course.slug + "/" + chapter.slug + "/mission")=_("Start the mission!") 
 
-        
-        //- Must be in a relative block for a relative js overlay
-        .relative
-          h2=_("My journey")
-          .my-journey.row.top20(data-course=course.slug)
-      
       .span3
         include ../layouts/progress-menu
+
+  //- Must be in a relative block for a relative js overlay  
+  .my-journey-head
+    .container
+      h2=_("My journey")
+      //- Dynamicly completed
+      .my-journey.row.top20(data-course=course.slug)
+      
         
   include ../layouts/footer
