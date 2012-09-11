@@ -61,7 +61,7 @@ case mission.state
   when "failed"
     - var qs = mission.countQuestionSuccess();
     if qs == 0
-      h2="O " + qs + " question correcte sur " + mission.questionsNumber
+      h2="0 question correcte sur " + mission.questionsNumber
     else if qs == 1
       h2="Seulement " + qs + " question correcte sur " + mission.questionsNumber
     else
