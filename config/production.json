@@ -1,5 +1,6 @@
 {
 	"port": false,
+  "host": "http://jquest.herokuapp.com",
 	"db": {
 	  "uri": false
 	},

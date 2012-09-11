@@ -37,9 +37,9 @@ module.exports.getChaptersByCourse = function(slug, complete) {
     // Get data from cache first
     function getFromCache(fallback) {
       // Get the chapters from the cache
-      app.memcached.get(cacheSlug, function(err, value) {    
+      app.memcached.get(cacheSlug, function(err, value) {
         // Gets the chapters from the fallback function
-        if(err != null || value == null ) fallback();
+        if(err != null || value == null || !value.length ) fallback();
         // Parse the received string
         else complete( JSON.parse( unescape(value.toString()) ) );
       });
@@ -78,7 +78,7 @@ module.exports.getChapterBySlug = function(id, complete) {
       // Get the chapter from the cache
       app.memcached.get(slug, function(err, value) {
         // Gets the chapter from the fallback function
-        if(err != null || value == null) fallback();
+        if(err != null ||  value == null || !value.length) fallback();
         // Parse the received string
         else complete( JSON.parse( unescape(value.toString()) ) );
       });
