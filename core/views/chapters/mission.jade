@@ -77,8 +77,10 @@ block body
                   
               .clearfix
 
-        h2=_("My journey")
-        .my-journey.row.top20(data-course=course.slug)
+        //- Must be in a relative block for a relative js overlay
+        .relative
+          h2=_("My journey")
+          .my-journey.row.top20(data-course=course.slug)
 
     
       .span3
