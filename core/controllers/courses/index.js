@@ -55,7 +55,7 @@ module.exports.getCourses = function(lang, complete) {
       app.memcached.get('courses-list--'+lang, function(err, value) {            
 
         // Gets the colletion from the fallback function
-        if(err != null || value == null) fallback();
+        if(err != null ||  value == null || !value.length) fallback();
         // Parse the received string
         else complete( JSON.parse( unescape(value.toString()) ) );        
 
@@ -69,13 +69,13 @@ module.exports.getCourses = function(lang, complete) {
       rest.get(config.api.hostname + "/api/get_category_index/?lang="+lang).on("complete", function(data) {
 
         // Escapes and stringify the categories
-        var categories = escape( JSON.stringify( data.categories || [] ) );
+        var categories = escape( JSON.stringify( data.categories ) );
 
         // Put the data in the cache 
         app.memcached.set('courses-list--'+lang, categories);
 
         // Call the complete function
-        complete( data.categories  || []);
+        complete( data.categories );
 
       });
     }        
@@ -97,7 +97,7 @@ module.exports.getCourseBySlug = function(slug, complete) {
       app.memcached.get('course--'+slug, function(err, value) {
 
         // Gets the colletion from the fallback function
-        if(err != null || value == null) fallback();
+        if(err != null ||  value == null || !value.length) fallback();
         // Parse the received string
         else complete( JSON.parse( unescape(value.toString()) ) );
       });
@@ -107,15 +107,15 @@ module.exports.getCourseBySlug = function(slug, complete) {
 
       // get_category_index request from the external "WordPress API"
       rest.get(config.api.hostname + "/category/"+slug+"?lang=auto&json=1&post_type=jquest_chapter&count=10000&order_by=parent&order=ASC").on("complete", function(data) {
-
+        
         // Escapes and stringify the category
-        var category = escape( JSON.stringify( data.category || []) );
+        var category = escape( JSON.stringify( data.category ) );
 
         // Put the data in the cache 
         app.memcached.set('course--'+slug, category);
 
         // Call the complete function
-        complete( data.category  || null);
+        complete( data.category );
 
       });
     }        
