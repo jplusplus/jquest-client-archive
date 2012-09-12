@@ -76,12 +76,16 @@ block body
                         =_("Try again")
                   
               .clearfix
-
-        h2=_("My journey")
-        .my-journey.row.top20(data-course=course.slug)
-
-    
       .span3
         include ../layouts/progress-menu
+
+  //- Must be in a relative block for a relative js overlay  
+  .my-journey-head
+    .container
+      h2=_("My journey")
+      //- Dynamicly completed
+      .my-journey.row.top20(data-course=course.slug)
+
+    
         
   include ../layouts/footer
