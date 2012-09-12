@@ -81,5 +81,7 @@
 	"The mission is about to begin in % second.": "The mission is about to begin in % second.",
 	"My journey": "My journey",
 	"Try again": "Try again",
-	"Play again": "Play again"
+	"Play again": "Play again",
+	"Connexion failed": "Connexion failed",
+	"Unable to connect to jQuest.": "Unable to connect to jQuest."
 }
