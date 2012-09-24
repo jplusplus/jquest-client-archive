@@ -140,4 +140,4 @@ function createUserOauth(user, profile, token, tokenSecret, done) {
  */
 function failedPage(req, res) {
 	res.render('users/login-failed');
-}
+}i
