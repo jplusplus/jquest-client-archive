@@ -83,5 +83,7 @@
 	"Try again": "Try again",
 	"Play again": "Play again",
 	"Connexion failed": "Connexion failed",
-	"Unable to connect to jQuest.": "Unable to connect to jQuest."
+	"Unable to connect to jQuest.": "Unable to connect to jQuest.",
+	"Edit courses ‹ Admin": "Edit courses ‹ Admin",
+	"Edit courses": "Edit courses"
 }

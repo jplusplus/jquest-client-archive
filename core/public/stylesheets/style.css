@@ -61,7 +61,7 @@ h1,h2,h3,h4,.brand,fieldset legend{font-family:'Share',sans-serif;text-shadow:1p
 .btn input{display:none;}
 .well-header{margin:-19px;margin-bottom:19px;padding:19px;padding-bottom:0;border-bottom:1px solid rgba(0, 0, 0, 0.1);position:relative;-webkit-box-shadow:0 1px 0 0 #ffffff;-moz-box-shadow:0 1px 0 0 #ffffff;box-shadow:0 1px 0 0 #ffffff;}.well-header.well-large{margin:-24px;margin-bottom:24px;padding:24px;padding-bottom:0;border-bottom:1px solid rgba(0, 0, 0, 0.1);position:relative;-webkit-box-shadow:0 1px 0 0 #ffffff;-moz-box-shadow:0 1px 0 0 #ffffff;box-shadow:0 1px 0 0 #ffffff;}
 .well-header.well-small{margin:-9px;margin-bottom:9px;padding:9px;padding-bottom:0;border-bottom:1px solid rgba(0, 0, 0, 0.1);position:relative;-webkit-box-shadow:0 1px 0 0 #ffffff;-moz-box-shadow:0 1px 0 0 #ffffff;box-shadow:0 1px 0 0 #ffffff;}
-.navbar{margin-bottom:0;}.navbar a.padding0{padding:0 !important;}
+.navbar{margin-bottom:3px;}.navbar a.padding0{padding:0 !important;}
 .navbar .main-link{font-family:'Share',sans-serif;font-size:16px;margin-right:10px;}
 .navbar .log-in{white-space:nowrap;padding:10px;}.navbar .log-in label{margin:0;margin-bottom:5px;display:block;color:#333333;}.navbar .log-in label.checkbox{margin-top:5px;margin-bottom:0px;}
 .navbar .log-in a{color:#00749b;padding-top:0;}
