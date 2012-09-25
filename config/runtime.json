@@ -1,6 +1,0 @@
-{
-  "memcached": {
-    "timeout": 0.5,
-    "retries": 2
-  }
-}

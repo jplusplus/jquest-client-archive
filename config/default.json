@@ -28,5 +28,16 @@
     "username" : "55d0f4",
     "password" : "7bc199029d6bc5ebfce9",
     "expires"  : 3600
+  },
+  "mail" : {
+	  "host": "mail.gandi.net",
+	  "auth": {
+      "user": "invite@jquest.org",
+      "pass": "hellopaquitas"
+	  },
+  	"default": {
+  		"from"	 : "noreply@jquest.org",
+  		"subject": "No subject"
+  	}
   }
 }

@@ -56,12 +56,11 @@ var express        = require('express')
     */
   , passport       = require("passport");
 
-   /**
-    * Stop watching for file changes
-    * @type {Object}
-    */
-  config.watchForConfigFileChanges(0);
-
+ /**
+  * Stop watching for file changes
+  * @type {Object}
+  */
+config.watchForConfigFileChanges(0);
 
 /**
  * @type {Object}
@@ -328,13 +327,18 @@ exports.boot = function(){
     sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
     // Sync the database with the object models
     sequelize.sync({force: false&&app.settings.env == "development"});
-
+    
 
     /************************************
      * Cache client
      ************************************/    
+    var memcachedOptions = {      
+      username : config.memcached.username,
+      password : config.memcached.password,
+      expires  : config.memcached.expires
+    }
     // Creates the memcached client
-    app.memcached = new memjs.Client.create(config.memcached.servers, config.memcached);
+    app.memcached = new memjs.Client.create(config.memcached.servers, memcachedOptions);
     app.memcached.flush();
 
     /*****************************************
@@ -358,7 +362,6 @@ exports.boot = function(){
     // @warning Needs to be after the helpers
     app.use(app.router);
 
-
   });
 
 
@@ -376,12 +379,11 @@ exports.boot = function(){
 };
 
 
+
 /************************************
  * Creates the app and listen on
  * the default port.
  ************************************/  
 exports.boot().listen(process.env.PORT || config.port, function(){
-
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-
 });

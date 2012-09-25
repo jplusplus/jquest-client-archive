@@ -17,10 +17,9 @@ section.top20
       img.thumbnail(src="/images/badge-icon.png")
 
 section.top20        
-  h3=_("Invite a friend to %s", course.title)
-  span.label no implemented
-  .input-prepend.input-append.top10          
-    .add-on
-      i.icon-envelope
-    input.span1(type="text")
-    button.btn=_("Go!")
+  form#inviteFriend
+    h3=_("Invite a friend to %s", course.title)
+    span.label no implemented
+    .input-prepend.input-append.top10              
+      input.span2(type="text",placeholder=_("Email address"))
+      button.btn=_("Go!")
