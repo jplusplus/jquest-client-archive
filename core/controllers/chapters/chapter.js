@@ -21,9 +21,6 @@ module.exports = function(app) {
         // Needs to be accessible in all functions of the serie
         chapter; 
 
-		// Get and update the language
-    res.cookie("language", usersCtrl.getUserLang(req) );
-
 		async.series({
 			// Finds the course
 			course : function(callback) {

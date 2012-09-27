@@ -21,9 +21,6 @@ module.exports = function(_app) {
 	// GET courses page
 	app.get(/^\/(courses|cours)\/([a-zA-Z0-9_.-]+)$/, function(req, res){
 
-		// Get and update the language
-    res.cookie("language", users.getUserLang(req) );
-
 		async.waterfall([
 			// First, finds the course
 			function getCourse(callback) {

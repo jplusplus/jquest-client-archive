@@ -23,7 +23,7 @@ module.exports = function(_app) {
 	app.get(/^\/(courses|cours)$/, function(req, res){
 
     // Get and update the language
-  res.cookie("language", usersCtrl.getUserLang(req) );
+    res.cookie("language", usersCtrl.getUserLang(req) );
 
     module.exports.getCourses(req.cookies.language, function(courses) {
 

@@ -18,10 +18,11 @@
     , "passport"          : "latest"
     , "passport-twitter"  : "latest"    
     , "pg"                : "0.7.2"
+    , "premailer-client"  : "latest"    
     , "restler"           : "latest"
     , "sequelize"         : ">= 1.4.1"
     , "twit"              : "latest"
-    , "underscore"        : "latest"    
+    , "underscore"        : "latest"  
   }
   , "engines": {
     "node": "0.8.7",

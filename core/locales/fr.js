@@ -86,5 +86,9 @@
 	"Unable to connect to jQuest.": "Unable to connect to jQuest.",
 	"Edit courses ‹ Admin": "Edit courses ‹ Admin",
 	"Edit courses": "Edit courses",
-	"Email address": "Email address"
+	"Email address": "Email address",
+	"about": "about",
+	"CGU": "CGU",
+	"Developers": "Developers",
+	"About": "About"
 }
