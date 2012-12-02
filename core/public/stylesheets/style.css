@@ -78,7 +78,7 @@ hr.soften{position:relative;height:1px;margin:40px 0;background-image:-webkit-li
 #main{position:relative;z-index:1000;background:url("/images/bg.jpg");margin:0;margin-bottom:300px;}
 footer{opacity:0.8;filter:alpha(opacity=80);background:rgba(0, 88, 155, 0.9);color:#9bd4ff;position:fixed;position:10;bottom:0;left:0;right:0;height:300px;}footer a,footer a:hover{color:#ffffff;}
 body{background:url("/images/bg.jpg");padding-top:50px;}
-h1,h2,h3,h4,.brand,fieldset legend{font-family:'Share',sans-serif;text-shadow:1px 1px 0 white;}
+@media (max-width:979px){body{padding:0;} #main{padding-left:20px;padding-right:20px;}}h1,h2,h3,h4,.brand,fieldset legend{font-family:'Share',sans-serif;text-shadow:1px 1px 0 white;}
 .btn input{display:none;}
 .well-header{margin:-19px;margin-bottom:19px;padding:19px;padding-bottom:0;border-bottom:1px solid rgba(0, 0, 0, 0.1);position:relative;-webkit-box-shadow:0 1px 0 0 #ffffff;-moz-box-shadow:0 1px 0 0 #ffffff;box-shadow:0 1px 0 0 #ffffff;}.well-header.well-large{margin:-24px;margin-bottom:24px;padding:24px;padding-bottom:0;border-bottom:1px solid rgba(0, 0, 0, 0.1);position:relative;-webkit-box-shadow:0 1px 0 0 #ffffff;-moz-box-shadow:0 1px 0 0 #ffffff;box-shadow:0 1px 0 0 #ffffff;}
 .well-header.well-small{margin:-9px;margin-bottom:9px;padding:9px;padding-bottom:0;border-bottom:1px solid rgba(0, 0, 0, 0.1);position:relative;-webkit-box-shadow:0 1px 0 0 #ffffff;-moz-box-shadow:0 1px 0 0 #ffffff;box-shadow:0 1px 0 0 #ffffff;}

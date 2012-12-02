@@ -30,9 +30,25 @@ footer {
 	// #gradient > .vertical(fade(@btnPrimaryBackground, 20), fade(@btnPrimaryBackgroundHighlight, 10) );
 }
 
+
 body {
   background:url("/images/bg.jpg");
 	padding-top:50px;
+}
+
+// TABLETS AND BELOW
+// -----------------
+@media (max-width: 979px) {
+
+  // Remove any padding from the body
+  body {
+    padding: 0;
+  }
+
+  #main {
+      padding-left:20px;
+      padding-right:20px;
+  }
 }
 
 h1, h2, h3, h4, .brand, fieldset legend {
