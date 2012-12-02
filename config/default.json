@@ -31,13 +31,16 @@
   },
   "mail" : {
 	  "host": "mail.gandi.net",
+    "debug": false,
 	  "auth": {
       "user": "invite@jquest.org",
       "pass": "hellopaquitas"
 	  },
   	"default": {
   		"from"	 : "noreply@jquest.org",
-  		"subject": "No subject"
+  		"subject": "No subject",
+      "html"   : "",
+      "generateTextFromHTML": true
   	}
   }
 }

@@ -16,9 +16,9 @@ module.exports = function(_app) {
     // Get and update the language
     res.cookie("language", require("./users").getUserLang(req));
 
-    module.exports.getPage(req.params.uid, req.cookies.language, function(page) {              
+    module.exports.getPage(req.params.uid, req.cookies.language, function(err, page) {              
       // We found the page
-      if(page) res.render("page", page); 
+      if(err == null && page) res.render("page", page); 
       // No page found
       else     res.render("404");
     });
@@ -46,7 +46,7 @@ module.exports.getPage = function(uid, lang, complete) {
         // Gets the colletion from the fallback function
         if(err != null ||  value == null || !value.length) fallback();
         // Parse the received string
-        else complete( JSON.parse( unescape(value.toString()) ) );
+        else complete(null, JSON.parse( unescape(value.toString()) ) );
       });
     },
     // Get data from the API 
@@ -71,12 +71,29 @@ module.exports.getPage = function(uid, lang, complete) {
 
         // Put the data in the cache 
         app.memcached.set(cacheSlug, page);
-
+        
         // Call the complete function
-        complete( data.page );
+        complete(null, data.page);
       });
 
     }        
   ]);
 
+};
+
+/**
+ * Replace every given variables by its value in the string.
+ * @param  {Object} vars Variables to look for.
+ * @param  {String} str  String to parse.
+ * @return {String} String parsed.
+ */
+module.exports.parsePage = function(vars, str) {
+
+  // For each var
+  for(var index in vars) {    
+    // Replace its value in the string
+    str = str.replace( new RegExp("{{" + index + "}}", "gi"), vars[index]);
+  }
+
+  return str;
 };

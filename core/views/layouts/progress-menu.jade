@@ -16,10 +16,13 @@ section.top20
     li.span1
       img.thumbnail(src="/images/badge-icon.png")
 
-section.top20        
-  form#inviteFriend
-    h3=_("Invite a friend to %s", course.title)
-    span.label no implemented
-    .input-prepend.input-append.top10              
-      input.span2(type="text",placeholder=_("Email address"))
+
+if user
+  section.top20        
+    form#inviteFriend(action="/courses/invite", method="POST")
+      input(type="hidden", name="from", value=user.username)
+      input(type="hidden", name="course", value=course.slug)
+      h3=_("Invite a friend to %s", course.title)
+      .input-prepend.input-append.top10
+        input.span2(type="text",name="to",placeholder=_("Email address"))
       button.btn=_("Go!")

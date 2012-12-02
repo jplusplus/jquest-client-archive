@@ -34,5 +34,8 @@
 	"Welcome to jQuest!": "Welcome to jQuest!",
 	"Where the Journalist training done right.": "Where the Journalist training done right.",
 	"Get ready!": "Get ready!",
-	"Sign in with Twitter": "Sign in with Twitter"
+	"Sign in with Twitter": "Sign in with Twitter",
+	"About": "About",
+	"CGU": "CGU",
+	"Developers": "Developers"
 }

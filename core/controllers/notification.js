@@ -18,7 +18,12 @@ var config = require("config")
  * Utils functions
  * @type {Object}
  */
-, utils = require('./utils');
+, utils = require('./utils')
+/**
+ * Mailifier
+ * @type {Object}
+ */
+, emailify = require('emailify');
 
 /**
  * @author Pirhoo
@@ -30,19 +35,17 @@ module.exports = function(_app) {
   // Global variable
   app = _app;
   
-  // Creare the Premailer client
-  module.exports.createPremailer();
   // Creare the SMTP client
   module.exports.createClient();
 
-
+  
   /*
   var options = {
     to: "pierre.romera@gmail.com",
-    subject: "", 
-    content: ""
+    subject: "Hola", 
+    content: "Hola",
+    ssl: true
   };
-
   app.get("/email/:slug", function(req, res) { 
 
     // Get and update the language
@@ -51,7 +54,7 @@ module.exports = function(_app) {
     require("./page").getPage(req.params.slug, req.cookies.language, function(page) {       
             
       // Parse every variable in the given string
-      options.content = parsePage({
+      options.content = require("./page").parsePage({
         courseName  : "La Tweet School",
         courseLink  : config.host,
         friendEmail : "hello@pirhoo.com"
@@ -65,24 +68,15 @@ module.exports = function(_app) {
     });
 
   });
-  */
-  /*
+  * /
+  
   // Create the template
   app.render("email", options, function(err, html) {    
     options.html = html;
     module.exports.sendMail(options, console.log);
-  }); */
+  });*/
 };
 
-/**
- * Create premailer client to convert css to inline-css 
- * from the premailer API.
- * 
- * @return {Object} Premailer client
- */
-module.exports.createPremailer = function() {
-  return premailerClient = require('premailer-client').createClient();
-};
 
 /**
  * Create an SMTP client to transport the email
@@ -92,10 +86,12 @@ module.exports.createClient = function() {
   // Creates reusable transport method (opens pool of SMTP connections)
   return smtpTransport = nodemailer.createTransport("SMTP", {
     host:  config.mail.host,
-    debug: true,
+    debug: config.mail.debug,    
+    secureConnection: config.mail.secureConnection || true,
+    port: config.mail.port || 465, // port for secure SMTP
     auth: {
-        user: config.mail.auth.user,
-        pass: config.mail.auth.pass
+      user: config.mail.auth.user,
+      pass: config.mail.auth.pass
     }
   });
 };
@@ -107,14 +103,17 @@ module.exports.createClient = function() {
  */
 module.exports.sendMail = function(mailOptions, callback) {
 
+  // Create SMTP transport if not exists
+  if(typeof smtpTransport == "undefined") module.exports.createClient();
+
   // Add defaults value to the mailOptions 
-  mailOptions = utils.merge(mailOptions || {}, config.mail.default);
+  mailOptions = utils.merge(mailOptions || {}, config.mail.default);  
 
   // Converts every css to inline-css with the Premailer API
-  premailerClient.getAll({ html : mailOptions.html },function(err, documents) {      
-
-    mailOptions.html = documents.html;
-    if( ! mailOptions.text ) mailOptions.text = documents.text;
+  emailify.parse(mailOptions.html, function(err, content) {   
+ 
+    if(err) return callback(err, content);
+    mailOptions.html = content;
 
     // Sends mail with defined transport object
     smtpTransport.sendMail(mailOptions, callback);
@@ -122,19 +121,3 @@ module.exports.sendMail = function(mailOptions, callback) {
 
 };
 
-/**
- * Replace every given variables by its value in the string.
- * @param  {Object} vars Variables to look for.
- * @param  {String} str  String to parse.
- * @return {String} String parsed.
- */
-function parsePage(vars, str) {
-
-  // For each var
-  for(var index in vars) {    
-    // Replace its value in the string
-    str = str.replace( new RegExp("{{" + index + "}}", "gi"), vars[index]);
-  }
-
-  return str;
-};

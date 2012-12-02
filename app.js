@@ -10,6 +10,10 @@
  * @author  Pirhoo <pirhoo@jplusplus.org>
  */
 
+
+var emailify = require('emailify'),
+fs           = require('fs')
+
    /**
     * Express Framework
     * @type {Object}
@@ -322,11 +326,11 @@ exports.boot = function(){
     // Database configuration
     var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
     // Set query logging on for development mode
-    dbConfig.logging = app.settings.env == "development" ? console.log : false;
+    dbConfig.logging = !app.settings.env == "development" ? console.log : false;
     // Database instance 
     sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
     // Sync the database with the object models
-    sequelize.sync({force: false&&app.settings.env == "development"});
+    sequelize.sync({force: false && app.settings.env == "development"});
     
 
     /************************************

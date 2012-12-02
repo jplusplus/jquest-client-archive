@@ -90,5 +90,7 @@
 	"about": "about",
 	"CGU": "CGU",
 	"Developers": "Developers",
-	"About": "About"
+	"About": "About",
+	"API": "API",
+	"GitHub": "GitHub"
 }
