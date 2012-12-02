@@ -55,7 +55,7 @@ module.exports.getCourses = function(lang, complete) {
       app.memcached.get('courses-list--'+lang, function(err, value) {            
 
         // Gets the colletion from the fallback function
-        if(err != null ||  value == null || !value.length) fallback();
+        if(err != null ||  value == null || !value.length ) fallback();
         // Parse the received string
         else complete( JSON.parse( unescape(value.toString()) ) );        
 

@@ -34,16 +34,21 @@ case mission.state
       input(type="hidden", name="question", value=question.id)
 
       //- Answers list
-      .row.answers
-        .span7.offset1
-          //- Is theres any answer list ?
-          if typeof question.answers != "undefined"
-            each answer in question.answers
-              label.span3.btn.btn-block.top20.radio
-                input(type="radio", name="quiz-answer", value=answer)
-                =answer
-            //- Adds an empty radio button for "no answer"
-            input.hide(type="radio", name="quiz-answer", value="", checked)
+      .answers        
+        //- Is theres any answer list ?
+        if typeof question.answers != "undefined"            
+          - for(q=0; q < question.answers.length; q++)
+            .row-fluid
+              .span1
+              - for(d=0; d<2 && q+d < question.answers.length; d++)
+                - q += d;
+                - answer = question.answers[q]
+                label.span5.btn.btn-block.top20.radio
+                  input(type="radio", name="quiz-answer", value=answer)
+                  =answer
+
+        //- Adds an empty radio button for "no answer"
+        input.hide(type="radio", name="quiz-answer", value="", checked)
     
     //- Scripts dependencies
     script(type="text/javascript")

@@ -21,12 +21,10 @@ block body
       h1=course.title
       p=course.description
 
-  .container
-
-    .row
-      .span9#my-journey
-        include ../layouts/my-journey
-      .span3
-        include ../layouts/progress-menu
-
-  include ../layouts/footer
+  .container    
+      .row
+        .span9#my-journey
+          .main-panel.no-padding
+            include ../layouts/my-journey
+        .span3
+          include ../layouts/progress-menu

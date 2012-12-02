@@ -1,20 +1,24 @@
 
 //- This list must be invisible on phone
-ul.row.no-bullet.hidden-phone#chapters
+ul.row-fluid.no-bullet.hidden-phone#chapters
   each chapter, key in chaptersOrdered
 
     //- Breaks line after 3 chapters 
     if(key > 0 && !(key%2) ) 
-      li.span9
+      li.span12
 
     if(chapter == null)       
       //- Draws an empty case
-      li.span3
+      li.span4
     else              
       //- chapter can be disabled
       - if( ! isChapterEnabled(chapter) ) {
+        - if(key%2===0) {
+          li.span1
+        - }
+
         //- Draws a chapter with its ID
-        li.span4.chapter.disabled(data-id=chapter.id, class= !(key%2) ? "offset1" : "")
+        li.span5.chapter.disabled(data-id=chapter.id)
           .well.well-small
             .thumb
               img(src=chapter.thumbnail)  
@@ -26,7 +30,7 @@ ul.row.no-bullet.hidden-phone#chapters
             .arrow(data-parent=chapter.parent)
       - } else {
         //- Draws a chapter with its ID and adds a class "highlight" to the ones with 0 point
-        li.span4.chapter(data-id=chapter.id, class=chapter.points === 0 ? "highlight" : "")
+        li.span5.chapter(data-id=chapter.id, class=chapter.points === 0 ? "highight" : "")
           .well.well-small
             .thumb
               img(src=chapter.thumbnail)  
@@ -47,7 +51,7 @@ ul.unstyled.visible-phone#chapters
       //- chapter can be disabled
       - var chapterClasses  = ! isChapterEnabled(chapter) ? "disabled" : ""              
       //- Draws a chapter with its ID
-      li.span9.chapter(data-id=chapter.id, class=chapterClasses)      
+      li.span12.chapter(data-id=chapter.id, class=chapterClasses)      
         .well.well-small
           .thumb
             img(src=chapter.thumbnail)    

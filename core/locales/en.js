@@ -37,5 +37,11 @@
 	"Sign in with Twitter": "Sign in with Twitter",
 	"About": "About",
 	"CGU": "CGU",
-	"Developers": "Developers"
+	"Developers": "Developers",
+	"API": "API",
+	"GitHub": "GitHub",
+	"%s point": {
+		"one": "%s point",
+		"other": "%s points"
+	}
 }

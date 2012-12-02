@@ -337,14 +337,17 @@ exports.boot = function(){
     /************************************
      * Cache client
      ************************************/    
-    var memcachedOptions = {      
+    // Add conditional credidentials
+    var memcachedOptions = config.memcached.username && config.memcached.password ? {      
       username : config.memcached.username,
-      password : config.memcached.password,
-      expires  : config.memcached.expires
-    }
+      password : config.memcached.password
+    } : {};
+    // Add the expiration time
+    memcachedOptions.expire = config.memcached.expire || 3600;
+
     // Creates the memcached client
     app.memcached = new memjs.Client.create(config.memcached.servers, memcachedOptions);
-    app.memcached.flush();
+    //app.memcached.flush();
 
     /*****************************************
      * Models, views and mission encapsulation

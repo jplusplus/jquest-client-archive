@@ -22,22 +22,21 @@ block body
       p=chapter.excerpt
       
   .container
-    .row
+    .row-fluid
       //- chapter.content must be read as an HTML content
-      .span9
-        !=chapter.content
-        p.tr.top20
-          a.btn.btn-large.btn-primary(href=_("/courses/") + course.slug + "/" + chapter.slug + "/mission")=_("Start the mission!") 
+      .span9.main-panel.no-padding
+        .padding20
+          !=chapter.content
+          p.tr.top20
+            a.btn.btn-large.btn-primary(href=_("/courses/") + course.slug + "/" + chapter.slug + "/mission")=_("Start the mission!") 
 
       .span3
         include ../layouts/progress-menu
 
   //- Must be in a relative block for a relative js overlay  
-  .my-journey-head
-    .container
+  #my-journey-nomad
+    #chapters.container
       h2=_("My journey")
       //- Dynamicly completed
-      .my-journey.row.top20(data-course=course.slug)
+      ul.my-journey.row.no-bullet.top20(data-course=course.slug)
       
-        
-  include ../layouts/footer

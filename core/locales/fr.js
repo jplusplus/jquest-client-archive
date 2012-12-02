@@ -92,5 +92,6 @@
 	"Developers": "Developers",
 	"About": "About",
 	"API": "API",
-	"GitHub": "GitHub"
+	"GitHub": "GitHub",
+	"Invite a friend to<br />%s": "Invite a friend to<br />%s"
 }

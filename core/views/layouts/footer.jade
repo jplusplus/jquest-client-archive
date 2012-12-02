@@ -1,9 +1,19 @@
-footer.container
-  hr.soften.hide
-  .row.top30
-    .span8
-      = "© " + new Date().getFullYear() + " Journalism++ | "
-      !="<a href='/page/about'>"+_("About")+"</a> | ";
-      !="<a href='/page/cgu'>"+_("CGU")+"</a> | ";
-      !="<a href='/page/api'>"+_("API")+"</a> | ";
-      !="<a href='http://github.com/jplusplus/jquest-mission'>"+_("GitHub")+"</a>";
+footer
+  .container
+    .row
+      .span4
+        .row-fluid.top50
+          a(href="", title="Twitter").span3
+            img(src="/images/twitter.png",alt="twitter")
+          a(href="", title="Facebook").span3
+            img(src="/images/facebook.png",alt="facebook")
+          a(href="", title="Github").span3
+            img(src="/images/github.png",alt="github")
+          a(href="", title="API").span3
+            img(src="/images/database.png",alt="API")
+
+    .row.top30
+      .span8
+        = "© " + new Date().getFullYear() + " Journalism++ | "
+        !="<a href='/page/about'>"+_("About")+"</a> | ";
+        !="<a href='/page/cgu'>"+_("CGU")+"</a>";
