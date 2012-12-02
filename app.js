@@ -57,7 +57,8 @@ var express        = require('express')
   , passport       = require("passport");
 
    /**
-    * Stop watching for file changes
+    * Stop watching for file changes (fix a bug with runtime file)
+    * @tutorial https://github.com/lorenwest/node-config/issues/28#issuecomment-7633312
     * @type {Object}
     */
   config.watchForConfigFileChanges(0);
@@ -266,27 +267,23 @@ exports.boot = function(){
      ************************************/   
 
     // Temporary solution to avoid a bug on config module
-    var arr = [];
+    var arrLocales = [];
     // The config module convert the array to object for a curious reason
     for(var ln in config.locale.available) {
-      arr.push( config.locale.available[ln] );
+      arrLocales.push( config.locale.available[ln] );
     }
-
-    // So we convert it and set the new values
-    config.locale.available = arr;  
 
     // using 'accept-language' header to guess language settings
     app.use(i18n.init);
 
     i18n.configure({
       // setup some locales
-      locales     : config.locale.available
+      locales     : arrLocales
       // allow the use of a cookie to define the language
       , cookie    : "language"
       // locales directory
       , directory :  "core/locales/"
     });
-
 
 
     /************************************
@@ -296,6 +293,8 @@ exports.boot = function(){
     app.locals({    
       // Configuration variables
       config: config,
+      // Available locales
+      availableLocales: arrLocales,
       getLanguageName: function(lang) {
         return {
           "fr": i18n.__("French"),
@@ -374,7 +373,6 @@ exports.boot = function(){
   return app;
 
 };
-
 
 /************************************
  * Creates the app and listen on
