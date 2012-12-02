@@ -73,16 +73,16 @@ module.exports = function(_app) {
           // Instances the mission 
           // (uses the chapter slug to find the good one) 
           // and call the render callback
-          mission = new app.missions[chapter.slug](app.models, req.user.id, chapter.id, function() {            
+          mission = new app.missions[chapter.slug](app.models, req.user.id, chapter.id, function(err) {                        
             // Add this instance to the list of available instances
             app.userMissions.push(this);    
             // Final callback                    
-            callback(null, this);
+            callback(err, this);
           }); 
 
         } else {
           // Prepare the mission to play
-          mission.prepare(req, res, function() { callback(null, mission) });
+          mission.prepare(req, res, function(err) { callback(err, mission) });
         }
 
       },
