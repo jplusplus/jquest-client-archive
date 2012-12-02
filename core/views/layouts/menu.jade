@@ -22,7 +22,7 @@
 								=_("Language")
 							b.caret
 						ul.dropdown-menu
-							each lang in config.locale.available.sort()
+							each lang in availableLocales.sort()
 								li
 									a(href="/lang/"+lang)
 										if(lang === language)
