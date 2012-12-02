@@ -20,14 +20,15 @@ block body
 			h1=_("Courses")
 			
 	.container
-		ul.row.no-bullet		
-			each cour in courses
-				li.span4
-					a(href=_("/courses/")+cour.slug)
-						h3
-							=cour.title
-						p 
-							em
-								=cour.description	
-
-	include ../layouts/footer
+		.main-panel				
+			- for(c=0; c < courses.length; c++)
+				.row-fluid(class=(c>0)?"top20":"")
+					- for(d=0; d<3 && c+d < courses.length ; d++)
+						- cour = courses[c+d]
+						.span4
+							a(href=_("/courses/")+cour.slug)
+								h3
+									=cour.title
+								p 
+									em
+										=cour.description	

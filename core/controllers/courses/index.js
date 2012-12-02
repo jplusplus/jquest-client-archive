@@ -23,7 +23,7 @@ module.exports = function(_app) {
 	app.get(/^\/(courses|cours)$/, function(req, res){
 
     // Get and update the language
-  res.cookie("language", usersCtrl.getUserLang(req) );
+    res.cookie("language", usersCtrl.getUserLang(req) );
 
     module.exports.getCourses(req.cookies.language, function(courses) {
 
@@ -55,7 +55,7 @@ module.exports.getCourses = function(lang, complete) {
       app.memcached.get('courses-list--'+lang, function(err, value) {            
 
         // Gets the colletion from the fallback function
-        if(err != null ||  value == null || !value.length) fallback();
+        if(err != null ||  value == null || !value.length ) fallback();
         // Parse the received string
         else complete( JSON.parse( unescape(value.toString()) ) );        
 

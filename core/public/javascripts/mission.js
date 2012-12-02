@@ -54,7 +54,7 @@ new (function(window, undefined) {
       
       that.hideSplashscreen();
       // And start the question countdown
-      that.startQuestionCountdown();
+      // that.startQuestionCountdown();
 
     // Or updates it
     } else {

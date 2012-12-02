@@ -10,6 +10,10 @@
  * @author  Pirhoo <pirhoo@jplusplus.org>
  */
 
+
+var emailify = require('emailify'),
+fs           = require('fs')
+
    /**
     * Express Framework
     * @type {Object}
@@ -55,13 +59,6 @@ var express        = require('express')
     * @type {Object}
     */
   , passport       = require("passport");
-
-   /**
-    * Stop watching for file changes (fix a bug with runtime file)
-    * @tutorial https://github.com/lorenwest/node-config/issues/28#issuecomment-7633312
-    * @type {Object}
-    */
-  config.watchForConfigFileChanges(0);
 
 
 /**
@@ -210,6 +207,14 @@ exports.boot = function(){
 
   // Creates Express server
   app = module.exports = express();   
+
+  /**
+   * Stop watching for file changes (fix a bug with runtime file)
+   * @tutorial https://github.com/lorenwest/node-config/issues/28#issuecomment-7633312
+   * @type {Object}
+   */
+  config.watchForConfigFileChanges(0);
+
   
   // Configuration
   app.configure(function(){
@@ -322,19 +327,27 @@ exports.boot = function(){
     // Database configuration
     var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
     // Set query logging on for development mode
-    dbConfig.logging = app.settings.env == "development" ? console.log : false;
+    dbConfig.logging = !app.settings.env == "development" ? console.log : false;
     // Database instance 
     sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
     // Sync the database with the object models
-    sequelize.sync({force: false&&app.settings.env == "development"});
-
+    sequelize.sync({force: false && app.settings.env == "development"});
+    
 
     /************************************
      * Cache client
      ************************************/    
+    // Add conditional credidentials
+    var memcachedOptions = config.memcached.username && config.memcached.password ? {      
+      username : config.memcached.username,
+      password : config.memcached.password
+    } : {};
+    // Add the expiration time
+    memcachedOptions.expire = config.memcached.expire || 3600;
+
     // Creates the memcached client
-    app.memcached = new memjs.Client.create(config.memcached.servers, config.memcached);
-    app.memcached.flush();
+    app.memcached = new memjs.Client.create(config.memcached.servers, memcachedOptions);
+    //app.memcached.flush();
 
     /*****************************************
      * Models, views and mission encapsulation
@@ -357,7 +370,6 @@ exports.boot = function(){
     // @warning Needs to be after the helpers
     app.use(app.router);
 
-
   });
 
 
@@ -379,7 +391,5 @@ exports.boot = function(){
  * the default port.
  ************************************/  
 exports.boot().listen(process.env.PORT || config.port, function(){
-
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-
 });

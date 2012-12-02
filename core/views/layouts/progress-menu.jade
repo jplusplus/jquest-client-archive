@@ -1,26 +1,32 @@
-section  
-  if(typeof userPoints == "number" && typeof ttPoints == "number")
+if(typeof userPoints == "number" && typeof ttPoints == "number")
+  section.white-panel.bottom20.padding20  
     h3=_("My points")
     .progress.top10
       .bar(style="width: " + Math.round(userPoints/ttPoints*100) + "%")
     p.tc=_n("%s point", "%s points", userPoints) + " / " + ttPoints
 
-section.top20
+section.white-panel.bottom20.padding20
   h3=_("My badges")
   span.label no implemented
-  ul.row.no-bullet.top10
-    li.span1
-      img.thumbnail(src="/images/badge-icon.png")
-    li.span1
-      img.thumbnail(src="/images/badge-icon.png")
-    li.span1
-      img.thumbnail(src="/images/badge-icon.png")
+  .row-fluid.top10
+    .span4
+      .padding10
+        img.thumbnail(src="/images/badge-icon.png")
+    .span4
+      .padding10
+        img.thumbnail(src="/images/badge-icon.png")
+    .span4
+      .padding10
+        img.thumbnail(src="/images/badge-icon.png")
 
-section.top20        
-  h3=_("Invite a friend to %s", course.title)
-  span.label no implemented
-  .input-prepend.input-append.top10          
-    .add-on
-      i.icon-envelope
-    input.span1(type="text")
-    button.btn=_("Go!")
+
+if user
+  section.white-panel.padding20      
+    h3!=_("Invite a friend to this course")
+    form#inviteFriend(action="/courses/invite", method="POST").row-fluid
+      input(type="hidden", name="from", value=user.username)
+      input(type="hidden", name="course", value=course.slug)
+      //h3!=_("Invite a friend to %s", course.title)
+      .input-append.top10
+        input.span8(type="text",name="to",placeholder=_("Email address"))
+        button.btn=_("Go!")

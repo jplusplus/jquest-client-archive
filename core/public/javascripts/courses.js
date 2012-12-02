@@ -60,9 +60,14 @@ new (function(window, undefined) {
       var course = that.el.$myJourneyEmpty.data("course");
 
       // Load the journey with AJAX
-      that.el.$myJourneyEmpty.loading().load("/courses/"+course+" #my-journey", function() {      	
-				that.initElements();	
-				that.initArrows();
+      that.el.$myJourneyEmpty.loading().load("/courses/"+course+" #my-journey .span5", function() {   
+
+        var chaptersCount = that.el.$myJourneyEmpty.find(".span5").length + 1,
+            chaptersWidth = that.el.$myJourneyEmpty.find(".span5").outerWidth();
+
+        that.el.$myJourneyEmpty.css("width", chaptersCount * chaptersWidth);
+        that.initElements();  
+        //that.initArrows();
       });
 
     }

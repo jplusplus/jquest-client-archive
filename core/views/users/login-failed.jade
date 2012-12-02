@@ -9,9 +9,13 @@ block stylesheets
 block scripts
 	script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
 
+block title
+	=_("Connexion failed")
+
 block body
 
 	include ../layouts/menu
 	.page-header
 		.container
-			.row		
+			h2=_("Connexion failed")
+			p=_("Unable to connect to jQuest.")

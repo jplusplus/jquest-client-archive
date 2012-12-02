@@ -28,64 +28,63 @@ block body
     .row
       //- chapter.content must be read as an HTML content
       .span9
-        form(method="POST", class="mission-"+mission.type, data-type=mission.type, data-state=mission.state)#mission          
-          .well
-            !=mission.getContent();   
+        .main-panel
+          form(method="POST", class="mission-"+mission.type, data-type=mission.type, data-state=mission.state).bottom0#mission          
+            .well.bottom0
+              !=mission.getContent();   
 
-            if mission.state == "game"
-              .splashscreen( data-msg-cd-plural=_("The mission is about to begin in % seconds."), data-msg-cd-single=_("The mission is about to begin in % second.") )
-                .countdown
-                .instruction=_("Push a button to select an answer")       
+              if mission.state == "game"
+                .splashscreen( data-msg-cd-plural=_("The mission is about to begin in % seconds."), data-msg-cd-single=_("The mission is about to begin in % second.") )
+                  .countdown
+                  .instruction=_("Push a button to select an answer")       
 
-          //- Hides the quiz navigation toolbar 
-          //- if we are not playing a classic game 
-          if mission.type == "classic" || mission.state != "game"
-            .well.well-small
-              .row              
-                case mission.state
-                  
-                  when "game"
-                    .pull-right
-                      button.btn.btn-primary(type="submit")
-                        =_("Next")
-                        i.icon-arrow-right.icon-white.left05
-                  
-                  when "success"
-                    .span3.tl                      
-                      a.btn.btn-primary(href=_("/courses/") + course.slug + "/" + chapter.slug )
-                        i.icon-arrow-left.icon-white.right05
-                        =_("Read the chapter again")  
-                    .span3.tc 
-                      button.btn(type="submit")                       
-                        i.icon-repeat.right05                      
-                        =_("Play again")
-                    if(nextChapter)
-                      .pull-right
-                        a.btn.btn-primary(href=_("/courses/") + course.slug + "/" + nextChapter.slug)
-                          =_("Next chapter")
-                          i.icon-arrow-right.icon-white.left05
+            //- Hides the quiz navigation toolbar 
+            //- if we are not playing a classic game 
+            if mission.type == "classic" || mission.state != "game"
+              .main-panel
+                .well.well-small.bottom0
+                  .row-fluid             
+                    case mission.state
+                      
+                      when "game"
+                        .pull-right
+                          button.btn.btn-primary(type="submit")
+                            =_("Next")
+                            i.icon-arrow-right.icon-white.left05
+                      
+                      when "success"
+                        .span4.tl                      
+                          a.btn.btn-primary(href=_("/courses/") + course.slug + "/" + chapter.slug )
+                            i.icon-arrow-left.icon-white.right05
+                            =_("Read the chapter again")  
+                        .span4.tc 
+                          button.btn(type="submit")                       
+                            i.icon-repeat.right05                      
+                            =_("Play again")
+                        if(nextChapter)
+                          .pull-right
+                            a.btn.btn-primary(href=_("/courses/") + course.slug + "/" + nextChapter.slug)
+                              =_("Next chapter")
+                              i.icon-arrow-right.icon-white.left05
 
-                  when "failed"
-                    .span3.tl                      
-                      a.btn.btn-primary(href=_("/courses/") + course.slug + "/" + chapter.slug )
-                        i.icon-arrow-left.icon-white.right05
-                        =_("Read the chapter again")                
-                    .span3.tc
-                      button.btn(type="submit")
-                        i.icon-repeat.right05                      
-                        =_("Try again")
-                  
-              .clearfix
+                      when "failed"
+                        .span4.tl                      
+                          a.btn.btn-primary(href=_("/courses/") + course.slug + "/" + chapter.slug )
+                            i.icon-arrow-left.icon-white.right05
+                            =_("Read the chapter again")                
+                        .span4.tc
+                          button.btn(type="submit")
+                            i.icon-repeat.right05                      
+                            =_("Try again")
+                    
+                .clearfix
       .span3
         include ../layouts/progress-menu
 
+
   //- Must be in a relative block for a relative js overlay  
-  .my-journey-head
-    .container
+  #my-journey-nomad
+    #chapters.container
       h2=_("My journey")
       //- Dynamicly completed
-      .my-journey.row.top20(data-course=course.slug)
-
-    
-        
-  include ../layouts/footer
+      ul.my-journey.row.no-bullet.top20(data-course=course.slug)

@@ -1,5 +1,56 @@
 @import "tools.less";
 
+
+@footerHeight:300px;
+@footerBackground: @linkColor;
+#main {
+  position:relative;
+  z-index:1000;  
+  background:url("/images/bg.jpg");  
+  margin:0;
+  margin-bottom:@footerHeight;    
+  //.box-shadow(3px 0 6px 0 darken(@footerBackground, 50) );
+}
+
+footer {
+	.opacity(80);
+	background:fade(@footerBackground, 90);
+	color:lighten(@footerBackground, 50);
+	a, a:hover { color:lighten(@footerBackground, 80); }
+
+	position:fixed;
+	position:10;
+	bottom:0;
+	left:0;
+	right:0;
+	
+	height:@footerHeight;
+	// color:white;
+	// font-weight:bold;
+	// #gradient > .vertical(fade(@btnPrimaryBackground, 20), fade(@btnPrimaryBackgroundHighlight, 10) );
+}
+
+
+body {
+  background:url("/images/bg.jpg");
+	padding-top:50px;
+}
+
+// TABLETS AND BELOW
+// -----------------
+@media (max-width: 979px) {
+
+  // Remove any padding from the body
+  body {
+    padding: 0;
+  }
+
+  #main {
+      padding-left:20px;
+      padding-right:20px;
+  }
+}
+
 h1, h2, h3, h4, .brand, fieldset legend {
 	font-family: 'Share', sans-serif;
 	text-shadow:1px 1px 0 white;
@@ -23,7 +74,34 @@ h1, h2, h3, h4, .brand, fieldset legend {
 
 .navbar {
 
-	margin-bottom:0;
+	border-bottom:1px solid #ddd;
+	.box-shadow(0 0 6px 0 fade(#000, 10) );
+
+	&, &:after {
+		.transition(0.7s);
+	}
+	
+
+	&.at-top {
+		
+		.opacity(30);		
+		&:hover { .opacity(100); }
+
+		.box-shadow(0 0 6px 0 fade(#000, 0) );
+
+
+		.navbar-inner {
+			background:fade(#000, 0);
+		}
+
+		&:after {
+		  .opacity(0);
+		}
+	}
+
+	.divider-vertical {
+	    border-right-color:fade(white, 80);
+	}
 
 	a.padding0 {
 		padding:0 !important;
@@ -83,19 +161,52 @@ h1, h2, h3, h4, .brand, fieldset legend {
 }
 
 
-.page-header {
-	background:@grayLighter;
-	border-bottom:darken(@grayLighter, 10%) solid 1px;
-	.box-shadow(inset 0 -1px 0 0 fade(white, 20%) );
-	
+.page-header {	
 	margin-top:0;
 	padding-top:30px;
+	border:0;
 
 	h1 {
 		padding-bottom:10px;
 	}
 }
 
+.main-panel {
+	position:relative;
+  background:white;
+  padding:20px;
+  margin-bottom:60px;
+  .box-shadow(0 0 6px 0 fade(#000, 10) );
+  .border-radius(3px);
+  border:0.01px solid transparent;
+  
+  &.no-padding { padding:0 }
+  &.no-outline:after { display:none }
+
+  &:after {
+  	content:"";
+    z-index:-1;
+
+    position:absolute;
+    top:-15px;
+    bottom:-15px;
+    left:-15px;
+    right:-15px;
+
+    background:fade(#fff, 30);
+  	.border-radius(3px);  	
+  }
+}
+
+.white-panel {
+  background:fade(#fff, 30);
+  .border-radius(3px);
+  
+  &.radius-top { .border-radius(3px 3px 0 0); }  	
+  &.radius-right { .border-radius(0 3px 3px 0); }  	
+  &.radius-bottom { .border-radius(0 0 3px 3px); }  	
+  &.radius-left { .border-radius(3px 3px 0 0); }  	
+}
 
 
 .chapter {
@@ -103,8 +214,11 @@ h1, h2, h3, h4, .brand, fieldset legend {
 	position: relative;
 	margin-bottom:10px;
 
-	&.disabled {
+	.well {
+	    margin-bottom:0px;
+	}
 
+	&.disabled {
 		// Add an overlay for the disabled chapter
 		.well:before {
 			z-index:100;
@@ -213,29 +327,33 @@ h1, h2, h3, h4, .brand, fieldset legend {
 
 		}
 
-		&.west.equal {
+		/*  Default */
+		&, &.west.equal {
 			top:50%;
 			left:-61px;
-			margin-top:-12px;
+			margin-top:-2px;
 		}
 
 		&.west.north {
 			top:-32px;
 			left:50%;
+			right:auto;
 			margin-left:-12px;		
 			.rotate(90deg);
 		}
 
 		&.east.equal {
 			top:50%;
+			left:auto;
 			right:-61px;
 			.rotate(180deg);
-			margin-top:-12px;
+			margin-top:-2px;
 		}
 
 		&.equal.north {
 			top:-32px;
 			left:50%;
+			right:auto;
 			margin-left:-12px;		
 			.rotate(90deg);
 		}
@@ -246,15 +364,19 @@ h1, h2, h3, h4, .brand, fieldset legend {
 
 }
 
-.my-journey-head {
+#my-journey .main-panel {	
+    padding:20px 0;
+}
+#my-journey-nomad {
 
 	position:relative;
 
-	background:@grayLighter;
-	border-bottom:darken(@grayLighter, 10%) solid 1px;
-	border-top:2px solid #DFDFDF;
-	.box-shadow(~"inset 0 -1px 0 0 rgba(255,255,255, 0.2), inset 0 1px 0 0 #C6C6C6" );
-	
+	background:fade(#fff, 20);
+	border-top:1px solid #ddd;
+
+	overflow:auto;
+	width:100%;
+
 	margin-top:30px;
 	padding-bottom:30px;
 
@@ -363,8 +485,4 @@ h1, h2, h3, h4, .brand, fieldset legend {
 
 	}
 
-}
-
-footer {
-	color:@gray;
 }

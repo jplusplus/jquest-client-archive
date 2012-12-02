@@ -26,10 +26,7 @@ module.exports = function(_app) {
     var course_slug  = req.params[1],
         chapter_slug = req.params[2],
         // Needs to be accessible in all functions of the serie
-        chapter; 
-        
-    // Get and update the language
-    res.cookie("language", usersCtrl.getUserLang(req) );    
+        chapter;  
 
     async.series({
       // Finds the course
