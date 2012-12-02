@@ -24,7 +24,8 @@ block body
 			- for(c=0; c < courses.length; c++)
 				.row-fluid(class=(c>0)?"top20":"")
 					- for(d=0; d<3 && c+d < courses.length ; d++)
-						- cour = courses[c+d]
+						- c += d
+						- cour = courses[c]
 						.span4
 							a(href=_("/courses/")+cour.slug)
 								h3
