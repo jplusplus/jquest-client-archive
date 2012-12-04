@@ -4,9 +4,9 @@ new (function(window, undefined) {
 
 	that.initElements = function() {
 		return that.el = {
-			$chapters  			: $("#chapters"),
-      $myJourneyEmpty : $(".my-journey"),
-      $myJourney 			: $("#my-journey")
+			$myJourneyDynamic : $("#my-journey-dynamic"),
+      $myJourneyEmpty   : $(".my-journey"),
+      $myJourney 			  : $("#my-journey")
 		};		
 	};
 
@@ -23,9 +23,9 @@ new (function(window, undefined) {
 			
 			var $arrow = $(arrow)
 			// Find the current chapter
-			, $chapter = $arrow.parents(".chapter")
+			, $chapter = $arrow.parents(".chapter-card")
 			// Finds the parent
-			,  $parent = that.el.$chapters.find(".chapter[data-id=" + $arrow.data("parent") + "]")
+			,  $parent = that.el.$myJourney.find(".chapter-card[data-id=" + $arrow.data("parent") + "]")
 			// Finds the parent positions
 			, parentPosition = {
 				 	// Horizontal position
@@ -62,12 +62,33 @@ new (function(window, undefined) {
       // Load the journey with AJAX
       that.el.$myJourneyEmpty.loading().load("/courses/"+course+" #my-journey .span5", function() {   
 
-        var chaptersCount = that.el.$myJourneyEmpty.find(".span5").length + 1,
+        var chaptersCount = that.el.$myJourneyEmpty.find(".span5").length,
             chaptersWidth = that.el.$myJourneyEmpty.find(".span5").outerWidth();
 
-        that.el.$myJourneyEmpty.css("width", chaptersCount * chaptersWidth);
+        that.el.$myJourneyEmpty.css("width", (chaptersCount + 1) * chaptersWidth);
+
         that.initElements();  
-        //that.initArrows();
+
+        if( $.fn.iScroll ) {
+
+          // iScroll option
+          var iScrollOptions =  { 
+            hScrollbar: true, 
+            hScroll: true, 
+            snap: "li", 
+            momentum: false, 
+            scrollbarClass: 'iscrollbar', 
+            hideScrollbar:true,
+            fadeScrollbar:true
+          };
+
+          // Creates the iScroll instance
+          var $iscroll = that.el.$myJourneyDynamic.iScroll(iScrollOptions).css("overflow", "visible"),
+               $lastEl = that.el.$myJourneyDynamic.find("li:not(.disabled):last");       
+
+          $iscroll.data("iscroll").scrollToElement( $lastEl[0], 0 );
+        }
+
       });
 
     }
