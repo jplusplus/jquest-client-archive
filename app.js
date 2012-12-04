@@ -234,7 +234,8 @@ exports.boot = function(){
     app.use(lessMiddleware({
       src: __dirname + '/core/public',
       // Compress the files
-      compress: true
+      compress: true,
+      optimization: 2
     }));
 
     // Public directory
