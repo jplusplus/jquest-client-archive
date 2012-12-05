@@ -161,29 +161,57 @@ footer {
   &.radius-left { .border-radius(3px 3px 0 0); }    
 }
 
+/* GENERIC DARK PANE */
+.dark-panel {
+  
+  .border-radius(4px);
+  .box-shadow(~"0 1px 3px 0 rgba(0,0,0, 0.2), 0 1px 0 0 rgba(255,255,255,0.3) inset");
+  border:1px solid #bbb;
+  border-color:rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+
+  background:#4483B4;  
+  #gradient > .vertical(#4483B4, darken(#4483B4, 5%) );
+
+  text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);
+  color:fade(@white, 80);  
+
+  a, h1, h2, h3, h4, h5 { 
+    color:@white;
+    text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  
+  &.radius-top { .border-radius(3px 3px 0 0); }   
+  &.radius-right { .border-radius(0 3px 3px 0); }   
+  &.radius-bottom { .border-radius(0 0 3px 3px); }    
+  &.radius-left { .border-radius(3px 3px 0 0); }    
+}
+
 /* GENERIC SMALL CHAPTER CARD */
 .chapter-card {
 
   position: relative;
   margin-bottom:10px;
 
-  .well {
-      margin-bottom:0px;
-  }
-
   &.disabled {
+
+    .dark-panel {
+      background:#bbb;
+    }
+
     // Add an overlay for the disabled chapter
-    .well:before {
+    .dark-panel:before {
       z-index:100;
       content:"";
       display:block;
       position:absolute;
-      top:0;
-      left:0;
+      top:-1px;
+      left:-1px;
+      bottom:-1px;
+      right:-1px;
+      .border-radius(inherit);
 
-      width:100%;
-      height:100%;
-      #gradient > .striped( fade(#ccc, 80%) );
+      #gradient > .striped( fade(#ccc, 60%) );
     }
 
     .arrow {
@@ -193,43 +221,27 @@ footer {
 
   }
 
-  &.highlight {
+  .dark-panel {
 
-    .well {
-      .box-shadow(0 0 6px 0 #FFEE00);
-      .animation( shadow-pulse 4s linear infinite )
-    }
-  }
-
-
-
-  .well {
+    padding:10px;
     min-height:22px;
     position: relative;
     z-index:60;
-
-    h4 {
-      margin-left:60px;
-    }
-
-    &:hover .thumb img {
-      height:110%;
-    }
+    text-align:center;
 
     .thumb {
-      float:left;
-      width:50px;
-      height:100%;
-      background:white;
+      width:42px;
+      height:42px;
+
+      background:#fff;
       overflow: hidden;
       
-      position:absolute;
-      top:0;
-      left:0;
-
-      border-right:1px solid #ccc;
-      .box-shadow(2px 0 2px 0 fade(#000, 10%) );
-      .border-radius(3px 0 0 3px);
+      margin:0 auto;
+      margin-bottom:10px;
+      
+      position:relative;
+      .box-shadow(0 1px 2px 0 fade(#000, 40%) );      
+      .border-radius(2px);
 
       img {
         height:100%;
@@ -245,9 +257,7 @@ footer {
 
     .points {
       display:block;
-      margin-left:60px;
       font-size:10px;
-      color:@gray;
       text-transform: uppercase;      
     }
 
@@ -291,7 +301,7 @@ footer {
       top:-32px;
       left:50%;
       right:auto;
-      margin-left:-12px;    
+      margin-left:-30px;    
       .rotate(90deg);
     }
 
@@ -307,7 +317,7 @@ footer {
       top:-32px;
       left:50%;
       right:auto;
-      margin-left:-12px;    
+      margin-left:-30px;    
       .rotate(90deg);
     }
 

@@ -19,7 +19,7 @@ ul.row-fluid.no-bullet.hidden-phone
 
         //- Draws a chapter with its ID
         li.span5.chapter-card.disabled(data-id=chapter.id)
-          .well.well-small
+          .dark-panel
             .thumb
               img(src=chapter.thumbnail)  
             h4=chapter.title            
@@ -29,9 +29,10 @@ ul.row-fluid.no-bullet.hidden-phone
             //- Draws an arrow related to the parent chapter
             .arrow(data-parent=chapter.parent)
       - } else {
-        //- Draws a chapter with its ID and adds a class "highlight" to the ones with 0 point
-        li.span5.chapter-card(data-id=chapter.id, class=chapter.points === 0 ? "highight" : "")
-          .well.well-small
+        //- Draws a chapter with its ID 
+        //- Disabled : adds a class "highlight" to the ones with 0 point (class=chapter.points === 0 ? "highight" : "")
+        li.span5.chapter-card(data-id=chapter.id)
+          .dark-panel
             .thumb
               img(src=chapter.thumbnail)  
             h4
@@ -52,7 +53,7 @@ ul.unstyled.visible-phone#chapters
       - var chapterClasses  = ! isChapterEnabled(chapter) ? "disabled" : ""              
       //- Draws a chapter with its ID
       li.span12.chapter-card(data-id=chapter.id, class=chapterClasses)      
-        .well.well-small
+        .dark-panel.left20.right20.bottom30
           .thumb
             img(src=chapter.thumbnail)    
           h4
