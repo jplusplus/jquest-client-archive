@@ -1,5 +1,21 @@
-footer.container
-	hr.soften.hide
-	.row.top30
-		.span8
-			| !{_("jQuest is a project build by the data-nerds from <a href='http://jplusplus.org' rel='external'>Journalsim++</a>.")}
+footer
+  .container
+    .row
+      .span4
+        .row-fluid.top50
+          a(href="", title="Twitter").span3
+            img(src="/images/twitter.png",alt="twitter")
+          a(href="", title="Facebook").span3
+            img(src="/images/facebook.png",alt="facebook")
+          a(href="", title="Github").span3
+            img(src="/images/github.png",alt="github")
+          a(href="", title="API").span3
+            img(src="/images/database.png",alt="API")
+
+        .top30
+          = "© " + new Date().getFullYear() + " Journalism++ | "
+          !="<a href='/page/about'>"+_("About")+"</a> | ";
+          !="<a href='/page/cgu'>"+_("CGU")+"</a>";
+
+      a(href="http://jplusplus.org", target="_blank").span4.offset4.top40.tr    
+        img(src="/images/logo-full.png")

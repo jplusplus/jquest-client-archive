@@ -1,1 +1,3 @@
-/core/public/
+/core/public/*
+/core/views/*
+/.git/*

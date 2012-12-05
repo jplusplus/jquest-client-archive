@@ -23,7 +23,7 @@ module.exports = function(_app) {
 	app.get(/^\/(courses|cours)$/, function(req, res){
 
     // Get and update the language
-  res.cookie("language", usersCtrl.getUserLang(req) );
+    res.cookie("language", usersCtrl.getUserLang(req) );
 
     module.exports.getCourses(req.cookies.language, function(courses) {
 
@@ -55,7 +55,7 @@ module.exports.getCourses = function(lang, complete) {
       app.memcached.get('courses-list--'+lang, function(err, value) {            
 
         // Gets the colletion from the fallback function
-        if(err != null ||  value == null || !value.length) fallback();
+        if(err != null ||  value == null || !value.length ) fallback();
         // Parse the received string
         else complete( JSON.parse( unescape(value.toString()) ) );        
 
@@ -65,8 +65,16 @@ module.exports.getCourses = function(lang, complete) {
     // Get data from the API 
     function getFromAPI() {
 
+      // Request option
+      var options = {
+        query: {
+          json      : "get_category_index",
+          lang      : lang
+        }
+      };
+
       // get_category_index request from the external "WordPress API"
-      rest.get(config.api.hostname + "/api/get_category_index/?lang="+lang).on("complete", function(data) {
+      rest.get(config.api.hostname, options).on("complete", function(data) {
 
         // Escapes and stringify the categories
         var categories = escape( JSON.stringify( data.categories ) );
@@ -105,8 +113,20 @@ module.exports.getCourseBySlug = function(slug, complete) {
     // Get data from the API 
     function getFromAPI() {
 
+      // Request option
+      var options = {
+        query: {
+          json      : 1,
+          lang      : "auto",
+          post_type : "jquest_chapter",
+          count     : 10000,
+          order_by  : "parent",
+          order     : "ASC"
+        }
+      };
+
       // get_category_index request from the external "WordPress API"
-      rest.get(config.api.hostname + "/category/"+slug+"?lang=auto&json=1&post_type=jquest_chapter&count=10000&order_by=parent&order=ASC").on("complete", function(data) {
+      rest.get(config.api.hostname + "/category/"+slug, options).on("complete", function(data) {
         
         // Escapes and stringify the category
         var category = escape( JSON.stringify( data.category ) );

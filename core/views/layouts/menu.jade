@@ -1,4 +1,4 @@
-.navbar
+#menu.navbar.navbar-fixed-top.at-top
 	.navbar-inner
 		.container
 			.brand
@@ -22,7 +22,7 @@
 								=_("Language")
 							b.caret
 						ul.dropdown-menu
-							each lang in config.locale.available.sort()
+							each lang in availableLocales.sort()
 								li
 									a(href="/lang/"+lang)
 										if(lang === language)
@@ -30,7 +30,7 @@
 										=getLanguageName(lang)
 
 
-				-if( user )
+				if user
 					li.user-avatar.dropdown
 						a.dropdown-toggle(href="#",data-toggle="dropdown")
 							img(src="http://twitter.com/api/users/profile_image/"+user.username)
@@ -43,6 +43,10 @@
 							li 
 								a(href="/users/settings")=_("Settings")
 							li.divider
+							if user.ugroup == "admin"								
+								li 
+									a(href="/admin/courses")=_("Edit courses")
+								li.divider
 							li 
 								a(href="/users/logout")=_("Log out")
 				- else

@@ -3,7 +3,8 @@ var coursesCtrl = require('./')
  , chaptersCtrl = require('../chapters')
  				, async = require('async')
 			 , config = require("config")
- 				, users = require("../users");
+ 				, users = require("../users")
+ 		 , pageCtrl = require("../page");
 
 // Global variables
 var app = null;
@@ -20,9 +21,6 @@ module.exports = function(_app) {
  
 	// GET courses page
 	app.get(/^\/(courses|cours)\/([a-zA-Z0-9_.-]+)$/, function(req, res){
-
-		// Get and update the language
-    res.cookie("language", users.getUserLang(req) );
 
 		async.waterfall([
 			// First, finds the course
@@ -146,5 +144,59 @@ module.exports = function(_app) {
 	  });
 
 	});
+
+  /**
+   * POST an user invitation
+   */
+  app.post(/^\/(courses|cours)\/invite$/, function(req, res) {
+
+  	async.series({
+  		// Get the course
+  		course : function(callback) {  			
+				// There is a function for that.
+				coursesCtrl.getCourseBySlug(req.body.course, function(c) {					
+					// Next step...
+					callback(null, c);
+				});
+  		},
+  		// Get the page's HTML
+  		page : function(callback) {	  			
+		    // Get and update the language
+		    res.cookie("language", require("../users").getUserLang(req) );
+		  	// Callback function is in the right format : function(err, page)
+		  	pageCtrl.getPage("invitation-a-un-cour", req.cookies.language, callback);
+
+  		}  		
+  	}, function(err, results) {
+
+	  	var options = {
+	  		to 		 				 : req.body.to,
+	  		friendUsername : req.user.username,
+	  		courseName 		 : results.course.title,  		
+	  		courseLink		 : config.host + req.app.locals._("/courses/") + results.course.slug
+	  	};
+
+			// Replace the mail subject
+			options.subject = results.page.subject = results.page.title;
+			// Replace the page variable by
+			results.page.content = pageCtrl.parsePage(options, results.page.content);
+			// Add the recceiver
+			results.page.to = options.to;
+
+			// Create the email template with the given page content
+			app.render("email", results.page, function(err, html) {  
+					
+				if(err) return console.log(err);
+				// Set the mail attribut	
+			  options.html = html;
+
+			  require("../notification").sendMail(options, res.json);			  				  
+
+			});
+
+  	});	  
+
+  });
+
 
 };

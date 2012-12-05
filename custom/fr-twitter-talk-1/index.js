@@ -17,11 +17,13 @@ module.exports = function(models, userId, chapterId, callback) {
   self.addQuestion(function(callback) {
 
     getTweet("242937028055007233", function(err, tweet) {
+
+      if(err) return callback(err, null);
       
       var solution = tweet.hashtags.slice(0,2)
          , answers = tweet.hashtags.concat([tweet.user.screen_name, tweet.user.location]);
 
-      callback({
+      callback(null, {
         label    : "Quel est le hashtag utilisé ?",
         content  : tweet.oembed.html,
         duration : 10,
@@ -38,6 +40,8 @@ module.exports = function(models, userId, chapterId, callback) {
 
     getTweet("194701750010253312", function(err, tweet) {
 
+      if(err) return callback(err, null);
+
       var answers = [
         tweet.user.screen_name,  // Right one
         tweet.user.name, 
@@ -45,7 +49,7 @@ module.exports = function(models, userId, chapterId, callback) {
         tweet.user.location
       ];
 
-      callback({
+      callback(null, {
         content  : tweet.oembed.html,
         duration: 10,
         label   : "Quel est le nom d'utilisateur de l'auteur de ce Tweet ?",
@@ -60,10 +64,12 @@ module.exports = function(models, userId, chapterId, callback) {
 
     getTweet("242669557679005703", function(err, tweet) {
 
+      if(err) return callback(err, null);
+
       var solution = tweet.hashtags.slice(0,2)
          , answers = tweet.hashtags.concat([tweet.user.screen_name, "Retweet"]);
 
-      callback({
+      callback(null, {
         content  : tweet.oembed.html,
         label   : "À quel thème se rapporte ce Tweet ?",
         duration: 10,
@@ -79,7 +85,9 @@ module.exports = function(models, userId, chapterId, callback) {
   self.addQuestion(function(callback) {
 
     getTweet("242914941621915649", function(err, tweet) {
-      callback({
+
+      if(err) return callback(err, null);
+      callback(null, {
         content  : tweet.oembed.html,
         label   : "Ce tweet est-il un Retweet ?",
         duration: 10,
@@ -93,7 +101,7 @@ module.exports = function(models, userId, chapterId, callback) {
   /*
 
   self.addQuestion(function(callback) {
-    callback({
+    callback(null, {
       content  : tweet.oembed.html,
       label   : "Quel est le nombre d'abonnements de cet utilisateur ?",
       duration: 10,
@@ -103,7 +111,7 @@ module.exports = function(models, userId, chapterId, callback) {
   });
 
   self.addQuestion(function(callback) {
-    callback({
+    callback(null, {
       content  : tweet.oembed.html,
       label   : "Quel est le nombre d'abonnés de cet utilisateur ?",
       duration: 10,
@@ -113,7 +121,7 @@ module.exports = function(models, userId, chapterId, callback) {
   });
 
   self.addQuestion(function(callback) {
-    callback({
+    callback(null, {
       content  : tweet.oembed.html,
       label   : "Quel est lʼidentifiant de cet utilisateur?",
       duration: 10,
@@ -127,6 +135,8 @@ module.exports = function(models, userId, chapterId, callback) {
   self.addQuestion(function(callback) {    
 
     getTweet("241211316403044354", function(err, tweet) {
+
+      if(err) return callback(err, null);
 
       var answers = [
         tweet.in_reply_to_screen_name,
@@ -145,7 +155,7 @@ module.exports = function(models, userId, chapterId, callback) {
       // Reduces and randomizes the array
       answers = _.shuffle( answers.slice(0,4) );
 
-      callback({
+      callback(null, {
         content  : tweet.oembed.html,
         label   : "A qui est destiné ce tweet ?",
         duration: 10,
@@ -162,6 +172,7 @@ module.exports = function(models, userId, chapterId, callback) {
 
     getTweet("235385538641813504", function(err, tweet) {
 
+      if(err) return callback(err, null);
 
       var answers = tweet.mentions;
       answers = answers.concat(tweet.hashtags);
@@ -170,7 +181,7 @@ module.exports = function(models, userId, chapterId, callback) {
       // Reduces and randomizes the array
       answers = _.shuffle(answers.slice(0,4));
 
-      callback({
+      callback(null, {
         content  : tweet.oembed.html,
         label   : "Qui est mentionné dans ce tweet ?",
         duration: 10,
@@ -221,20 +232,21 @@ function getTweet(id, callback) {
 
     var tweet = null;
 
-    if(!err) {
-      tweet = data.tweet;
-      // Adds the obembed code as a Tweet attribut
-      tweet.oembed = data.oembed;
-      // Save the hashtags
-      tweet.hashtags = tweet.text.match(/#(\w+)/g);
-      // Removed every #
-      tweet.hashtags = _.map(tweet.hashtags, function(el) { return el.replace("#", "")});
-      // Save the mentions
-      tweet.mentions = tweet.text.match(/@(\w+)/g);
-      // Removed every @
-      tweet.mentions = _.map(tweet.mentions, function(el) { return el.replace("@", "")});
-    }  
+    if(err) return callback(err, null);
+    else if(!data.tweet || !data.oembed) return callback(data, null);
 
+    tweet = data.tweet;
+    // Adds the obembed code as a Tweet attribut
+    tweet.oembed = data.oembed;
+    // Save the hashtags
+    tweet.hashtags = tweet.text.match(/#(\w+)/g);
+    // Removed every #
+    tweet.hashtags = _.map(tweet.hashtags, function(el) { return el.replace("#", "")});
+    // Save the mentions
+    tweet.mentions = tweet.text.match(/@(\w+)/g);
+    // Removed every @
+    tweet.mentions = _.map(tweet.mentions, function(el) { return el.replace("@", "")});
+  
     callback(err, tweet);
   });
 

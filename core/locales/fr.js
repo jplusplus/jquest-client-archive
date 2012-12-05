@@ -81,5 +81,17 @@
 	"The mission is about to begin in % second.": "The mission is about to begin in % second.",
 	"My journey": "My journey",
 	"Try again": "Try again",
-	"Play again": "Play again"
+	"Play again": "Play again",
+	"Connexion failed": "Connexion failed",
+	"Unable to connect to jQuest.": "Unable to connect to jQuest.",
+	"Edit courses ‹ Admin": "Edit courses ‹ Admin",
+	"Edit courses": "Edit courses",
+	"Email address": "Email address",
+	"about": "about",
+	"CGU": "CGU",
+	"Developers": "Developers",
+	"About": "About",
+	"API": "API",
+	"GitHub": "GitHub",
+	"Invite a friend to<br />%s": "Invite a friend to<br />%s"
 }

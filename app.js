@@ -10,6 +10,10 @@
  * @author  Pirhoo <pirhoo@jplusplus.org>
  */
 
+
+var emailify = require('emailify'),
+fs           = require('fs')
+
    /**
     * Express Framework
     * @type {Object}
@@ -55,12 +59,6 @@ var express        = require('express')
     * @type {Object}
     */
   , passport       = require("passport");
-
-   /**
-    * Stop watching for file changes
-    * @type {Object}
-    */
-  config.watchForConfigFileChanges(0);
 
 
 /**
@@ -209,6 +207,14 @@ exports.boot = function(){
 
   // Creates Express server
   app = module.exports = express();   
+
+  /**
+   * Stop watching for file changes (fix a bug with runtime file)
+   * @tutorial https://github.com/lorenwest/node-config/issues/28#issuecomment-7633312
+   * @type {Object}
+   */
+  config.watchForConfigFileChanges(0);
+
   
   // Configuration
   app.configure(function(){
@@ -228,7 +234,8 @@ exports.boot = function(){
     app.use(lessMiddleware({
       src: __dirname + '/core/public',
       // Compress the files
-      compress: true
+      compress: true,
+      optimization: 2
     }));
 
     // Public directory
@@ -266,27 +273,23 @@ exports.boot = function(){
      ************************************/   
 
     // Temporary solution to avoid a bug on config module
-    var arr = [];
+    var arrLocales = [];
     // The config module convert the array to object for a curious reason
     for(var ln in config.locale.available) {
-      arr.push( config.locale.available[ln] );
+      arrLocales.push( config.locale.available[ln] );
     }
-
-    // So we convert it and set the new values
-    config.locale.available = arr;  
 
     // using 'accept-language' header to guess language settings
     app.use(i18n.init);
 
     i18n.configure({
       // setup some locales
-      locales     : config.locale.available
+      locales     : arrLocales
       // allow the use of a cookie to define the language
       , cookie    : "language"
       // locales directory
       , directory :  "core/locales/"
     });
-
 
 
     /************************************
@@ -296,6 +299,8 @@ exports.boot = function(){
     app.locals({    
       // Configuration variables
       config: config,
+      // Available locales
+      availableLocales: arrLocales,
       getLanguageName: function(lang) {
         return {
           "fr": i18n.__("French"),
@@ -323,19 +328,27 @@ exports.boot = function(){
     // Database configuration
     var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
     // Set query logging on for development mode
-    dbConfig.logging = app.settings.env == "development" ? console.log : false;
+    dbConfig.logging = !app.settings.env == "development" ? console.log : false;
     // Database instance 
     sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
     // Sync the database with the object models
-    sequelize.sync({force: false&&app.settings.env == "development"});
-
+    sequelize.sync({force: false && app.settings.env == "development"});
+    
 
     /************************************
      * Cache client
      ************************************/    
+    // Add conditional credidentials
+    var memcachedOptions = config.memcached.username && config.memcached.password ? {      
+      username : config.memcached.username,
+      password : config.memcached.password
+    } : {};
+    // Add the expiration time
+    memcachedOptions.expire = config.memcached.expire || 3600;
+
     // Creates the memcached client
-    app.memcached = new memjs.Client.create(config.memcached.servers, config.memcached);
-    app.memcached.flush();
+    app.memcached = new memjs.Client.create(config.memcached.servers, memcachedOptions);
+    //app.memcached.flush();
 
     /*****************************************
      * Models, views and mission encapsulation
@@ -358,7 +371,6 @@ exports.boot = function(){
     // @warning Needs to be after the helpers
     app.use(app.router);
 
-
   });
 
 
@@ -375,13 +387,10 @@ exports.boot = function(){
 
 };
 
-
 /************************************
  * Creates the app and listen on
  * the default port.
  ************************************/  
 exports.boot().listen(process.env.PORT || config.port, function(){
-
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
-
 });
