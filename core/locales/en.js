@@ -44,5 +44,11 @@
 		"one": "%s point",
 		"other": "%s points"
 	},
-	"0 point": "0 point"
+	"0 point": "0 point",
+	"Syrian Quest": "Syrian Quest",
+	"PolitiikQuest": "PolitiikQuest",
+	"Welcome to Politikaa Quest!": "Welcome to Politikaa Quest!",
+	"Welcome": "Welcome",
+	"/m": "/m",
+	"Missions": "Missions"
 }

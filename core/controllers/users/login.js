@@ -23,10 +23,10 @@ function loginPage (req, res) {
 	// Disabled page
 	return res.redirect("/users/twitter-connect");	
 
-	/* if( req.param('email', false) )
+	if( req.param('email', false) )
 		loadUser(req, res, loginForm);
 	else
-		loginForm(req, res); */
+		loginForm(req, res);
 }
 
 

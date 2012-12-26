@@ -2,10 +2,15 @@
 	.navbar-inner
 		.container
 			.brand
-				a(href="/") jQuest
+				if instance 
+					a(href="/")=instance.name
+					sup.left10 by jQuest
+				else
+					a(href="/") jQuest
+
 			ul.nav.pull-right
-				
-				- var mainLinks = [{path:"/",label:_("Home")}, {path:_("/courses"),label:_("Courses")}, {path:"/help",label:_("Find help")}]
+
+				- var mainLinks = [{path:"/",label:_("Welcome")}, {path:_("/m"), label:_("Missions")}, {path:"/help",label:_("Find help")}]
 
 				each link in mainLinks
 					if typeof path !== "undefined" && _(path) == link.path
@@ -24,7 +29,7 @@
 						ul.dropdown-menu
 							each lang in availableLocales.sort()
 								li
-									a(href="//" + lang + "." + config.hostname + req.path)
+									a(href="//" + lang + "." + host + (config.port != 80 ? ":" + config.port : "") + req.path)
 										if(lang === language)
 											b.icon-ok.pull-right
 										=getLanguageName(lang)

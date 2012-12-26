@@ -93,5 +93,7 @@
 	"About": "About",
 	"API": "API",
 	"GitHub": "GitHub",
-	"Invite a friend to<br />%s": "Invite a friend to<br />%s"
+	"Invite a friend to<br />%s": "Invite a friend to<br />%s",
+	"Syrian Quest": "Syrian Quest",
+	"PolitiikQuest": "PolitiikQuest"
 }
