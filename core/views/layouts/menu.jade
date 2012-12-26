@@ -24,7 +24,7 @@
 						ul.dropdown-menu
 							each lang in availableLocales.sort()
 								li
-									a(href="/lang/"+lang)
+									a(href="//" + lang + "." + config.hostname + req.path)
 										if(lang === language)
 											b.icon-ok.pull-right
 										=getLanguageName(lang)

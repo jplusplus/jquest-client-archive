@@ -43,5 +43,6 @@
 	"%s point": {
 		"one": "%s point",
 		"other": "%s points"
-	}
+	},
+	"0 point": "0 point"
 }

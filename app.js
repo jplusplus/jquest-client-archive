@@ -313,12 +313,14 @@ exports.boot = function(){
     });
 
     app.use(function(req, res, next) {
+      // The current request
+      res.locals.req = req;
       // Current user
       res.locals.user      = req.user && req.user.ugroup != "tmp" ? req.user : false;
       // Current language
       res.locals.language  = req.cookies.language || i18n.getLocale(req) || config.locale.default;  
-
-      next();
+      // Check user language with the URL
+      require(__dirname + "/core/controllers/language").checkSubdomain(req, res, next);      
     });
 
 
@@ -348,7 +350,7 @@ exports.boot = function(){
 
     // Creates the memcached client
     app.memcached = new memjs.Client.create(config.memcached.servers, memcachedOptions);
-    //app.memcached.flush();
+    app.memcached.flush();
 
     /*****************************************
      * Models, views and mission encapsulation
