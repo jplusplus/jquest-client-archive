@@ -19,8 +19,16 @@ module.exports = function(_app) {
     module.exports.getPage(req.params.uid, req.cookies.language, function(err, page) {              
       // We found the page
       if(err == null && page) res.render("page", page); 
+      // Try to get the page in english
+      else if(req.cookies.language != "en") {
+        module.exports.getPage(req.params.uid, "en", function(err, page) { 
+          // We found the page
+          if(err == null && page) res.render("page", page); 
+          // No page found
+          else res.render("404");
+        });      
       // No page found
-      else     res.render("404");
+      } else res.render("404");
     });
 
   });
@@ -62,18 +70,22 @@ module.exports.getPage = function(uid, lang, complete) {
 
       // Determines wich argument use to retreive the page
       options.query[ isNaN(uid) ? "slug" : "id" ] = uid;
-
+    
       // get_category_index request from the external "WordPress API"
       rest.get(config.api.hostname, options).on("complete", function(data) {  
         
-        // Escapes and stringify the page
-        var page = escape( JSON.stringify( data.page ) );
+        if(data.page) {            
+          // Escapes and stringify the page
+          var page = escape( JSON.stringify( data.page ) );
 
-        // Put the data in the cache 
-        app.memcached.set(cacheSlug, page);
-        
-        // Call the complete function
-        complete(null, data.page);
+          // Put the data in the cache 
+          app.memcached.set(cacheSlug, page);
+          
+          // Call the complete function
+          complete(null, data.page);
+        } else {
+          complete(data, null);
+        }
       });
 
     }        

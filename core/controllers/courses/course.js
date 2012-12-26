@@ -150,6 +150,9 @@ module.exports = function(_app) {
    */
   app.post(/^\/(courses|cours)\/invite$/, function(req, res) {
 
+
+  	if(! req.user) return res.json({"error" : "You must be connected to invite a friend."});
+
   	async.series({
   		// Get the course
   		course : function(callback) {  			
@@ -164,10 +167,12 @@ module.exports = function(_app) {
 		    // Get and update the language
 		    res.cookie("language", require("../users").getUserLang(req) );
 		  	// Callback function is in the right format : function(err, page)
-		  	pageCtrl.getPage("invitation-a-un-cour", req.cookies.language, callback);
+		  	pageCtrl.getPage("invitation-a-un-cours", req.cookies.language, callback);
 
   		}  		
   	}, function(err, results) {
+
+  		if(err) return res.json({"error": err});
 
 	  	var options = {
 	  		to 		 				 : req.body.to,
@@ -185,12 +190,19 @@ module.exports = function(_app) {
 
 			// Create the email template with the given page content
 			app.render("email", results.page, function(err, html) {  
-					
-				if(err) return console.log(err);
+				
+				// Something happends during rendering
+				if(err) return res.json({"error": err});
+				
 				// Set the mail attribut	
 			  options.html = html;
 
-			  require("../notification").sendMail(options, res.json);			  				  
+			  // Sends the email
+			  require("../notification").sendMail(options, function(err, result) {
+			  	if(err) return res.json({"error": err});
+			  	// Show the send result
+			  	res.json(result);
+			  });			  				  
 
 			});
 

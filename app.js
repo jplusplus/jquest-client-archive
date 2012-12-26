@@ -313,12 +313,26 @@ exports.boot = function(){
     });
 
     app.use(function(req, res, next) {
+      // Current hostname
+      res.locals.host = req.host.match(/(\w+\.(\w+))$/)[0]; 
+      // The current request
+      res.locals.req  = req;
       // Current user
       res.locals.user      = req.user && req.user.ugroup != "tmp" ? req.user : false;
       // Current language
       res.locals.language  = req.cookies.language || i18n.getLocale(req) || config.locale.default;  
 
-      next();
+      // Check user language with the URL
+      require(__dirname + "/core/controllers/url").checkLanguage(req, res, function(err, language) {
+        // Check the current domain to dertermine the current instance
+        require(__dirname + "/core/controllers/url").checkInstance(req, res, function(err, instance) {                   
+          // Records the instance
+          res.locals.instance = instance;
+          // Next step
+          next();
+        });
+      });      
+      
     });
 
 
@@ -328,11 +342,14 @@ exports.boot = function(){
     // Database configuration
     var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
     // Set query logging on for development mode
-    dbConfig.logging = !app.settings.env == "development" ? console.log : false;
+    dbConfig.logging = app.settings.env == "development" ? console.log : false;
     // Database instance 
     sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
     // Sync the database with the object models
-    sequelize.sync({force: false && app.settings.env == "development"});
+    sequelize.sync({force: true && app.settings.env == "development"}).success(function() {
+      app.models.Instance.create({ name: "Syrian Quest",   slug: "syrianquest",   host: "syrianquest.dev" });
+      app.models.Instance.create({ name: "Politiikaa Quest", slug: "politiikquest", host: "politiikquest.dev" });
+    });
     
 
     /************************************
@@ -348,7 +365,7 @@ exports.boot = function(){
 
     // Creates the memcached client
     app.memcached = new memjs.Client.create(config.memcached.servers, memcachedOptions);
-    //app.memcached.flush();
+    app.memcached.flush();
 
     /*****************************************
      * Models, views and mission encapsulation

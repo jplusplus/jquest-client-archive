@@ -16,8 +16,13 @@ module.exports = function(app) {
 	/*
 	 * GET home page.
 	 */
-	app.get('/', function(req, res){		
-	  res.render('index.jade', { path:"/" });
+	app.get('/', function(req, res){	
+		// No specified instance, default template
+		if( ! res.locals.instance )	{
+	  	res.render('home/default', { path:"/" });
+	  } else {	  	
+	  	res.render('home/' +  res.locals.instance.slug , { path:"/" });	  	
+	  }
 	});
 
 };

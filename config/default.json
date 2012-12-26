@@ -1,6 +1,7 @@
 {
-	"port": 3000,
-	"host": "http://localhost",
+	"port"     : 3000,
+  "host"     : "http://localhost",
+  "hostname" : "localhost:3000",
 	"db": {
 	  "uri": "postgres://pirhoo:pirhoo@localhost:5432/jquest_orm"	  
 	},
@@ -37,7 +38,7 @@
       "pass": "hellopaquitas"
 	  },
   	"default": {
-  		"from"	 : "noreply@jquest.org",
+  		"from"	 : "contact@jquest.org",
   		"subject": "No subject",
       "html"   : "",
       "generateTextFromHTML": true

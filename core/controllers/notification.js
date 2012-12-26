@@ -37,44 +37,6 @@ module.exports = function(_app) {
   
   // Creare the SMTP client
   module.exports.createClient();
-
-  
-  /*
-  var options = {
-    to: "pierre.romera@gmail.com",
-    subject: "Hola", 
-    content: "Hola",
-    ssl: true
-  };
-  app.get("/email/:slug", function(req, res) { 
-
-    // Get and update the language
-    res.cookie("language", require("./users").getUserLang(req));
-
-    require("./page").getPage(req.params.slug, req.cookies.language, function(page) {       
-            
-      // Parse every variable in the given string
-      options.content = require("./page").parsePage({
-        courseName  : "La Tweet School",
-        courseLink  : config.host,
-        friendEmail : "hello@pirhoo.com"
-      }, page.content);
-
-      // Changes the mail subject according the page
-      options.subject = page.title;    
-
-      res.render("email", options); 
-
-    });
-
-  });
-  * /
-  
-  // Create the template
-  app.render("email", options, function(err, html) {    
-    options.html = html;
-    module.exports.sendMail(options, console.log);
-  });*/
 };
 
 

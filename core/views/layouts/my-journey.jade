@@ -32,12 +32,12 @@ ul.row-fluid.no-bullet.hidden-phone
         //- Draws a chapter with its ID 
         //- Disabled : adds a class "highlight" to the ones with 0 point (class=chapter.points === 0 ? "highight" : "")
         li.span5.chapter-card(data-id=chapter.id)
-          .dark-panel
-            .thumb
-              img(src=chapter.thumbnail)  
-            h4
-              a(tabindex=chapter.parent||chapter.id, href=_("/courses/")+course.slug+"/"+chapter.slug)=chapter.title 
-            .points=_n("%s point", "%s points", getUserPoints(chapter) )
+          a(tabindex=chapter.parent||chapter.id, href=_("/courses/")+course.slug+"/"+chapter.slug)
+            .dark-panel
+              .thumb
+                img(src=chapter.thumbnail)  
+              h4=chapter.title 
+              .points=_n("%s point", "%s points", getUserPoints(chapter) )
           //- After the first element, every chapter has a parent
           if(key > 0)
             //- Draws an arrow related to the parent chapter

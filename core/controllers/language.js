@@ -1,10 +1,13 @@
-var config = require("config");
+var config = require("config"), app;
+
 /**
  * @author Pirhoo
  * @description Language contr
  *
  */
-module.exports = function(app) {
+module.exports = function(_app) {
+
+  app = _app;
 
 	/*
 	 * GET home page.

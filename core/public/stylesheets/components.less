@@ -12,6 +12,10 @@ h1, h2, h3, h4, .brand, fieldset legend {
   text-shadow:1px 1px 0 white;
 }
 
+a:hover {
+    text-decoration:none;
+}
+
 /* MAIN ELEMENT (WORKSPACE) */
 #main {
   position:relative;
@@ -241,17 +245,29 @@ footer {
       
       position:relative;
       .box-shadow(0 1px 2px 0 fade(#000, 40%) );      
-      .border-radius(2px);
+      .border-radius(inherit);
 
       img {
         height:100%;
         width:auto;
         max-width: 400%;
-
+        z-index:10;
         position:absolute;
         top:0;
         left:0;
         .transition(3s);
+      }
+
+      &:after {
+        content:"";
+        z-index:15;
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        .border-radius(inherit);
+        .box-shadow( 0 1px 0 0 fade(white, 30) inset );
       }
     }
 

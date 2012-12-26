@@ -50,12 +50,11 @@ html
         line-height: 100%
       }
 
-      /* Forces Hotmail to display normal line spacing.  More on that: http://www.emailonacid.com/forum/viewthread/43/ */
       #backgroundTable {
         margin: 0;
         width: 100% !important;
-        line-height: 100% !important; 
-        background:white;             
+        line-height: 100% !important;         
+        background:#f5f5f5 url("http://jquest.herokuapp.com/images/bg.jpg");
       }
 
       #backgroundTable td {
@@ -63,7 +62,7 @@ html
       }
 
       .wells {      
-        background-color: #f5f5f5;
+        background: #ffffff;
         border: 1px solid #D5D5D5;
         border-bottom-width:2px;
         border-radius:4px;        
@@ -233,7 +232,7 @@ html
                 h2
                   a(href=config.host) jQuest
               td(width=300, valign='top')
-                h2.tr=subject    
+                h2.tr=subject
 
             tr.content
               td(colspan=2, width=600)!=content
