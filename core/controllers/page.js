@@ -11,7 +11,7 @@ module.exports = function(_app) {
   
   app = _app; 
 
-  app.get("/page/:uid", function(req, res) { 
+  app.get("/p/:uid", function(req, res) { 
 
     // Get and update the language
     res.cookie("language", require("./users").getUserLang(req));

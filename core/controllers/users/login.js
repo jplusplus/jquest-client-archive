@@ -8,12 +8,18 @@ module.exports = function(app, sequelize) {
 	/*
 	 * GET user login page.
 	 */
-	app.get('/users/login', loginPage);
+	app.get('/u/login', loginPage);
 
 	/*
 	 * POST user login page.
 	 */
-	app.post('/users/login', loginPage);
+	app.post('/u/login', loginPage);
+
+	/*
+	 * GET user signup page.
+	 */
+	app.get('/u/signup', signupPage);
+
 
 };
 
@@ -21,7 +27,7 @@ module.exports = function(app, sequelize) {
 function loginPage (req, res) {
 
 	// Disabled page
-	return res.redirect("/users/twitter-connect");	
+	//return res.redirect("/u/twitter-connect");	
 
 	if( req.param('email', false) )
 		loadUser(req, res, loginForm);
@@ -36,13 +42,27 @@ function loginForm(req, res){
 	if(req.session.currentUser) return res.redirect("/");	
 
 	var params = { 
-		title: 'jQuest',
 		email: req.param('email', false), 
 		path:"/" 
 	};
 
 	res.render('users/login.jade', params);
 }
+
+
+function signupPage (req, res) {
+
+	// Redirects logged users
+	if(req.session.currentUser) return res.redirect("/");	
+
+	var params = { 
+		email: req.param('email', false), 
+		path:"/" 
+	};
+
+	res.render('users/signup.jade', params);
+}
+
 
 
 function loadUser(req, res, callback) {

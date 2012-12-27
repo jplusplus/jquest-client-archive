@@ -42,22 +42,22 @@
 							b.caret
 						ul.dropdown-menu
 							li 
-								a(href="/users/"+user.username)=_("Profil")
+								a(href="/u/"+user.username)=_("Profil")
 							li 
-								a(href="/users/"+user.username+"/scores")=_("My scores")
+								a(href="/u/"+user.username+"/scores")=_("My scores")
 							li 
-								a(href="/users/settings")=_("Settings")
+								a(href="/u/settings")=_("Settings")
 							li.divider
 							if user.ugroup == "admin"								
 								li 
 									a(href="/admin/courses")=_("Edit courses")
 								li.divider
 							li 
-								a(href="/users/logout")=_("Log out")
+								a(href="/u/logout")=_("Log out")
 				- else
 					li.dropdown
-						a.padding0(href="/users/login")
-							span.btn.btn-primary=_("Sign in with Twitter")
+						a.padding0(href="/u/signup")
+							span.btn.btn-primary=_("Sign up")
 
 
 							

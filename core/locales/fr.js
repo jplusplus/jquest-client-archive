@@ -99,5 +99,12 @@
 	"Welcome": "Welcome",
 	"/m": "/m",
 	"Missions": "Missions",
-	"Welcome to Syrian Quest!": "Welcome to Syrian Quest!"
+	"Welcome to Syrian Quest!": "Welcome to Syrian Quest!",
+	"Sign up": "Sign up",
+	"Sign in": "Sign in",
+	"Or sign up with...": "Or sign up with...",
+	"Your Twitter account": "Your Twitter account",
+	"Your Facebook account": "Your Facebook account",
+	"Your Google account": "Your Google account",
+	"Your GitHub account": "Your GitHub account"
 }

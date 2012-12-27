@@ -16,10 +16,10 @@ module.exports = function(_app) {
 	/*
 	 * GET user root page.
 	 */
-	app.get('/users', function(req, res){
+	app.get('/u', function(req, res){
 
 		// Redirects not logged users
-		if(!req.user) return res.redirect("/users/login");
+		if(!req.user) return res.redirect("/u/login");
 		res.redirect("/");
 
 	});
