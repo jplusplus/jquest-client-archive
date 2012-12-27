@@ -50,5 +50,6 @@
 	"Welcome to Politikaa Quest!": "Welcome to Politikaa Quest!",
 	"Welcome": "Welcome",
 	"/m": "/m",
-	"Missions": "Missions"
+	"Missions": "Missions",
+	"Welcome to Syrian Quest!": "Welcome to Syrian Quest!"
 }
