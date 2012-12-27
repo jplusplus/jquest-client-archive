@@ -9,15 +9,16 @@ To make jQuest up and running, you need:
 
 
 ### Dependencies
-jQuest is build at the top of the pleasant [Node Package Manager](http://npmjs.org/). To donwload and set up the whole dependancies three, simply run from the project's root directory :
-  > npm install
+jQuest is build at the top of the pleasant [Node Package Manager](http://npmjs.org/). To download and set up the whole dependancies three, simply run from the project's root directory :
+
+    $ npm install
 
 ### Configuration files
 The default configuration is present into the *config/default.json*. Every modifications in this file will be commited. The *runtime.json* file is an auto-generated file that you shouldn't edit.
 
 * **Development mode**: If you want to overide default values, you have to create a file named *config/development.json* and corresponding to your local configuration. This file will be ignored by git. 
 * **Production mode**: if you want to overide default values, you have to edit the *config/production.json* file to fit with your production environment. **This file won't be ignored by git**.
-  
+
 ### Environment variables
 The following environment variables can be use with the highest priority :
 
