@@ -95,5 +95,9 @@
 	"GitHub": "GitHub",
 	"Invite a friend to<br />%s": "Invite a friend to<br />%s",
 	"Syrian Quest": "Syrian Quest",
-	"PolitiikQuest": "PolitiikQuest"
+	"PolitiikQuest": "PolitiikQuest",
+	"Welcome": "Welcome",
+	"/m": "/m",
+	"Missions": "Missions",
+	"Welcome to Syrian Quest!": "Welcome to Syrian Quest!"
 }
