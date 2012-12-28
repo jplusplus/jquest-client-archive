@@ -1,7 +1,7 @@
 {
 	"port"     : 3000,
   "host"     : "http://localhost",
-  "hostname" : "localhost:3000",
+  "hostname" : "localhost",
 	"db": {
 	  "url": "postgres://pirhoo:pirhoo@localhost:5432/jquest_orm"	  
 	},

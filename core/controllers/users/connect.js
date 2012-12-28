@@ -38,10 +38,14 @@ var addStrategy = module.exports.addStrategy = function(options) {
   // Redirect the user to Strategy authentication.  When complete, the strategy
   // will redirect the user back to the application
   app.get(connectPath, function(req, res) {
+    
     // Create the strategy name according the given request (and instance)
     var   strategyName = req.path.match(/(\w+)-connect$/)[1],  
                   lang = res.locals.language,
-    strategyIdentifier = lang + "-" + res.locals.instance.slug + "-" + strategyName;    
+              instance = res.locals.instance,
+    // Instance prefix is optional to determines the strategy identifier
+    strategyIdentifier = ! instance ? strategyName : lang + "-" + instance.slug + "-" + strategyName;    
+
     // Triggers the passport authentification with the given strategy  
     passport.authenticate(strategyIdentifier)(req, res);
   });
@@ -57,38 +61,66 @@ var addStrategy = module.exports.addStrategy = function(options) {
 
     // Get every language, one by one
     for(var l in config.locale.available) {
-      
-      var lang = config.locale.available[l]
+
+      // Add the verify function without instance prefixe
+      addVerify(options, config.locale.available[l]);
 
       // Add a strategy for each existing Instance and language
       for(var i in instances) {
 
-        // Create the strategy name
-        var strategyIdentifier = lang + "-" + instances[i].slug + "-" + options.name;
-
-        // Handles the Twitter callback
-        app.get(callbackPath, 
-          passport.authenticate(strategyIdentifier, {
-            failureRedirect: failedPath,
-            successRedirect: succeedPath,
-          })
-        );
-
-        // Verify function fallback
-        options.verifyFn = typeof options.verifyFn == "function" ? options.verifyFn : verify;
-
-        var strategyOptions = options.strategyOptions;
-        // Add callbackURL and passReqToCallback to the default options 
-        strategyOptions.callbackURL = "http://" + lang + "." + instances[i].host + ":3000" + callbackPath;
-        strategyOptions.passReqToCallback = true;
-
-        // Add the strategy
-        passport.use(strategyIdentifier, new options.strategyFn(strategyOptions, options.verifyFn));
+        // Add the verify function for the given language and instance
+        addVerify(options, config.locale.available[l], instances[i]);
 
       }
     }
 
   });
+
+};
+
+
+/**
+ * Add a verify middleware binded to given language and instance
+ * @param {Object}   options  Strategy options
+ * @param {String}   lang     Subdomain language
+ * @param {String}   instance (optional) Domain instance
+ */
+var addVerify = module.exports.addVerify = function(options, lang, instance) {
+
+  // Create the strategy strategyName without optional lang/instance prefix
+  var strategyIdentifier = !instance ? options.name : lang + "-" + instance.slug + "-" + options.name;
+
+  // Create the strategy paths
+  var callbackPath = '/u/' + options.name + "-callback", 
+       succeedPath = '/u/' + options.name + "-succeed",
+        failedPath = '/u/' + options.name + "-failed";
+
+  // Handles the Twitter callback
+  app.get(callbackPath, 
+    passport.authenticate(strategyIdentifier, {
+      failureRedirect: failedPath,
+      successRedirect: succeedPath,
+    })
+  );
+
+  // Verify function fallback
+  options.verifyFn = typeof options.verifyFn == "function" ? options.verifyFn : verify;
+
+  var strategyOptions = options.strategyOptions
+               , port = config.port == 80 ? "" : ":" + config.port;
+
+  // The callback URL is different for the instance and the nude domain
+  if( instance ) {
+    strategyOptions.callbackURL = "http://" + lang + "." + instance.host + port + callbackPath;
+  } else {
+    strategyOptions.callbackURL = "http://" + lang + "." + config.hostname + port + callbackPath;
+  }
+
+  // Force passing the request to the strategy's callback
+  strategyOptions.passReqToCallback = true;
+
+  // Add the strategy
+  passport.use(strategyIdentifier, new options.strategyFn(strategyOptions, options.verifyFn) );
 
 };
 
