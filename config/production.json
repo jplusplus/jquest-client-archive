@@ -3,6 +3,6 @@
   "host"     : "http://jquest.herokuapp.com",
   "hostname" : "jquest.herokuapp.com",
 	"db": {
-	  "uri": false
+	  "url": false
 	}
 }

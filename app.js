@@ -256,9 +256,7 @@ exports.boot = function(){
     // To support persistent login sessions, Passport needs to be able to
     // serialize users into and deserialize users out of the session. Typically,
     // this will be as simple as storing the user ID when serializing, and finding
-    // the user by ID when deserializing. However, since this example does not
-    // have a database of user records, the complete Twitter profile is serialized
-    // and deserialized.
+    // the user by ID when deserializing.
     passport.serializeUser(function(user, done) {
       done(null, user.id);
     });
@@ -314,7 +312,7 @@ exports.boot = function(){
 
     app.use(function(req, res, next) {
       // Current hostname
-      res.locals.host = req.host.match(/(\w+\.(\w+))$/)[0]; 
+      res.locals.host = require(__dirname + "/core/controllers/url").host(req); 
       // The current request
       res.locals.req  = req;
       // Current user
@@ -336,21 +334,6 @@ exports.boot = function(){
     });
 
 
-    /************************************
-     * Database synchronisation
-     ************************************/    
-    // Database configuration
-    var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.uri);  
-    // Set query logging on for development mode
-    dbConfig.logging = app.settings.env == "development" ? console.log : false;
-    // Database instance 
-    sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
-    // Sync the database with the object models
-    sequelize.sync({force: true && app.settings.env == "development"}).success(function() {
-      app.models.Instance.create({ name: "Syrian Quest",   slug: "syrianquest",   host: "syrianquest.dev" });
-      app.models.Instance.create({ name: "Politiikaa Quest", slug: "politiikquest", host: "politiikquest.dev" });
-    });
-    
 
     /************************************
      * Cache client
@@ -367,19 +350,39 @@ exports.boot = function(){
     app.memcached = new memjs.Client.create(config.memcached.servers, memcachedOptions);
     app.memcached.flush();
 
+
+    /************************************
+     * Database synchronisation
+     ************************************/    
+    // Database configuration
+    var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.url);  
+    // Set query logging on for development mode
+    dbConfig.logging = app.settings.env == "development" ? console.log : false;    
+    // Database instance 
+    sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
+
     /*****************************************
      * Models, views and mission encapsulation
      *****************************************/  
     app.controllers = {};
     app.models      = {};
     app.missions    = {};
+    
     // Import all models from the /models directory
     // @warning Needs the Sequelize database instanced before 
     importAllModels(__dirname + "/core/models", app.models);
-    // Load all controllers from the /controllers directory
-    loadAllRequires(__dirname + "/core/controllers", app.controllers, true);
-    // Load all mission's class
-    loadAllMissions(__dirname + "/custom", app.missions);
+
+    // Sync the database with the  new object models
+    sequelize.sync({force: false}).success(function() {    
+
+      // Load all controllers from the /controllers directory
+      loadAllRequires(__dirname + "/core/controllers", app.controllers, true);
+      // Load all mission's class
+      loadAllMissions(__dirname + "/custom", app.missions);  
+
+      app.models.Instance.create({ name: "Syrian Quest",   slug: "syrianquest",   host: "syrianquest.dev" });
+      app.models.Instance.create({ name: "Politiikaa Quest", slug: "politiikquest", host: "politiikquest.dev" });
+    });
 
 
     /************************************

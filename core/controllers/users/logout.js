@@ -8,7 +8,7 @@ module.exports = function(app, sequelize) {
 	/*
 	 * GET user log out.
 	 */
-	app.get('/users/logout', function(req, res) {
+	app.get('/u/logout', function(req, res) {
 		req.logout();
 		res.redirect("/");
 	});	

@@ -1,3 +1,5 @@
+var config = require("config");
+
 module.exports = function(a) { app = a; };
 
 /**
@@ -31,16 +33,15 @@ module.exports.checkLanguage = function(req, res, callback) {
   }
 
   // If the lang given is not an allowed parameter
-  if( [].indexOf(lang) == -1 ) {       
-
+  if( [].indexOf(lang) == -1 ) {               
     // Find the current host
-    var host = req.host.match(/(\w+\.(\w+))$/)[0],
+    var h = host(req),
     // And the current port
         port = config.port != 80 ? ":" + config.port : "",
     // Construct the new url with the right language prefix
-      defaultUrl = req.protocol + "://" + res.locals.language + "." + host + port;
+      defaultUrl = req.protocol + "://" + res.locals.language + "." + h + port;
     // Add the path
-     defaultUrl += req.path;       
+     defaultUrl += req.originalUrl;         
     // Redirect to the user language
     res.redirect(defaultUrl);
   }
@@ -59,7 +60,7 @@ module.exports.checkLanguage = function(req, res, callback) {
  */
 module.exports.checkInstance = function(req, res, callback) {
 
-  var instanceHost = req.host.match(/(\w+\.(\w+))$/)[0];
+  var instanceHost = host(req);
   // Create the user in the database
   app.models.Instance.find({    
     where: { host : instanceHost }
@@ -67,3 +68,14 @@ module.exports.checkInstance = function(req, res, callback) {
   }).complete(callback);
 
 };
+
+/**
+ * Get the current host (sub domain excluded)
+ * @param  {Object} req Request
+ * @return {String}     Host
+ */
+function host(req) {
+  return req.host.match(/(\w+\.(\w+))$/)[0];
+};
+
+module.exports.host = host;

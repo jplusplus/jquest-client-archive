@@ -3,7 +3,6 @@ var coursesCtrl = require('./')
  , chaptersCtrl = require('../chapters')
  				, async = require('async')
 			 , config = require("config")
- 				, users = require("../users")
  		 , pageCtrl = require("../page");
 
 // Global variables

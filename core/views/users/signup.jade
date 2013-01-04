@@ -1,7 +1,7 @@
 extends ../layout
 
 block title
-  =_("Log in")
+  =_("Sign up")
 
 block stylesheets
   link(href="http://fonts.googleapis.com/css?family=Share:400,700", type='text/css', rel="stylesheet")
@@ -16,11 +16,11 @@ block body
   .container
     .row.top40.bottom40
       .span8.offset2
-        form.form-horizontal.well.padding0.log-in(action="/user/login",method="POST")
+        form.form-horizontal.well.padding0.sign-up(action="/user/login",method="POST")
           .row-fluid
             .span7
               fieldset.left20.top20.right20
-                legend=_("Log in with your email")
+                legend=_("Sign up with your email")
 
                 if(email)
                   .alert.alert-error!=_("Your <b>email</b> or your <b>password</b> is incorrect.")
@@ -39,18 +39,17 @@ block body
                     input(type="password",name="password",id="input-password")
 
                 .control-group
-                  .control-label 
-                  label.controls.checkbox
-                    input(type="checkbox")
-                    | Remember me on that computer
+                  label.control-label(for="input-password-again")=_("Your password again")
+                  .controls
+                    input(type="password",name="password_again",id="input-password-again")
 
                 .form-actions.bottom0
-                  button.btn.btn-primary.btn-large(type="submit")=_("Log in")
-                  !=_(' or <a href="/u/signup">Sign up</a>')
+                  button.btn.btn-primary.btn-large(type="submit")=_("Sign up")
+                  !=_(' or <a href="/u/login">Log in</a>')
 
             .span5.white-panel.connect-form         
               fieldset.margin20
-                legend=_("Or log in with...")
+                legend=_("Or sign up with...")
                 ul.unstyled
                   li
                     a(href="/u/twitter-connect").btn.btn-twitter.btn-large.span12.bottom20 
