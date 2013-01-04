@@ -1,6 +1,7 @@
-   var rest = require('restler')
-    , async = require('async')
-   , config = require("config");
+var rest = require('restler')
+ , async = require('async')
+, config = require("config")
+,     fs = require('fs');
 
 /**
  * @author Pirhoo
@@ -12,18 +13,25 @@ module.exports = function(_app) {
   app = _app; 
 
   app.get("/p/:uid", function(req, res) { 
+  
+    // Template file 
+    var tpl = "pages/",
+    // Extended template file
+    extendedTpl = app.get("views") + "/" + tpl + req.params.uid + "." + app.get("view engine");
+    // Use a sub template ?
+    tpl = fs.existsSync(extendedTpl) ? tpl + req.params.uid : tpl;
 
     // Get and update the language
     res.cookie("language", require("./users").getUserLang(req));
 
-    module.exports.getPage(req.params.uid, req.cookies.language, function(err, page) {              
+    getPage(req.params.uid, req.cookies.language, function(err, page) {        
       // We found the page
-      if(err == null && page) res.render("page", page); 
+      if(err == null && page) res.render(tpl, page); 
       // Try to get the page in english
       else if(req.cookies.language != "en") {
-        module.exports.getPage(req.params.uid, "en", function(err, page) { 
+        getPage(req.params.uid, "en", function(err, page) { 
           // We found the page
-          if(err == null && page) res.render("page", page); 
+          if(err == null && page) res.render(tpl, page); 
           // No page found
           else res.render("404");
         });      
@@ -39,7 +47,7 @@ module.exports = function(_app) {
  * @author Pirhoo
  * @description Get a page using its slug or id (polymorph)
  */
-module.exports.getPage = function(uid, lang, complete) {
+var getPage = module.exports.getPage = function(uid, lang, complete) {
 
   // Unique slug used by the cache to retreive the page
   var cacheSlug = 'page--' + lang + "--" + uid;
@@ -70,10 +78,10 @@ module.exports.getPage = function(uid, lang, complete) {
 
       // Determines wich argument use to retreive the page
       options.query[ isNaN(uid) ? "slug" : "id" ] = uid;
-    
+      
       // get_category_index request from the external "WordPress API"
       rest.get(config.api.hostname, options).on("complete", function(data) {  
-        
+                
         if(data.page) {            
           // Escapes and stringify the page
           var page = escape( JSON.stringify( data.page ) );

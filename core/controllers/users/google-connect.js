@@ -2,8 +2,6 @@
           , config = require("config")
         , passport = require("passport");
 
-var twitterCallback = "/u/google-callback";
-
 /**
  * @author Pirhoo
  * @description Connect route
@@ -13,15 +11,12 @@ module.exports = function(_app, sequelize) {
 
   app = _app;
 
-  require("../users/connect").addStrategy({
-     "name"           : "google" 
-    ,"strategyFn"     : require("passport-google-oauth").Strategy
-    ,"strategyOptions": {
-       "consumerKey"      : config.oauth.google.consumer_key
-      ,"consumerSecret"   : config.oauth.google.consumer_secret    
-    }
-    ,"succeedFn"      : succeedPage
-    ,"failedFn"       : failedPage
+  require("../users/connect")(app).addStrategy({
+     "name"            : "google" 
+    ,"strategyFn"      : require("passport-google-oauth").OAuth2Strategy
+    ,"strategyOptions" : config.oauth.google
+    ,"succeedFn"       : succeedPage
+    ,"failedFn"        : failedPage
   });
   
 };

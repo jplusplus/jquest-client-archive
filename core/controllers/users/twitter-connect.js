@@ -2,8 +2,6 @@
 	, config = require("config")
 , passport = require("passport");
 
-var twitterCallback = "/u/twitter-callback";
-
 /**
  * @author Pirhoo
  * @description Connect route
@@ -13,15 +11,12 @@ module.exports = function(_app, sequelize) {
 
 	app = _app;
 
-	require("../users/connect").addStrategy({
-		 "name" 					: "twitter" 
-		,"strategyFn" 		: require("passport-twitter").Strategy
-		,"strategyOptions": {
-	  	 "consumerKey" 			: config.oauth.twitter.consumer_key
-	 	  ,"consumerSecret"		: config.oauth.twitter.consumer_secret 	  
-		}
-    ,"succeedFn" 			: succeedPage
-    ,"failedFn"				: failedPage
+	require("../users/connect")(app).addStrategy({
+		 "name" 					 : "twitter" 
+		,"strategyFn" 		 : require("passport-twitter").Strategy
+		,"strategyOptions" : config.oauth.twitter
+    ,"succeedFn" 			 : succeedPage
+    ,"failedFn"				 : failedPage
 	});
 	
 };

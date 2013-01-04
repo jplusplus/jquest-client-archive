@@ -1,0 +1,50 @@
+extends ../layout
+
+block title
+    =title
+    
+block stylesheets
+    link(href="http://fonts.googleapis.com/css?family=Share:400,700", type='text/css', rel="stylesheet")
+    link(href="/stylesheets/style.css", type='text/css', rel="stylesheet")
+    link(href="/stylesheets/vendor/swagger/hightlight.default.css", type='text/css', rel="stylesheet")
+    link(href="/stylesheets/vendor/swagger/screen.css", type='text/css', rel="stylesheet")
+
+                
+block body
+
+    include ../layouts/menu
+    .page-header
+        .container
+            h1=title                    
+
+    .container
+        !=content
+        #swagger-ui-container.swagger-ui-wrap
+
+
+block scripts
+    script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")  
+    script(src="/javascripts/vendor/swagger/jquery.slideto.min.js", type="text/javascript") 
+    script(src="/javascripts/vendor/swagger/jquery.wiggle.min.js", type="text/javascript")  
+    script(src="/javascripts/vendor/swagger/jquery.ba-bbq.min.js", type="text/javascript")  
+    script(src="/javascripts/vendor/swagger/handlebars-1.0.rc.1.js", type="text/javascript")    
+    script(src="/javascripts/vendor/swagger/underscore-min.js", type="text/javascript") 
+    script(src="/javascripts/vendor/swagger/backbone-min.js", type="text/javascript")   
+    script(src="/javascripts/vendor/swagger/swagger.js", type="text/javascript")    
+    script(src="/javascripts/vendor/swagger/swagger-ui.min.js", type="text/javascript") 
+
+    script(type="text/javascript")
+        $(function () {
+
+            window.swaggerUi = new SwaggerUi({
+                discoveryUrl: "//jquest-core.herokuapp.com/v1/doc/resources/",
+                dom_id:"swagger-ui-container",
+                supportHeaderParams: true,
+                headers: { Authorization: 'Basic cGlyaG9vOjE5=NjhyZXZvbHV0aW9u==' },
+                supportedSubmitMethods: ["get", "post", "delete", "put", "update"],
+                docExpansion: "none",
+                booleanValues: true
+            });
+
+            window.swaggerUi.load();
+        });

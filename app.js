@@ -350,6 +350,7 @@ exports.boot = function(){
     app.memcached = new memjs.Client.create(config.memcached.servers, memcachedOptions);
     app.memcached.flush();
 
+
     /************************************
      * Database synchronisation
      ************************************/    
@@ -360,26 +361,29 @@ exports.boot = function(){
     // Database instance 
     sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
 
-    
     /*****************************************
      * Models, views and mission encapsulation
      *****************************************/  
     app.controllers = {};
     app.models      = {};
     app.missions    = {};
+    
     // Import all models from the /models directory
     // @warning Needs the Sequelize database instanced before 
     importAllModels(__dirname + "/core/models", app.models);
-    // Load all controllers from the /controllers directory
-    loadAllRequires(__dirname + "/core/controllers", app.controllers, true);
-    // Load all mission's class
-    loadAllMissions(__dirname + "/custom", app.missions);
 
     // Sync the database with the  new object models
-    sequelize.sync({force: true}).success(function() {
+    sequelize.sync({force: false}).success(function() {    
+
+      // Load all controllers from the /controllers directory
+      loadAllRequires(__dirname + "/core/controllers", app.controllers, true);
+      // Load all mission's class
+      loadAllMissions(__dirname + "/custom", app.missions);  
+
       app.models.Instance.create({ name: "Syrian Quest",   slug: "syrianquest",   host: "syrianquest.dev" });
       app.models.Instance.create({ name: "Politiikaa Quest", slug: "politiikquest", host: "politiikquest.dev" });
     });
+
 
     /************************************
      * Configure router      

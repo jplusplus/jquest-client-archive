@@ -55,9 +55,12 @@
 							li 
 								a(href="/u/logout")=_("Log out")
 				- else
-					li.dropdown
+					li
 						a.padding0(href="/u/signup")
 							span.btn.btn-primary=_("Sign up")
+					li
+						a.padding0(href="/u/login")
+							span.btn=_("Log in")
 
 
 							

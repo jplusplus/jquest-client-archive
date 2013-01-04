@@ -58,5 +58,18 @@
 	"Your Twitter account": "Your Twitter account",
 	"Your Facebook account": "Your Facebook account",
 	"Your Google account": "Your Google account",
-	"Your GitHub account": "Your GitHub account"
+	"Your GitHub account": "Your GitHub account",
+	"Your email": "Your email",
+	"Your password": "Your password",
+	"Your password again": "Your password again",
+	"Sign up with your email": "Sign up with your email",
+	"Sign in with your email": "Sign in with your email",
+	"Or sign in with...": "Or sign in with...",
+	"Log in with your email": "Log in with your email",
+	"Or log in with...": "Or log in with...",
+	" or <a href=\"/u/signup\">Sign up</a>": " or <a href=\"/u/signup\">Sign up</a>",
+	" or <a href=\"/u/login\">Log in</a>": " or <a href=\"/u/login\">Log in</a>",
+	"Your username": "Your username",
+	"Connexion failed": "Connexion failed",
+	"Unable to connect to jQuest.": "Unable to connect to jQuest."
 }

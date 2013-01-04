@@ -1,54 +1,74 @@
 extends ../layout
 
 block title
-	=_("Log in")
+  =_("Log in")
 
 block stylesheets
-	link(href="http://fonts.googleapis.com/css?family=Share:400,700", type='text/css', rel="stylesheet")
-	link(href="/stylesheets/style.css", type='text/css', rel="stylesheet")
+  link(href="http://fonts.googleapis.com/css?family=Share:400,700", type='text/css', rel="stylesheet")
+  link(href="/stylesheets/style.css", type='text/css', rel="stylesheet")
 
 block scripts
-	script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
+  script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
 
 block body
 
-	include ../layouts/menu
-	.container.top40
-		.row
-			.span5.offset1
-				form.form-horizontal.well(action="/user/login",method="POST")
-					fieldset 
-						legend Log in to your account
+  include ../layouts/menu
+  .container
+    .row.top40.bottom40
+      .span8.offset2
+        form.form-horizontal.well.padding0.log-in(action="/user/login",method="POST")
+          .row-fluid
+            .span7
+              fieldset.left20.top20.right20
+                legend=_("Log in with your email")
 
-						if(email)
-							.alert.alert-error Your <b>email</b> or your <b>password</b> is incorrect.
+                if(email)
+                  .alert.alert-error!=_("Your <b>email</b> or your <b>password</b> is incorrect.")
 
-						.control-group
-							label.control-label(for="input-email") Your email
-							.controls
-								if(typeof email != "undefined")
-									input(type="text",name="email",id="input-email",value=email)
-								else
-									input(type="password",name="email",id="input-email")
-						.control-group
-							label.control-label(for="input-password") Your password
-							.controls
-								input(type="password",name="password",id="input-password")
-								p.help-block 
-									a(href="/user/forgotten") You forgot your password ?
-						.control-group
-							.control-label 
-							label.controls.checkbox
-								input(type="checkbox")
-								| Remember me on that computer
-						.form-actions
-							button.btn.btn-primary.btn-large(type="submit") Log in
+                .control-group
+                  label.control-label(for="input-email")=_("Your email")
+                  .controls
+                    if(typeof email != "undefined")
+                      input(type="text",name="email",id="input-email",value=email)
+                    else
+                      input(type="password",name="email",id="input-email")
 
-			.span4.offset1
-				blockquote.top90
-					p 
-						| "jQuest is the most beautiful way to improve your skills about the Internets" 
-						small Larry Page, New York Time, 2012
+                .control-group
+                  label.control-label(for="input-password")=_("Your password")
+                  .controls
+                    input(type="password",name="password",id="input-password")
 
-				big.top20 Need an accout ?
-					a.btn.btn-large.left10 Sign up!
+                .control-group
+                  .control-label 
+                  label.controls.checkbox
+                    input(type="checkbox")
+                    | Remember me on that computer
+
+                .form-actions.bottom0
+                  button.btn.btn-primary.btn-large(type="submit")=_("Log in")
+                  !=_(' or <a href="/u/signup">Sign up</a>')
+
+            .span5.white-panel.connect-form         
+              fieldset.margin20
+                legend=_("Or log in with...")
+                ul.unstyled
+                  li
+                    a(href="/u/twitter-connect").btn.btn-twitter.btn-large.span12.bottom20 
+                      .tl
+                        i.right10.icon-twitter
+                        =_("Your Twitter account")
+                  li
+                    a(href="/u/facebook-connect").btn.btn-facebook.btn-large.span12.bottom20 
+                      .tl
+                        i.right10.icon-facebook
+                        =_("Your Facebook account")
+                  li
+                    a(href="/u/google-connect").btn.btn-google.btn-large.span12.bottom20
+                      .tl
+                        i.right10.icon-google-plus-sign
+                        =_("Your Google account")
+                  li
+                    a(href="/u/github-connect").btn.btn-inverse.btn-large.span12.bottom20
+                      .tl
+                        i.right10.icon-github
+                        =_("Your GitHub account")

@@ -34,17 +34,16 @@ module.exports.checkLanguage = function(req, res, callback) {
 
   // If the lang given is not an allowed parameter
   if( [].indexOf(lang) == -1 ) {               
-
-  //  // Find the current host
-  //  var h = host(req),
-  //  // And the current port
-  //      port = config.port != 80 ? ":" + config.port : "",
-  //  // Construct the new url with the right language prefix
-  //    defaultUrl = req.protocol + "://" + res.locals.language + "." + h + port;
-  //  // Add the path
-  //   defaultUrl += req.originalUrl;         
-  //  // Redirect to the user language
-  //  res.redirect(defaultUrl);
+    // Find the current host
+    var h = host(req),
+    // And the current port
+        port = config.port != 80 ? ":" + config.port : "",
+    // Construct the new url with the right language prefix
+      defaultUrl = req.protocol + "://" + res.locals.language + "." + h + port;
+    // Add the path
+     defaultUrl += req.originalUrl;         
+    // Redirect to the user language
+    res.redirect(defaultUrl);
   }
 
   if(typeof callback == 'function') callback();

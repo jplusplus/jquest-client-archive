@@ -1,6 +1,6 @@
-          var util = require("util")
-          , config = require("config")
-        , passport = require("passport");
+  var util = require("util")
+  , config = require("config")
+, passport = require("passport");
 
 /**
  * @author Pirhoo
@@ -12,9 +12,9 @@ module.exports = function(_app, sequelize) {
   app = _app;
 
   require("../users/connect")(app).addStrategy({
-     "name"           : "facebook" 
-    ,"strategyFn"     : require("passport-facebook").Strategy
-    ,"strategyOptions": config.oauth.facebook
+     "name"           : "github"
+    ,"strategyFn"     : require("passport-github").Strategy
+    ,"strategyOptions": config.oauth.github
     ,"succeedFn"      : succeedPage
     ,"failedFn"       : failedPage
   });
@@ -24,7 +24,7 @@ module.exports = function(_app, sequelize) {
 
 
 /**
- * Facebook connexion failed page
+ * github connexion failed page
  * @param  {Object} req HTTP request
  * @param  {Object} res HTTP result
  */
@@ -34,7 +34,7 @@ function failedPage(req, res) {
 
 
 /**
- * Facebook connexion Succeed page
+ * github connexion Succeed page
  * @param  {Object} req HTTP request
  * @param  {Object} res HTTP result
  */

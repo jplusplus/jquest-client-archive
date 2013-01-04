@@ -10,8 +10,14 @@ var app;
  */
 module.exports = function(_app) {
   app = _app;
+
+  return module.exports;
 };
 
+/**
+ * Add a connect strategy
+ * @param {Object} options Strategy options
+ */
 var addStrategy = module.exports.addStrategy = function(options) {
 
   // List of the required options
@@ -161,7 +167,7 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
         // Completes the user information previously completed 
         // with unefficient data
         req.user.username = profile.username;
-        req.user.password = require("enc").sha1(tokenSecret);
+        req.user.password = require("enc").sha1( Math.random() );
 
         // Saves the data
         req.user.save().complete(function() { 
@@ -176,7 +182,7 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
         var user = app.models.User.create({
             username : profile.username
           , ugroup   : "player"
-          , password : require("enc").sha1(tokenSecret)
+          , password : require("enc").sha1( Math.random() )
 
         // Callback function
         }).complete(function(err, player) {

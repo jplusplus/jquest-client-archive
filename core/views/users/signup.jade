@@ -16,17 +16,17 @@ block body
   .container
     .row.top40.bottom40
       .span8.offset2
-        form.form-horizontal.well.padding0(action="/user/login",method="POST")
+        form.form-horizontal.well.padding0.sign-up(action="/user/login",method="POST")
           .row-fluid
             .span7
               fieldset.left20.top20.right20
-                legend Sign up with your email
+                legend=_("Sign up with your email")
 
                 if(email)
-                  .alert.alert-error Your <b>email</b> or your <b>password</b> is incorrect.
+                  .alert.alert-error!=_("Your <b>email</b> or your <b>password</b> is incorrect.")
 
                 .control-group
-                  label.control-label(for="input-email") Your email
+                  label.control-label(for="input-email")=_("Your email")
                   .controls
                     if(typeof email != "undefined")
                       input(type="text",name="email",id="input-email",value=email)
@@ -34,17 +34,18 @@ block body
                       input(type="password",name="email",id="input-email")
 
                 .control-group
-                  label.control-label(for="input-password") Your password
+                  label.control-label(for="input-password")=_("Your password")
                   .controls
                     input(type="password",name="password",id="input-password")
 
                 .control-group
-                  label.control-label(for="input-password") Your password again
+                  label.control-label(for="input-password-again")=_("Your password again")
                   .controls
-                    input(type="password",name="password_again",id="input-password")
+                    input(type="password",name="password_again",id="input-password-again")
 
                 .form-actions.bottom0
-                  button.btn.btn-primary.btn-large(type="submit")=_("Sign in")
+                  button.btn.btn-primary.btn-large(type="submit")=_("Sign up")
+                  !=_(' or <a href="/u/login">Log in</a>')
 
             .span5.white-panel.connect-form         
               fieldset.margin20
