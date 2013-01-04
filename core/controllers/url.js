@@ -43,7 +43,7 @@ module.exports.checkLanguage = function(req, res, callback) {
     // Add the path
      defaultUrl += req.originalUrl;         
     // Redirect to the user language
-    res.redirect(defaultUrl);
+    //res.redirect(defaultUrl);
   }
 
   if(typeof callback == 'function') callback();
