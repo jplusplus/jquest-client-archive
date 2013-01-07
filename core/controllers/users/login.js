@@ -1,3 +1,4 @@
+var url = require("../url");
 /**
  * @author Pirhoo
  * @description Login route
@@ -8,17 +9,17 @@ module.exports = function(app, sequelize) {
 	/*
 	 * GET user login page.
 	 */
-	app.get('/u/login', loginPage);
+	app.get('/:lang/u/login', loginPage);
 
 	/*
 	 * POST user login page.
 	 */
-	app.post('/u/login', loginPage);
+	app.post('/:lang/u/login', loginPage);
 
 	/*
 	 * GET user signup page.
 	 */
-	app.get('/u/signup', signupPage);
+	app.get('/:lang/u/signup', signupPage);
 
 
 };
@@ -26,8 +27,8 @@ module.exports = function(app, sequelize) {
 
 function loginPage (req, res) {
 
-	// Disabled page
-	//return res.redirect("/u/twitter-connect");	
+	// Redirect to the right language
+	url.checkLanguage(req, res);
 
 	if( req.param('email', false) )
 		loadUser(req, res, loginForm);
@@ -37,6 +38,9 @@ function loginPage (req, res) {
 
 
 function loginForm(req, res){
+
+	// Redirect to the right language
+	url.checkLanguage(req, res);
 
 	// Redirects logged users
 	if(req.session.currentUser) return res.redirect("/");	
@@ -51,6 +55,9 @@ function loginForm(req, res){
 
 
 function signupPage (req, res) {
+
+	// Redirect to the right language
+	url.checkLanguage(req, res);
 
 	// Redirects logged users
 	if(req.session.currentUser) return res.redirect("/");	

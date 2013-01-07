@@ -1,4 +1,6 @@
-var config = require("config"), app;
+var config = require("config"), 
+    i18n   = require("i18n"),
+    app;
 
 /**
  * @author Pirhoo
@@ -7,14 +9,14 @@ var config = require("config"), app;
  */
 module.exports = function(_app) {
 
-  app = _app;
+    app = _app;
 
-	/*
-	 * GET home page.
-	 */
-	app.get('/lang/:ln', function(req, res) {		
-		res.cookie("language", req.params.ln.toLowerCase() );		
-		res.redirect("/");
-	});
+    /*
+     * GET home page.
+     */
+    app.get('/lang/:ln', function(req, res) {        
+        i18n.setLocale(req, req.params.ln.toLowerCase);       
+        res.redirect(req.query.path || "back" || "/");
+    });
 
 };

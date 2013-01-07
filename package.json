@@ -18,6 +18,7 @@
     , "passport-facebook"     : "latest"    
     , "passport-twitter"      : "latest"    
     , "pg"                    : "0.7.2"
+    , "restful"               : "latest"
     , "restler"               : "latest"
     , "sequelize"             : ">= 1.4.1"
     , "twit"                  : "latest"

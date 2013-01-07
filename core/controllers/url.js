@@ -1,4 +1,5 @@
-var config = require("config");
+var config = require("config"),
+      i18n = require("i18n");
 
 module.exports = function(a) { app = a; };
 
@@ -10,42 +11,42 @@ module.exports = function(a) { app = a; };
  */
 module.exports.checkLanguage = function(req, res, callback) {
 
-  if( req.subdomains.length > 0 ) {
-    
+  if( req.params && req.params.lang ) {    
     // First parameter must be the Language
-    var l = 0;
-    do {
-      // Get the parameter
-      var lang = req.subdomains[l++].toLowerCase();      
-    // Check that we are not using the www prefix 
-    } while(lang == "www" && l < req.subdomains.length);
-
-    // If the lang is a valid language string
-    if(  app.locals.availableLocales.indexOf(lang) > -1 ) {
-      // Change the user language with it
-      res.cookie("language", lang);         
-      res.locals.language = lang;   
-      
-      if(typeof callback == 'function') callback();   
-      return;
-    }   
-
+    // Get the parameter
+    var lang = (req.params.lang || "").toLowerCase();    
+  } else {
+    // First parameter must be the Language
+    // Use non-explicit matching to get the language
+    var matches = req.path.match(/^(\/?(\w+)).*/i),
+           lang = matches && matches.length > 2 ? matches[2] : null; 
   }
 
-  // If the lang given is not an allowed parameter
-  if( [].indexOf(lang) == -1 ) {               
+  // If the lang is a valid language string
+  if(  app.locals.availableLocales.indexOf(lang) > -1 ) {
+
+    // Change the user language with it
+    i18n.setLocale(req, lang);
+    res.locals.lang = lang;    
+    
+  // Any given lang is good (or accept redirection)
+  } else if(lang != "noredirect") {
+
+    // Determines the languages without the url
+    var lang = i18n.getLocale(req) || config.locale.default;  
     // Find the current host
     var h = host(req),
     // And the current port
         port = config.port != 80 ? ":" + config.port : "",
-    // Construct the new url with the right language prefix
-      defaultUrl = req.protocol + "://" + res.locals.language + "." + h + port;
+    // Construct the new url with the right language suffix
+      defaultUrl = req.protocol + "://" + h + port + "/" + lang;
     // Add the path
      defaultUrl += req.originalUrl;         
     // Redirect to the user language
-    //res.redirect(defaultUrl);
+    res.redirect(defaultUrl);
+    return;
   }
-
+   
   if(typeof callback == 'function') callback();
 
 };

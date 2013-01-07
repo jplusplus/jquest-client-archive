@@ -36,10 +36,9 @@ var addStrategy = module.exports.addStrategy = function(options) {
   }
 
   // Create the strategy paths
-  var connectPath  = '/u/' + options.name + "-connect",
-      callbackPath = '/u/' + options.name + "-callback",
-      succeedPath  = '/u/' + options.name + "-succeed",
-      failedPath   = '/u/' + options.name + "-failed";
+  var connectPath  = '/:lang/u/' + options.name + "-connect",
+      succeedPath  = '/noredirect/u/' + options.name + "-succeed",
+      failedPath   = '/noredirect/u/' + options.name + "-failed";
 
   // Redirect the user to Strategy authentication.  When complete, the strategy
   // will redirect the user back to the application
@@ -47,7 +46,7 @@ var addStrategy = module.exports.addStrategy = function(options) {
     
     // Create the strategy name according the given request (and instance)
     var   strategyName = req.path.match(/(\w+)-connect$/)[1],  
-                  lang = res.locals.language,
+                  lang = res.locals.lang,
               instance = res.locals.instance,
     // Instance prefix is optional to determines the strategy identifier
     strategyIdentifier = ! instance ? strategyName : lang + "-" + instance.slug + "-" + strategyName;    
@@ -97,9 +96,9 @@ var addVerify = module.exports.addVerify = function(options, lang, instance) {
   var strategyIdentifier = !instance ? options.name : lang + "-" + instance.slug + "-" + options.name;
 
   // Create the strategy paths
-  var callbackPath = '/u/' + options.name + "-callback", 
-       succeedPath = '/u/' + options.name + "-succeed",
-        failedPath = '/u/' + options.name + "-failed";
+  var callbackPath = '/noredirect/u/' + options.name + "-callback", 
+       succeedPath = '/noredirect/u/' + options.name + "-succeed",
+        failedPath = '/noredirect/u/' + options.name + "-failed";
 
   // Handles the Twitter callback
   app.get(callbackPath, 
@@ -117,9 +116,9 @@ var addVerify = module.exports.addVerify = function(options, lang, instance) {
 
   // The callback URL is different for the instance and the nude domain
   if( instance ) {
-    strategyOptions.callbackURL = "http://" + lang + "." + instance.host + port + callbackPath;
+    strategyOptions.callbackURL = "http://" + instance.host + port + callbackPath;
   } else {
-    strategyOptions.callbackURL = "http://" + lang + "." + config.hostname + port + callbackPath;
+    strategyOptions.callbackURL = "http://" + config.hostname + port + callbackPath;
   }
 
   // Force passing the request to the strategy's callback

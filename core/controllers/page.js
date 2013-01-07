@@ -12,7 +12,10 @@ module.exports = function(_app) {
   
   app = _app; 
 
-  app.get("/p/:uid", function(req, res) { 
+  app.get("/:lang/p/:uid", function(req, res) { 
+
+    // Check the language in the URL
+    require("./url").checkLanguage(req, res);
   
     // Template file 
     var tpl = "pages/",

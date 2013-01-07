@@ -1,6 +1,6 @@
-          var util = require("util")
-          , config = require("config")
-        , passport = require("passport");
+  var util = require("util")
+  , config = require("config")
+, passport = require("passport");
 
 /**
  * @author Pirhoo

@@ -1,5 +1,5 @@
-	var util = require("util")
-	, config = require("config")
+  var util = require("util")
+  , config = require("config")
 , passport = require("passport");
 
 /**
@@ -7,18 +7,18 @@
  * @description Connect route
  *
  */
-module.exports = function(_app, sequelize) {	
+module.exports = function(_app, sequelize) {    
 
-	app = _app;
+    app = _app;
 
-	require("../users/connect")(app).addStrategy({
-		 "name" 					 : "twitter" 
-		,"strategyFn" 		 : require("passport-twitter").Strategy
-		,"strategyOptions" : config.oauth.twitter
-    ,"succeedFn" 			 : succeedPage
-    ,"failedFn"				 : failedPage
-	});
-	
+    require("../users/connect")(app).addStrategy({
+         "name"            : "twitter" 
+        ,"strategyFn"      : require("passport-twitter").Strategy
+        ,"strategyOptions" : config.oauth.twitter
+        ,"succeedFn"       : succeedPage
+        ,"failedFn"        : failedPage
+    });
+    
 };
 
 
@@ -29,7 +29,7 @@ module.exports = function(_app, sequelize) {
  * @param  {Object} res HTTP result
  */
 function failedPage(req, res) {
-	res.render('users/login-failed');
+    res.render('users/login-failed');
 }
 
 
@@ -39,5 +39,5 @@ function failedPage(req, res) {
  * @param  {Object} res HTTP result
  */
 function succeedPage(req, res) {
-	res.redirect('/');
+    res.redirect('/');
 }

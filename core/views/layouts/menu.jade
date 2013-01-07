@@ -10,14 +10,15 @@
 
 			ul.nav.pull-right
 
-				- var mainLinks = [{path:"/",label:_("Welcome")}, {path:_("/m"), label:_("Missions")}, {path:"/help",label:_("Find help")}]
+				- var prefix    ="/"+lang;
+				- var mainLinks = [{path:prefix+"/", label:_("Welcome")}, {path:prefix+"/m", label:_("Missions")}, {path:prefix+"/help", label:_("Find help")}]
 
 				each link in mainLinks
-					if typeof path !== "undefined" && _(path) == link.path
+					if req.path == link.path
 						li.main-link.active
 							a(href=link.path)=link.label
 					else
-						li.main-link
+						li.main-link					
 							a(href=link.path)=link.label
 				
 				li.divider-vertical
@@ -27,12 +28,12 @@
 								=_("Language")
 							b.caret
 						ul.dropdown-menu
-							each lang in availableLocales.sort()
+							each l in availableLocales.sort()
 								li
-									a(href="//" + lang + "." + host + (config.port != 80 ? ":" + config.port : "") + req.path)
-										if(lang === language)
+									a(href="/" + l + req.path.substring(3) )
+										if(l === lang)
 											b.icon-ok.pull-right
-										=getLanguageName(lang)
+										=getLanguageName(l)	
 
 
 				if user
@@ -42,24 +43,24 @@
 							b.caret
 						ul.dropdown-menu
 							li 
-								a(href="/u/"+user.username)=_("Profil")
+								a(href="/" + lang + "/u/"+user.username)=_("Profil")
 							li 
-								a(href="/u/"+user.username+"/scores")=_("My scores")
+								a(href="/" + lang + "/u/"+user.username+"/scores")=_("My scores")
 							li 
-								a(href="/u/settings")=_("Settings")
+								a(href="/" + lang + "/u/settings")=_("Settings")
 							li.divider
 							if user.ugroup == "admin"								
 								li 
 									a(href="/admin/courses")=_("Edit courses")
 								li.divider
 							li 
-								a(href="/u/logout")=_("Log out")
+								a(href="/" + lang + "/u/logout")=_("Log out")
 				- else
 					li
-						a.padding0(href="/u/signup")
+						a.padding0(href="/" + lang + "/u/signup")
 							span.btn.btn-primary=_("Sign up")
 					li
-						a.padding0(href="/u/login")
+						a.padding0(href="/" + lang + "/u/login")
 							span.btn=_("Log in")
 
 

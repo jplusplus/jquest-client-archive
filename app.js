@@ -257,7 +257,7 @@ exports.boot = function(){
     // serialize users into and deserialize users out of the session. Typically,
     // this will be as simple as storing the user ID when serializing, and finding
     // the user by ID when deserializing.
-    passport.serializeUser(function(user, done) {
+    passport.serializeUser(function(user, done) {      
       done(null, user.id);
     });
 
@@ -316,21 +316,21 @@ exports.boot = function(){
       // The current request
       res.locals.req  = req;
       // Current user
-      res.locals.user      = req.user && req.user.ugroup != "tmp" ? req.user : false;
+      res.locals.user = req.user && req.user.ugroup != "tmp" ? req.user : false;
       // Current language
-      res.locals.language  = req.cookies.language || i18n.getLocale(req) || config.locale.default;  
+      res.locals.lang = i18n.getLocale(req) || config.locale.default; 
+      
+      // Checks the language at every request
+      require(__dirname + "/core/controllers/url").checkLanguage(req, res, function() {
 
-      // Check user language with the URL
-      require(__dirname + "/core/controllers/url").checkLanguage(req, res, function(err, language) {
         // Check the current domain to dertermine the current instance
         require(__dirname + "/core/controllers/url").checkInstance(req, res, function(err, instance) {                   
           // Records the instance
           res.locals.instance = instance;
           // Next step
           next();
-        });
-      });      
-      
+        }); 
+      })     
     });
 
 
