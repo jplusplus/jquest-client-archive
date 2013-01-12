@@ -1,7 +1,11 @@
 var config = require("config"),
-      i18n = require("i18n");
+      i18n = require("i18n"),
+       api = require("../api");
 
-module.exports = function(a) { app = a; };
+module.exports = function(a) { 
+  app = a; 
+  return module.exports; 
+};
 
 /**
  * Check the subdomain that must contain the locale 
@@ -62,12 +66,7 @@ module.exports.checkLanguage = function(req, res, callback) {
 module.exports.checkInstance = function(req, res, callback) {
 
   var instanceHost = host(req);
-  // Create the user in the database
-  app.models.Instance.find({    
-    where: { host : instanceHost }
-  // Complete callback
-  }).complete(callback);
-
+  api.instance({ host : instanceHost }).get(callback)
 };
 
 /**
@@ -77,6 +76,6 @@ module.exports.checkInstance = function(req, res, callback) {
  */
 function host(req) {
   return req.host.match(/(\w+\.(\w+))$/)[0];
-};
+}
 
 module.exports.host = host;

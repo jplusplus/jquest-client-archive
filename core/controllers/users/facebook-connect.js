@@ -12,7 +12,7 @@ module.exports = function(_app, sequelize) {
   app = _app;
 
   require("../users/connect")(app).addStrategy({
-     "name"           : "facebook" 
+     "name"           : "facebook"
     ,"strategyFn"     : require("passport-facebook").Strategy
     ,"strategyOptions": config.oauth.facebook
     ,"succeedFn"      : succeedPage

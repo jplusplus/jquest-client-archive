@@ -1,4 +1,3 @@
-var url = require("../url");
 /**
  * @author Pirhoo
  * @description Login route
@@ -27,9 +26,6 @@ module.exports = function(app, sequelize) {
 
 function loginPage (req, res) {
 
-	// Redirect to the right language
-	url.checkLanguage(req, res);
-
 	if( req.param('email', false) )
 		loadUser(req, res, loginForm);
 	else
@@ -38,9 +34,6 @@ function loginPage (req, res) {
 
 
 function loginForm(req, res){
-
-	// Redirect to the right language
-	url.checkLanguage(req, res);
 
 	// Redirects logged users
 	if(req.session.currentUser) return res.redirect("/");	
@@ -55,9 +48,6 @@ function loginForm(req, res){
 
 
 function signupPage (req, res) {
-
-	// Redirect to the right language
-	url.checkLanguage(req, res);
 
 	// Redirects logged users
 	if(req.session.currentUser) return res.redirect("/");	

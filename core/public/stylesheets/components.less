@@ -191,11 +191,17 @@ footer {
   &.radius-left { .border-radius(3px 3px 0 0); }    
 }
 
-/* GENERIC SMALL CHAPTER CARD */
-.chapter-card {
-
-  position: relative;
-  margin-bottom:10px;
+/* GENERIC SMALL mission CARD */
+.mission-card {
+  
+  display:inline-block;
+  margin:20px;
+  text-align:center;
+  background:#aaa;
+  color:white;   
+  position:relative;
+  z-index:100;
+  .border-radius(4px);
 
   &.disabled {
 
@@ -203,7 +209,7 @@ footer {
       background:#bbb;
     }
 
-    // Add an overlay for the disabled chapter
+    // Add an overlay for the disabled mission
     .dark-panel:before {
       z-index:100;
       content:"";
@@ -218,16 +224,13 @@ footer {
       #gradient > .striped( fade(#ccc, 60%) );
     }
 
-    .arrow {
-      border-style:dashed;
-      .opacity(60);
-    }
-
   }
 
   .dark-panel {
 
-    padding:10px;
+    padding:10px 20px;
+    width:60px;
+    margin:0;
     min-height:22px;
     position: relative;
     z-index:60;
@@ -276,67 +279,6 @@ footer {
       font-size:10px;
       text-transform: uppercase;      
     }
-
-  }
-
-  .arrow {
-    width:60px;
-    height:0px;
-    border:0;
-    border-bottom:2px @grayLight solid;   
-
-    position:absolute;
-    z-index:50;
-
-    &:after {     
-      display:block;
-      content:"";
-
-      position:absolute;
-      top:-3px; right:0px;
-
-      height:6px;
-      width:6px;
-
-      border:2px solid @grayLight;
-      border-left:0;
-      border-bottom:0;
-
-      .rotate(45deg); 
-
-    }
-
-    /*  Default */
-    &, &.west.equal {
-      top:50%;
-      left:-61px;
-      margin-top:-2px;
-    }
-
-    &.west.north {
-      top:-32px;
-      left:50%;
-      right:auto;
-      margin-left:-30px;    
-      .rotate(90deg);
-    }
-
-    &.east.equal {
-      top:50%;
-      left:auto;
-      right:-61px;
-      .rotate(180deg);
-      margin-top:-2px;
-    }
-
-    &.equal.north {
-      top:-32px;
-      left:50%;
-      right:auto;
-      margin-left:-30px;    
-      .rotate(90deg);
-    }
-
 
 
   }

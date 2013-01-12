@@ -17,7 +17,7 @@ module.exports = function(app) {
 	app.get(/^\/(courses|cours)\/([a-zA-Z0-9_.-]+)\/([a-zA-Z0-9_.-]+)$/, function(req, res){
 
 		var course_slug  = req.params[1],
-				chapter_slug = req.params[2],
+			chapter_slug = req.params[2],
         // Needs to be accessible in all functions of the serie
         chapter; 
 

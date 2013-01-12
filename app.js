@@ -10,9 +10,92 @@
  * @author  Pirhoo <pirhoo@jplusplus.org>
  */
 
+/**
+   * Patch the console methods in order to provide timestamp information
+   *
+   * Usage:
+   *  > console.log('ok')
+   *  2012-09-06T11:52:56.769Z ok true
+   *
+   * Note:
+   *  The patch will only be applied with the first call.
+   *
+   * Tested with V8 (Google Chrome & NodeJS)
+   */
+  
 
-var emailify = require('emailify'),
-fs           = require('fs')
+
+
+
+(function(c){
+  // Do not extend the console twice
+  if(c.__elg__){return;}
+
+  var util = require('util');
+  // Maps this three console's methods
+  ['log', 'info', 'error'].forEach(function(f){
+    var _= c[f];
+    c[f] = function(){
+      var args = arguments;
+      for(var i in args) {
+        // Only apply the inspect to objects
+        if(typeof args[i] == "object") {
+          args[i] = util.inspect(args[i], false, null);
+        }
+      }
+      return _.apply(c, args);
+    };
+  });
+  c.__elg__ = true;
+})(console);
+
+
+var tab = [
+  {name:"a", children: ["b", "c"] },
+  {name:"e", children: ["f", "g"] },
+  {name:"h", children: [] },
+  {name:"k", children: [] },
+  {name:"f", children: ["h", "h"] },
+  {name:"c", children: ["d"] },
+  {name:"b", children: ["d"] },
+  {name:"d", children: ["e"] },
+  {name:"g", children: ["h", "k"] },
+];
+
+/*
+BFS(graphe G, sommet s):
+{
+  f = CreerFile();
+  Marquer(s);
+  Enfiler(f, s);
+  TANT-QUE NON FileVide(f) FAIRE
+      x = Défiler(f);
+      Afficher(x)
+      TANT-QUE ExisteFils(x) FAIRE
+          z = FilsSuivant(x);
+          SI NonMarqué(z) ALORS 
+              Marquer(z);
+              Enfiler(f, z);
+          FIN-SI
+      FIN-TANT-QUE
+  FIN-TANT-QUE
+}
+
+1  procedure BFS(G,v):
+2      create a queue Q
+3      enqueue v onto Q
+4      mark v
+5      while Q is not empty:
+6          t ← Q.dequeue()
+7          if t is what we are looking for:
+8              return t
+9          for all edges e in G.adjacentEdges(t) do
+12             u ← G.adjacentVertex(t,e)
+13             if u is not marked:
+14                  mark u
+15                  enqueue u onto Q
+
+*/
 
    /**
     * Express Framework
@@ -68,15 +151,14 @@ var app = sequelize = null;
 
 /**
  * Loads all requires automaticly from a directory
- * @param  {String} dirname   Directory where look for the file
- * @param  {Object} where     Object where save the instances
+ * @param  {String} dirname   Directory where look for the file 
  * @param  {Boolean} instance Should we instanciate each module ? 
  */
-function loadAllRequires(dirname, where, instance) {  
+function loadAllRequires(dirname, instance) {  
   // Change the root of the directory to analyse following the given parameter
   var dir = dirname || __dirname;
   // Var to record the require
-  where = typeof(where) === "object" ? where : {};
+  where = typeof(where) === "object" ? where : {};  
   
   // Grab a list of our route files/directories
   fs.readdirSync(dir).forEach(function(name){
@@ -91,7 +173,7 @@ function loadAllRequires(dirname, where, instance) {
     // If it's a directory...
     if( stats.isDirectory() ) {
       // Recursive calling
-      loadAllRequires(path, where, instance);      
+      loadAllRequires(path, instance);      
     // If it's a regular file...
     } else {      
       // Require the module with app in parameter
@@ -171,32 +253,6 @@ function importAllModels(dirname, where) {
   });
 }
 
-/**
- * Parses the DNS url to extract fields
- * @param  {String} url The URL to parse
- * @return {Object}     The fields extracted from the URL
- */
-function getDbConfigFromURL(url) {
-  
-  var regex  =  /(\w*)\:\/\/(([a-zA-Z0-9_\-.]*)\:([a-zA-Z0-9_\-.]*))?@([a-zA-Z0-9_\-.]*)(\:(\d+))?\/([a-zA-Z0-9_\-.]*)/
-  ,   fields = [undefined, "dialect", "auth", "username", "password", "host", undefined, "port", "database"]
-  ,   match  = url.match(regex)
-  ,   conf   = {};
-  
-  // Puts every match in the right field
-  for(var index in fields) {
-    
-    var fieldName = fields[index];
-    // If the current field index matches to something
-    if( fieldName && match[index] ) {
-      conf[fieldName] = match[index];
-    }
-  }
-  
-  // Return the configuration
-  return conf;
-}
-
 
 
 /**
@@ -258,11 +314,11 @@ exports.boot = function(){
     // this will be as simple as storing the user ID when serializing, and finding
     // the user by ID when deserializing.
     passport.serializeUser(function(user, done) {      
-      done(null, user.id);
+      done(null, user);
     });
 
     passport.deserializeUser(function(obj, done) {
-      app.models.User.find(obj).complete(done);
+      done(null, obj);
     });
 
 
@@ -322,11 +378,15 @@ exports.boot = function(){
       
       // Checks the language at every request
       require(__dirname + "/core/controllers/url").checkLanguage(req, res, function() {
-
         // Check the current domain to dertermine the current instance
-        require(__dirname + "/core/controllers/url").checkInstance(req, res, function(err, instance) {                   
-          // Records the instance
-          res.locals.instance = instance;
+        require(__dirname + "/core/controllers/url").checkInstance(req, res, function(err, instance) {                             
+          if( !err && instance.objects.length > 0 ) {
+            // Records the instance
+            res.locals.instance = instance.objects[0]
+          } else {
+            // Disables instance mode
+            res.locals.instance = false;
+          }
           // Next step
           next();
         }); 
@@ -351,38 +411,15 @@ exports.boot = function(){
     app.memcached.flush();
 
 
-    /************************************
-     * Database synchronisation
-     ************************************/    
-    // Database configuration
-    var dbConfig = getDbConfigFromURL(process.env.DATABASE_URL || config.db.url);  
-    // Set query logging on for development mode
-    dbConfig.logging = app.settings.env == "development" ? console.log : false;    
-    // Database instance 
-    sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);     
-
     /*****************************************
-     * Models, views and mission encapsulation
+     * Controllers, templates and mission encapsulation
      *****************************************/  
-    app.controllers = {};
-    app.models      = {};
-    app.missions    = {};
     
-    // Import all models from the /models directory
-    // @warning Needs the Sequelize database instanced before 
-    importAllModels(__dirname + "/core/models", app.models);
-
-    // Sync the database with the  new object models
-    sequelize.sync({force: false}).success(function() {    
-
-      // Load all controllers from the /controllers directory
-      loadAllRequires(__dirname + "/core/controllers", app.controllers, true);
-      // Load all mission's class
-      loadAllMissions(__dirname + "/custom", app.missions);  
-
-      app.models.Instance.create({ name: "Syrian Quest",   slug: "syrianquest",   host: "syrianquest.dev" });
-      app.models.Instance.create({ name: "Politiikaa Quest", slug: "politiikquest", host: "politiikquest.dev" });
-    });
+    // Load all controllers from the /controllers directory    
+    loadAllRequires(__dirname + "/core/controllers", true);
+    // Load all mission's class
+    app.missions    = {};
+    loadAllMissions(__dirname + "/custom", app.missions);
 
 
     /************************************

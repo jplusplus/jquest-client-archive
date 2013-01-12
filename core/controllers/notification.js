@@ -18,7 +18,7 @@ var config = require("config")
  * Utils functions
  * @type {Object}
  */
-, utils = require('./utils')
+, utils = require('../utils')
 /**
  * Mailifier
  * @type {Object}

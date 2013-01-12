@@ -1,8 +1,5 @@
 {
-	"port"     : 80,
+  "port"     : 80,
   "host"     : "http://jquest.herokuapp.com",
-  "hostname" : "jquest.herokuapp.com",
-	"db": {
-	  "url": false
-	}
+  "hostname" : "jquest.herokuapp.com"
 }

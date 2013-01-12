@@ -1,5 +1,6 @@
 var config = require("config")
-, passport = require("passport");
+, passport = require("passport")
+     , api = require("../../api");
 
 // Globals
 var app;
@@ -62,20 +63,23 @@ var addStrategy = module.exports.addStrategy = function(options) {
   app.get(succeedPath, options.succeedFn);
 
   // Gets all instances from the database
-  app.models.Instance.all().success(function(instances) {
+  api.instance.get(function(err, instances) {
 
-    // Get every language, one by one
-    for(var l in config.locale.available) {
+    if(!err && instances.objects)  {
 
-      // Add the verify function without instance prefixe
-      addVerify(options, config.locale.available[l]);
+      // Get every language, one by one
+      for(var l in config.locale.available) {
 
-      // Add a strategy for each existing Instance and language
-      for(var i in instances) {
+        // Add the verify function without instance prefixe
+        addVerify(options, config.locale.available[l]);
 
-        // Add the verify function for the given language and instance
-        addVerify(options, config.locale.available[l], instances[i]);
+        // Add a strategy for each existing Instance and language
+        for(var i in instances.objects) {
 
+          // Add the verify function for the given language and instance
+          addVerify(options, config.locale.available[l], instances.objects[i]);          
+
+        }
       }
     }
 
@@ -141,84 +145,39 @@ var addVerify = module.exports.addVerify = function(options, lang, instance) {
 var verify = module.exports.verify = function(req, token, tokenSecret, profile, done) {
 
   // Find the user whith the given id and for Twitter
-  app.models.UserOauth.find({ 
-    where: { 
-        consumerUserId: profile.id
-      , consumer:"twitter"
-    }
-  // If success
-  }).complete(function(error, userOauth) {
+  api.user_oauth({  
+    consumer_user_id : profile.id,
+    consumer         : profile.provider
+  }).get(function(err, res) {
 
     // The user already exists
-    if(userOauth !== null) {
-
-      done(null, {id: userOauth.userId});     
-
+    if(!err && res.objects.length > 0) {
+      api.user(res.objects[0].user.id).get(done);     
     // The user do not exists yet
     } else {
 
+      // We build the User to save
+      var user = api.user.post({
+        username    : profile.username,
+        first_name  : "",
+        last_name   : "",
+        is_active   : true,
+        date_joined : new Date(),
+        // UserOauth object
+        oauths      : {
+            consumer                   : profile.provider
+          , consumer_user_id           : profile.id
+          , oauth_access_token         : token
+          , oauth_access_token_secret  : tokenSecret                           
+        }
+      // Callback function
+      }, done);
+
       // If the user is already connected with a temporary session
-      if( req.isAuthenticated() && req.user.ugroup == "tmp") {
-
-        // Transforms the current temporary user
-        // to a complete player user
-        req.user.ugroup   = "player";
-        // Completes the user information previously completed 
-        // with unefficient data
-        req.user.username = profile.username;
-        req.user.password = require("enc").sha1( Math.random() );
-
-        // Saves the data
-        req.user.save().complete(function() { 
-          // And when the user is saved, create its oauth credidentials
-          createUserOauth(req.user, profile, token, tokenSecret, done);
-        });
-
-      // The user isn't connected yet with temporary session
-      } else {
-
-        // We build the User to save
-        var user = app.models.User.create({
-            username : profile.username
-          , ugroup   : "player"
-          , password : require("enc").sha1( Math.random() )
-
-        // Callback function
-        }).complete(function(err, player) {
-          // Create the oauth credidentials
-          // in the database
-          createUserOauth(player, profile, token, tokenSecret, done);
-        });
-
-      }
+      // if( req.isAuthenticated() && req.user.ugroup == "tmp") { }
 
     }
 
-  });
-
-};
-
-
-/**
- * Create a new UserOauth entry in the database
- * @param  {Object}   user        Passport user object (wich is a sequelize model)
- * @param  {Object}   profile     Twitter profile object
- * @param  {String}   token       Twitter user token
- * @param  {String}   tokenSecret Twutter user token secret
- * @param  {Function} done        Callback function
- */
-function createUserOauth(user, profile, token, tokenSecret, done) {
-
-  // We create the UserOauth 
-  userOauth = app.models.UserOauth.create({ 
-      consumer                : profile.provider
-    , consumerUserId          : profile.id
-    , userId                  : user.id
-    , oauthAccessToken        : token
-    , oauthAccessToken_secret : tokenSecret                           
-  }).complete(function(err) {               
-    // Callback function
-    done(err, user);
   });
 
 };
