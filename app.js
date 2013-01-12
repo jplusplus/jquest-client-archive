@@ -281,7 +281,7 @@ exports.boot = function(){
 
     app.use(function(req, res, next) {      
       // Current hostname
-      res.locals.host = require(__dirname + "/core/controllers/url").host(req); 
+      res.locals.host = req.host; 
       // The current request
       res.locals.req  = req;
       // Current user

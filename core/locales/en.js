@@ -71,5 +71,9 @@
 	" or <a href=\"/u/login\">Log in</a>": " or <a href=\"/u/login\">Log in</a>",
 	"Your username": "Your username",
 	"Connexion failed": "Connexion failed",
-	"Unable to connect to jQuest.": "Unable to connect to jQuest."
+	"Unable to connect to jQuest.": "Unable to connect to jQuest.",
+	"Start": "Start",
+	"Explore": "Explore",
+	"Choose a mission": "Choose a mission",
+	"Choose a mission from the list below. If it's locked, you have<br />to complete other missions before you can move on.": "Choose a mission from the list below. If it's locked, you have<br />to complete other missions before you can move on."
 }

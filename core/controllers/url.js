@@ -39,7 +39,7 @@ module.exports.checkLanguage = function(req, res, callback) {
     // Determines the languages without the url
     var lang = i18n.getLocale(req) || config.locale.default;  
     // Find the current host
-    var h = host(req),
+    var h = req.host,
     // And the current port
         port = config.port != 80 ? ":" + config.port : "",
     // Construct the new url with the right language suffix
@@ -64,18 +64,5 @@ module.exports.checkLanguage = function(req, res, callback) {
  * @param  {Function} callback The callback function
  */
 module.exports.checkInstance = function(req, res, callback) {
-
-  var instanceHost = host(req);
-  api.instance({ host : instanceHost }).get(callback)
+  api.instance({ host : req.host }).get(callback)
 };
-
-/**
- * Get the current host (sub domain excluded)
- * @param  {Object} req Request
- * @return {String}     Host
- */
-function host(req) {
-  return req.host.match(/(\w+\.(\w+))$/)[0];
-}
-
-module.exports.host = host;
