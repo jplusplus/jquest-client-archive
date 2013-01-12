@@ -363,10 +363,10 @@ exports.boot = function(){
       },
         // Language helpers
       _ : i18n.__,
-      _n: i18n.__n
+      _n: i18n.__n      
     });
 
-    app.use(function(req, res, next) {
+    app.use(function(req, res, next) {      
       // Current hostname
       res.locals.host = require(__dirname + "/core/controllers/url").host(req); 
       // The current request
@@ -375,7 +375,9 @@ exports.boot = function(){
       res.locals.user = req.user && req.user.ugroup != "tmp" ? req.user : false;
       // Current language
       res.locals.lang = i18n.getLocale(req) || config.locale.default; 
-      
+      // Add url prefix
+      res.locals.url = function(u) { return "/" + res.locals.lang + u; };
+
       // Checks the language at every request
       require(__dirname + "/core/controllers/url").checkLanguage(req, res, function() {
         // Check the current domain to dertermine the current instance

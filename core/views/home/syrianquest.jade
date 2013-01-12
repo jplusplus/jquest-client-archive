@@ -14,8 +14,13 @@ block body
 
   include ../layouts/menu
     
-  .page-header
-    .container
-      .row    
-        .span8
-          h1=instance.name
+  .container
+    .row.top60   
+      .span6.offset3
+        iframe(width="100%",height="315",src="http://www.youtube.com/embed/0YkjMeKZcA8",frameborder="0",allowfullscreen=true)
+    .row.tc.bottom60
+      h1.span6.offset3.top40.bottom40 Learn new investigation skills and help sort out information about Syria
+      .span12
+        a.btn.btn-large.btn-primary(href=url("/m"))
+          strong Start the Quest!      
+        .btn.btn-large.left10(href=url("/e")) Explore the data

@@ -207,7 +207,10 @@ footer {
   font-size:12px;
   text-shadow:1px 1px 0 white;
   color:#aaa;   
-  &.activated { color:#000; }
+  a, &.activated { 
+    font-weight:bold;
+    color:#444;
+  }
   
   .panel {    
     .border-radius(4px);
@@ -225,6 +228,7 @@ footer {
     
     .user-points { 
       color:#888;
+      font-weight:normal;
       padding-top:5px;
       line-height:16px;
       height:16px;  

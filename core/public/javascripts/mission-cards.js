@@ -1,5 +1,8 @@
 $(function() {
 
+  // Active popover on mission card
+  $('.mission-card .panel').popover({trigger: "hover"});
+
   window.jsPlumb.bind("ready", function() {    
 
     // Use Canvas as default renderer

@@ -114,5 +114,9 @@
 	"Or log in with...": "Or log in with...",
 	"Sign up with your email": "Sign up with your email",
 	"Your password again": "Your password again",
-	" or <a href=\"/u/login\">Log in</a>": " or <a href=\"/u/login\">Log in</a>"
+	" or <a href=\"/u/login\">Log in</a>": " or <a href=\"/u/login\">Log in</a>",
+	"Explore": "Explore",
+	"Start": "Start",
+	"Choose a mission": "Choose a mission",
+	"Choose a mission from the list below. If it's locked, you have<br />to complete other missions before you can move on.": "Choose a mission from the list below. If it's locked, you have<br />to complete other missions before you can move on."
 }

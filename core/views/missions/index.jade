@@ -25,15 +25,12 @@ block body
   include ../layouts/menu
   .page-header
     .container
-      h1
-        =instance.name
-        =" › " 
-        =_("Missions")
+      h1=_("Choose a mission")
+      p!=_("Choose a mission from the list below. If it's locked, you have<br />to complete other missions before you can move on.")
       
-  .container
-    .row-fluid
+  .container    
       //- chapter.content must be read as an HTML content
-      .span9.main-panel.no-padding
+      .main-panel.no-padding
         .padding20
           .cards
             - var lastLevel = 0;
@@ -41,11 +38,16 @@ block body
               //- Line break when the level change
               if lastLevel < m.level
                 br
-              .mission-card(data-uri=m.resource_uri, data-children=m.children.join(','), class=m.isActivated ? "activated" : "")
-                .panel
-                  .mission-name=m.name
-                  if m.progression
-                    .user-points=m.progression.points+" points"
-                    .game-tick(class=m.progression.state)
-                
+              if m.isActivated
+                .mission-card.activated(data-uri=m.resource_uri, data-children=m.children.join(',') )
+                  a.panel(href=url("/m/"+m.id), title=m.name, data-content=m.description)
+                    .mission-name=m.name
+                    if m.progression
+                      .user-points=m.progression.points+" points"
+                      .game-tick(class=m.progression.state)
+              else
+                .mission-card(data-uri=m.resource_uri, data-children=m.children.join(',') )
+                  .panel(title=m.name, data-content=m.description)
+                    .mission-name=m.name
+                    
               - lastLevel = m.level

@@ -31,8 +31,7 @@ module.exports = function(_app) {
                     if( req.isAuthenticated() ) {
                         api.user_progression({user: req.user.id}).get(callback)
                     } else {
-                        //callback(null,false)
-                        api.user_progression({user: 2}).get(callback)
+                        callback(null,false)                        
                     }
                 },
             }, function render(err, results) {
@@ -58,8 +57,8 @@ module.exports = function(_app) {
                     // Is the current missiona activated ?
                     //  1 - Yes, if no parent
                     mission.isActivated = mission.relationships.length == 0;
-                    //  2 - Or not, if no user progression (loged out)
-                    mission.isActivated = mission.isActivated || !results.userProgressions;
+                    //  2 - Or not, if no user progression and the current is the root (loged out)
+                    mission.isActivated = mission.isActivated || (!results.userProgressions && !mission.relationships.length)
                     //  3 - Or yes, if one parent is succeed
                     mission.isActivated = mission.isActivated || !!_.find(mission.relationships, function(rs) {
                         // Find the user progession of each parent to its state
@@ -103,8 +102,8 @@ module.exports = function(_app) {
  *  / \                         B--1
  * B   C         will begin     C--1
  *  \ / \                       D--2
- *   D   E                      E--3
- *    \                         F--4
+ *   D   E                      E--2
+ *    \                         F--3
  *     F
  *  
  * @param  {Object} graph Graph to fetch

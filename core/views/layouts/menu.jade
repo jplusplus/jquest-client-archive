@@ -10,8 +10,7 @@
 
 			ul.nav.pull-right
 
-				- var prefix    ="/"+lang;
-				- var mainLinks = [{path:prefix+"/", label:_("Welcome")}, {path:prefix+"/m", label:_("Missions")}, {path:prefix+"/help", label:_("Find help")}]
+				- var mainLinks = [{path:url("/"), label:_("Welcome")}, {path:url("/m"), label:_("Start")}, {path:url("/e"), label:_("Explore")}, {path:url("/help"), label:_("Find help")}]
 
 				each link in mainLinks
 					if req.path == link.path
@@ -43,24 +42,24 @@
 							b.caret
 						ul.dropdown-menu
 							li 
-								a(href="/" + lang + "/u/"+user.username)=_("Profil")
+								a(href=url("/u/"+user.username))=_("Profil")
 							li 
-								a(href="/" + lang + "/u/"+user.username+"/scores")=_("My scores")
+								a(href=url("/u/"+user.username+"/scores"))=_("My scores")
 							li 
-								a(href="/" + lang + "/u/settings")=_("Settings")
+								a(href=url("/u/settings"))=_("Settings")
 							li.divider
 							if user.ugroup == "admin"								
 								li 
 									a(href="/admin/courses")=_("Edit courses")
 								li.divider
 							li 
-								a(href="/" + lang + "/u/logout")=_("Log out")
+								a(href=url("/u/logout"))=_("Log out")
 				- else
 					li
-						a.padding0(href="/" + lang + "/u/signup")
+						a.padding0(href=url("/u/signup"))
 							span.btn.btn-primary=_("Sign up")
 					li
-						a.padding0(href="/" + lang + "/u/login")
+						a.padding0(href=url("/u/login"))
 							span.btn=_("Log in")
 
 
