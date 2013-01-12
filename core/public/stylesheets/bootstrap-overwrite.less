@@ -75,15 +75,20 @@ input[type="color"],
 .navbar {
 
   .transition(0.7s);
-  .box-shadow(0 0 6px 0 fade(#000, 10) );
-  border-bottom:1px solid #ddd;
+  border:0px;
 
   .divider-vertical {
-      border-right-color:fade(white, 80);
+    border-right-color:fade(white, 80);
+    border-left-color:darken(@navbarBackground, 12%);
   }
 
   a.padding0 {
     padding:0 !important;
+  }
+  
+  .navbar-inner {
+    .box-shadow(0 0 6px 0 fade(#000, 10) );
+    background:url("/images/bg.jpg");
   }
 
   
@@ -99,7 +104,7 @@ input[type="color"],
 
     /* The navbar begins transparent */
     .navbar-inner {
-      background:transparent;
+      .box-shadow(none);
     }
   }
 
