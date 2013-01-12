@@ -29,28 +29,44 @@ module.exports = function(_app) {
                 // Finds the user progressions for this instance
                 userProgressions : function(callback) {                    
                     if( req.isAuthenticated() ) {
-                        api.userProgressions({user: req.user.id}).get(callback)
+                        api.user_progression({user: req.user.id}).get(callback)
                     } else {
-                        callback(null,false)
+                        //callback(null,false)
+                        api.user_progression({user: 2}).get(callback)
                     }
                 },
             }, function render(err, results) {
-                // Switchs to the 404 page if an error happends
-                if(err || !results.instance) return res.render('404');   
                 
-                // Create the mission three :
-                //   1 - map every mission to record the user progression
-                //   2 - map every mission to extract its childrens
+                // Switchs to the 404 page if an error happends
+                if(err || !results.instance) return res.render('404');  
+                
+                // Create the mission three with missions mapping :
+                //   1 - to record the user progression
+                //   2 - to determines if the mission is activated
+                //   3 - to extract its childrens
+                //   4 - and map every children list to only keep resource_uri
                 _.map(results.instance.missions, function(mission) {
 
                     // Merge Instance's missions with user progressions
                     if(results.userProgressions) {
-                        // Filters the userProgression array to this mission
-                        mission.progressions = _.filter(results.userProgressions, function(p) { 
-                            return p.mission == mission.id;
+                        // Filters the userProgressions array to this mission
+                        mission.progression = _.find(results.userProgressions.objects, function(p) { 
+                            return p.mission == mission.resource_uri;
                         });
-                        return m;
-                    }       
+                    } 
+
+                    // Is the current missiona activated ?
+                    //  1 - Yes, if no parent
+                    mission.isActivated = mission.relationships.length == 0;
+                    //  2 - Or not, if no user progression (loged out)
+                    mission.isActivated = mission.isActivated || !results.userProgressions;
+                    //  3 - Or yes, if one parent is succeed
+                    mission.isActivated = mission.isActivated || !!_.find(mission.relationships, function(rs) {
+                        // Find the user progession of each parent to its state
+                        return !! _.find(results.userProgressions.objects, function(up) {                            
+                            return rs.parent == up.mission && up.state == "succeed"
+                        })
+                    })
 
                     // Get childs number by fetch every missions' relationships
                     mission.children = _.filter(results.instance.missions, function(m) {
@@ -58,6 +74,7 @@ module.exports = function(_app) {
                             return rs.parent == mission.resource_uri;
                         });
                     });
+
                     // Pluck the resource uri
                     mission.children = _.pluck(mission.children, "resource_uri");
 

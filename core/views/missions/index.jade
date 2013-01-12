@@ -41,7 +41,11 @@ block body
               //- Line break when the level change
               if lastLevel < m.level
                 br
-              .mission-card(data-uri=m.resource_uri, data-children=m.children.join(','))
-                .dark-panel=m.name
+              .mission-card(data-uri=m.resource_uri, data-children=m.children.join(','), class=m.isActivated ? "activated" : "")
+                .panel
+                  .mission-name=m.name
+                  if m.progression
+                    .user-points=m.progression.points+" points"
+                    .game-tick(class=m.progression.state)
                 
               - lastLevel = m.level

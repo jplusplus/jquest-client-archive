@@ -3,7 +3,7 @@ $(function() {
   window.jsPlumb.bind("ready", function() {    
 
     // Use Canvas as default renderer
-    jsPlumb.setRenderMode(jsPlumb.SVG);
+    //jsPlumb.setRenderMode(jsPlumb.CANVAS);
     jsPlumb.importDefaults({
       ConnectorZIndex:10
     });
@@ -31,7 +31,7 @@ $(function() {
             endpointStyle:"Blank",
             paintStyle:{             
               lineWidth:1, 
-              strokeStyle:"#222"
+              strokeStyle:"#666"
             },
           });          
         }                  
