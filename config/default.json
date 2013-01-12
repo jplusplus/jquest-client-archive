@@ -7,7 +7,7 @@
 		"default"	 : "fr"
 	},
 	"api":{
-		"url": "http://jquest-core.herokuapp.com",
+		"url": "http://pierre:mT0KBqZz9MtLTSwVImiJ@jquest-core.herokuapp.com",
     "version": "v1"
 	},
 	"oauth":{
