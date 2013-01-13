@@ -1,8 +1,8 @@
 @footerHeight:300px;
-@footerBackground: @linkColor;
+@footerBackground: #4483B4;
 
 body {
-  background:url("/images/bg.jpg");
+  background:@footerBackground;
   padding-top:50px;
 }
 
@@ -18,12 +18,23 @@ a:hover {
 
 /* MAIN ELEMENT (WORKSPACE) */
 #main {
-  position:relative;
-  z-index:1000;  
+  position:relative;  
+  z-index:100;
   background:url("/images/bg.jpg");  
   margin:0;
   margin-bottom:@footerHeight;    
-  //.box-shadow(3px 0 6px 0 darken(@footerBackground, 50) );  
+  
+  &:after {
+    position:absolute;
+    left:0; right:0;
+    bottom:-10px;
+    
+    content:"";
+    border-top:1px solid white;    
+    height:10px;
+    background-color:transparent!important; //  Hack for mozilla gradient
+    #gradient > .vertical(fade(#000, 20), rgba(0,0,0,0) );
+  }
 }
 
 
@@ -111,11 +122,12 @@ a:hover {
 /* FOOTER */
 footer {
   .opacity(80);
-  background:fade(@footerBackground, 90);
+  background:@footerBackground;
   color:lighten(@footerBackground, 50);
   a, a:hover { color:lighten(@footerBackground, 80); }
 
   position:fixed;
+  z-index:-1;
   position:10;
   bottom:0;
   left:0;

@@ -74,8 +74,8 @@ input[type="color"],
 /* NAVBARS */
 .navbar {
 
-  .transition(0.7s);
   border:0px;
+  background:url("/images/bg.jpg");
 
   .divider-vertical {
     border-right-color:fade(white, 80);
@@ -87,24 +87,24 @@ input[type="color"],
   }
   
   .navbar-inner {
+    background:transparent;
     .box-shadow(0 0 6px 0 fade(#000, 10) );
-    background:url("/images/bg.jpg");
+    .transition(0.7s);
   }
-
   
   /* When the scroll of the page is at top */
   &.at-top {
     
     /* Removes the shadow under the menu */
     .box-shadow(0 0 6px 0 fade(#000, 0) );
-    /* Navbar must be ligthly faded */
-    .opacity(30);   
     /* ...except during the hover  */
-    &:hover { .opacity(100); }
+    &:hover .navbar-inner { .opacity(100); }
 
     /* The navbar begins transparent */
     .navbar-inner {
       .box-shadow(none);
+      /* Navbar must be ligthly faded */
+      .opacity(30);   
     }
   }
 
