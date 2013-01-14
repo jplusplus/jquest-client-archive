@@ -22,9 +22,9 @@ The default configuration is present into the *config/default.json*. Every modif
 ### Environment variables
 The following environment variables can be use with the highest priority :
 
-* **PORT** defines the port to listen to (ex: *80*).
-* **DATABASE_URL** defines the Universal Resource Locator (ex: *mysql://root:root@localhost:3306/jquest*) 
-* **NODE_ENV** defines the runing mode (ex: *development*, *production*, etc)
+* **PORT** defines the port to listen to (ex: *80*);
+* **API_URL** defines the url to the API;
+* **NODE_ENV** defines the runing mode (ex: *development*, *production*, etc).
 
 ### Common issues
 * **Error: watch ENOSPC**: Do not run the application with DropBox on the same system.

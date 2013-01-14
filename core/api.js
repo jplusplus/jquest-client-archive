@@ -21,6 +21,6 @@ fermata.registerPlugin("slashed", function (transport, baseURL) {
 });
 
 // Creates the api client
-var api = fermata.slashed(config.api.url);
+var api = fermata.slashed(config.api.url || process.env.API_URL);
 
 module.exports = api[config.api.version];
