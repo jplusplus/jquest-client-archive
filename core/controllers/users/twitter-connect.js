@@ -15,29 +15,6 @@ module.exports = function(_app, sequelize) {
          "name"            : "twitter" 
         ,"strategyFn"      : require("passport-twitter").Strategy
         ,"strategyOptions" : config.oauth.twitter
-        ,"succeedFn"       : succeedPage
-        ,"failedFn"        : failedPage
     });
     
 };
-
-
-
-/**
- * Twitter connexion failed page
- * @param  {Object} req HTTP request
- * @param  {Object} res HTTP result
- */
-function failedPage(req, res) {
-    res.render('users/login-failed');
-}
-
-
-/**
- * Twitter connexion Succeed page
- * @param  {Object} req HTTP request
- * @param  {Object} res HTTP result
- */
-function succeedPage(req, res) {
-    res.redirect('/');
-}

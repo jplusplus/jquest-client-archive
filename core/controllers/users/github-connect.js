@@ -15,29 +15,7 @@ module.exports = function(_app, sequelize) {
      "name"           : "github"
     ,"strategyFn"     : require("passport-github").Strategy
     ,"strategyOptions": config.oauth.github
-    ,"succeedFn"      : succeedPage
-    ,"failedFn"       : failedPage
   });
   
 };
 
-
-
-/**
- * github connexion failed page
- * @param  {Object} req HTTP request
- * @param  {Object} res HTTP result
- */
-function failedPage(req, res) {
-  res.render('users/login-failed');
-}
-
-
-/**
- * github connexion Succeed page
- * @param  {Object} req HTTP request
- * @param  {Object} res HTTP result
- */
-function succeedPage(req, res) {
-  res.redirect('/');
-}

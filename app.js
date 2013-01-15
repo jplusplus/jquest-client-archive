@@ -279,7 +279,7 @@ exports.boot = function(){
       _n: i18n.__n      
     });
 
-    app.use(function(req, res, next) {      
+    app.use(function(req, res, next) {            
       // Current hostname
       res.locals.host = req.host; 
       // The current request
@@ -289,12 +289,18 @@ exports.boot = function(){
       // Current language
       res.locals.lang = i18n.getLocale(req) || config.locale.default; 
       // Add url prefix
-      res.locals.url = function(u) { return "/" + res.locals.lang + u; };
+      res.locals.url = function(u, oauthCallback) { 
+        if(oauthCallback) {
+          return config["oauth-callback-host"] + "/" + res.locals.lang + u; 
+        } else {
+          return "/" + res.locals.lang + u; 
+        }
+      };                           
 
       // Checks the language at every request
       require(__dirname + "/core/controllers/url").checkLanguage(req, res, function() {
         // Check the current domain to dertermine the current instance
-        require(__dirname + "/core/controllers/url").checkInstance(req, res, function(err, instance) {                             
+        require(__dirname + "/core/controllers/url").checkInstance(req, res, function(err, instance) {
           if( !err && instance.objects.length > 0 ) {
             // Records the instance
             res.locals.instance = instance.objects[0]

@@ -52,22 +52,22 @@ block body
                 legend=_("Or sign up with...")
                 ul.unstyled
                   li
-                    a(href="/u/twitter-connect").btn.btn-twitter.btn-large.span12.bottom20 
+                    a(href=url("/u/twitter-connect/"+instance.id, true) ).btn.btn-twitter.btn-large.span12.bottom20 
                       .tl
                         i.right10.icon-twitter
                         =_("Your Twitter account")
                   li
-                    a(href="/u/facebook-connect").btn.btn-facebook.btn-large.span12.bottom20 
+                    a(href=url("/u/facebook-connect/"+instance.id, true) ).btn.btn-facebook.btn-large.span12.bottom20 
                       .tl
                         i.right10.icon-facebook
                         =_("Your Facebook account")
                   li
-                    a(href="/u/google-connect").btn.btn-google.btn-large.span12.bottom20
+                    a(href=url("/u/google-connect/"+instance.id, true) ).btn.btn-google.btn-large.span12.bottom20
                       .tl
                         i.right10.icon-google-plus-sign
                         =_("Your Google account")
                   li
-                    a(href="/u/github-connect").btn.btn-inverse.btn-large.span12.bottom20
+                    a(href=url("/u/github-connect/"+instance.id, true) ).btn.btn-inverse.btn-large.span12.bottom20
                       .tl
                         i.right10.icon-github
                         =_("Your GitHub account")

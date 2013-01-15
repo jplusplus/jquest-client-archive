@@ -1,9 +1,12 @@
 var config = require("config")
 , passport = require("passport")
-     , api = require("../../api");
+     , api = require("../../api")
+   , async = require("async");
 
 // Globals
 var app;
+// Path to token authentication
+var tokenAuthPath = "/noredirect/u/auth/:token/:user"
 
 /**
  * User connect help
@@ -11,6 +14,35 @@ var app;
  */
 module.exports = function(_app) {
   app = _app;
+
+  // Add token auth path handler
+  app.get(tokenAuthPath, function(req, res) {
+    // Date time object, 5 minutes ago (token expiration)
+    var fiveMinAgo = new Date( (new Date()).getTime() - 5*60000 );
+    // Do the token exist ?
+    api.user_token({
+      token: req.params.token, 
+      user: req.params.user, 
+      created_at__gt: fiveMinAgo.toISOString()
+    }).get(function(err, result) {
+      
+      // No error and tokens found
+      if(!err && result.objects.length > 0) {
+        
+        // Log the user in
+        req.logIn(result.objects[0].user, function(err) {
+          // Redirect to home
+          res.redirect("/");          
+        });
+
+        // Remove the token 
+        // Its success is optional 
+        // but we add an empty callback to force the request
+        api.user_token(result.objects[0].id).del(function() { });
+
+      }
+    })
+  })
 
   return module.exports;
 };
@@ -25,9 +57,7 @@ var addStrategy = module.exports.addStrategy = function(options) {
   var requiredOptions = [
      "name"           
     ,"strategyFn"           
-    ,"strategyOptions"    
-    ,"succeedFn"      
-    ,"failedFn"  
+    ,"strategyOptions"
   ];
 
   // Checks options
@@ -37,7 +67,7 @@ var addStrategy = module.exports.addStrategy = function(options) {
   }
 
   // Create the strategy paths
-  var connectPath  = '/:lang/u/' + options.name + "-connect",
+  var connectPath  = '/:lang/u/' + options.name + "-connect/:instance",
       succeedPath  = '/noredirect/u/' + options.name + "-succeed",
       failedPath   = '/noredirect/u/' + options.name + "-failed";
 
@@ -46,44 +76,24 @@ var addStrategy = module.exports.addStrategy = function(options) {
   app.get(connectPath, function(req, res) {
     
     // Create the strategy name according the given request (and instance)
-    var   strategyName = req.path.match(/(\w+)-connect$/)[1],  
-                  lang = res.locals.lang,
-              instance = res.locals.instance,
-    // Instance prefix is optional to determines the strategy identifier
-    strategyIdentifier = ! instance ? strategyName : lang + "-" + instance.slug + "-" + strategyName;    
+    var strategyName = req.path.match(/(\w+)-connect\/\d$/)[1];        
+    
+    // Records the instance to redirect after authentification
+    res.cookie("redirect-to-instance", req.params.instance);
 
     // Triggers the passport authentification with the given strategy  
-    passport.authenticate(strategyIdentifier)(req, res);
+    passport.authenticate(strategyName)(req, res);      
+  
   });
 
 
   // The user authentification failed
-  app.get(failedPath, options.failedFn);
+  app.get(failedPath, options.failedFn || failedPage);
   // The user authentification succeed
-  app.get(succeedPath, options.succeedFn);
-
-  // Gets all instances from the database
-  api.instance.get(function(err, instances) {
-
-    if(!err && instances.objects)  {
-
-      // Get every language, one by one
-      for(var l in config.locale.available) {
-
-        // Add the verify function without instance prefixe
-        addVerify(options, config.locale.available[l]);
-
-        // Add a strategy for each existing Instance and language
-        for(var i in instances.objects) {
-
-          // Add the verify function for the given language and instance
-          addVerify(options, config.locale.available[l], instances.objects[i]);          
-
-        }
-      }
-    }
-
-  });
+  app.get(succeedPath, options.succeedFn || succeedPage);
+  
+  // Add the verify function without instance prefixe
+  addVerify(options);
 
 };
 
@@ -91,13 +101,11 @@ var addStrategy = module.exports.addStrategy = function(options) {
 /**
  * Add a verify middleware binded to given language and instance
  * @param {Object}   options  Strategy options
- * @param {String}   lang     Subdomain language
- * @param {String}   instance (optional) Domain instance
  */
-var addVerify = module.exports.addVerify = function(options, lang, instance) {
+var addVerify = module.exports.addVerify = function(options) {
 
   // Create the strategy strategyName without optional lang/instance prefix
-  var strategyIdentifier = !instance ? options.name : lang + "-" + instance.slug + "-" + options.name;
+  var strategyIdentifier = options.name;
 
   // Create the strategy paths
   var callbackPath = '/noredirect/u/' + options.name + "-callback", 
@@ -115,15 +123,10 @@ var addVerify = module.exports.addVerify = function(options, lang, instance) {
   // Verify function fallback
   options.verifyFn = typeof options.verifyFn == "function" ? options.verifyFn : verify;
 
-  var strategyOptions = options.strategyOptions
-               , port = config.port == 80 ? "" : ":" + config.port;
-
-  // The callback URL is different for the instance and the nude domain
-  if( instance ) {
-    strategyOptions.callbackURL = "http://" + instance.host + port + callbackPath;
-  } else {
-    strategyOptions.callbackURL = "http://" + config.hostname + port + callbackPath;
-  }
+  var strategyOptions = options.strategyOptions;
+  // Generic callback url for all instances
+  strategyOptions.callbackURL = "http://" + config["oauth-callback-host"] + callbackPath;  
+  strategyOptions.session = false;
 
   // Force passing the request to the strategy's callback
   strategyOptions.passReqToCallback = true;
@@ -143,6 +146,7 @@ var addVerify = module.exports.addVerify = function(options, lang, instance) {
  * @param  {Function} done        Callback function
  */
 var verify = module.exports.verify = function(req, token, tokenSecret, profile, done) {
+
 
   // Find the user whith the given id and for Twitter
   api.user_oauth({  
@@ -181,3 +185,86 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
   });
 
 };
+
+/**
+ * Chooses to redirect or not the user to an instance
+ * @param  {Object} req Request
+ * @param  {Object} res Result
+ * @return {Boolean}    True if try to redirect
+ */
+var redirectToInstance = module.exports.redirectToInstance = function(req, res) {
+  
+  var instance = req.cookies["redirect-to-instance"];
+  // Do we need to redirect the user ?
+  if( instance && req.isAuthenticated() ) {
+    // Create the token
+    var token = getRandomToken(100);
+    // Send parallel requests
+    async.parallel({
+      // Get the instance
+      instance: api.instance(instance).get,
+      // Create an user token
+      user_token: function(done) { api.user_token.post({
+        user       : req.user.resource_uri,
+        created_at : new Date(),
+        token      : token
+      }, done) }
+    // Serie done
+    }, function(err, result) {      
+      // First we clear the cookie
+      res.clearCookie("redirect-to-instance");
+      // Failed page
+      if(err) failedPage(req, res);
+      else {
+        var url = req.protocol + "://" + result.instance.host;
+        // Add the port if not 80
+           url += config.port == 80 ? "" : ":" + config.port;
+        // Add the token authentication path
+           url += tokenAuthPath.replace(":token", token).replace(":user", req.user.id);
+        // Redirect to the authentication path on another domain
+        res.redirect(url);
+      }
+    });
+
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Connexion failed page
+ * @param  {Object} req HTTP request
+ * @param  {Object} res HTTP result
+ */
+var failedPage = module.exports.failedPage = function(req, res) {  
+  res.render('users/login-failed');
+}
+
+
+/**
+ * Connexion Succeed page
+ * @param  {Object} req HTTP request
+ * @param  {Object} res HTTP result
+ */
+var succeedPage = module.exports.succeedPage = function(req, res) {
+  // Do not redirect if we redirect to an instance
+  return !redirectToInstance(req, res) && res.redirect('/');  
+}
+
+
+/**
+ * Generate a random token
+ * @param  {Number} len Length of the token (default: 100)
+ * @return {String}     Generated token
+ */
+var getRandomToken = module.exports.getRandomToken = function(len) {
+    
+  var token = "";
+  var alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for( var i=0; i < (len || 100); i++ )
+    token += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+
+  return token;
+}

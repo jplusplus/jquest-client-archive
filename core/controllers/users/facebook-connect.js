@@ -15,29 +15,8 @@ module.exports = function(_app, sequelize) {
      "name"           : "facebook"
     ,"strategyFn"     : require("passport-facebook").Strategy
     ,"strategyOptions": config.oauth.facebook
-    ,"succeedFn"      : succeedPage
-    ,"failedFn"       : failedPage
   });
   
 };
 
 
-
-/**
- * Facebook connexion failed page
- * @param  {Object} req HTTP request
- * @param  {Object} res HTTP result
- */
-function failedPage(req, res) {
-  res.render('users/login-failed');
-}
-
-
-/**
- * Facebook connexion Succeed page
- * @param  {Object} req HTTP request
- * @param  {Object} res HTTP result
- */
-function succeedPage(req, res) {
-  res.redirect('/');
-}

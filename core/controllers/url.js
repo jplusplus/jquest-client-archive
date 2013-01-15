@@ -58,7 +58,7 @@ module.exports.checkLanguage = function(req, res, callback) {
 
 
 /**
- * Check the domain that must is the instance key 
+ * Check the domain that must be an instance key 
  * @param  {Object}   req      The request
  * @param  {Object}   res      The result of the request
  * @param  {Function} callback The callback function
