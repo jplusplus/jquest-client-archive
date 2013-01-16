@@ -293,7 +293,7 @@ exports.boot = function(){
       res.locals.url = function(u, oauthCallback) { 
         var instance = res.locals.instance;
         if(oauthCallback && instance) {
-          return config.oauth["callback-host"] + "/" + res.locals.lang + u + "/" + instance.id; 
+          return "//" + config.oauth["callback-host"] + "/" + res.locals.lang + u + "/" + instance.id; 
         } else {
           return "/" + res.locals.lang + u; 
         }
