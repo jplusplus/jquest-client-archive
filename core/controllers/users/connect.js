@@ -164,9 +164,9 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
 
       // We build the User to save
       var user = api.user.post({
-        username    : profile.username || profile.name || profile.email,
-        first_name  : "",
-        last_name   : "",
+        username    : profile.provider + "-" + profile.id,
+        first_name  : profile.first_name || profile.given_name  || "",
+        last_name   : profile.last_name || profile.family_name  || "",
         is_active   : true,
         date_joined : new Date(),
         // UserOauth object
