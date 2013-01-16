@@ -162,8 +162,7 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
     // The user do not exists yet
     } else {
 
-      // We build the User to save
-      var user = api.user.post({
+      var user = {
         username    : profile.provider + "-" + profile.id,
         first_name  : profile.first_name || profile.given_name  || "",
         last_name   : profile.last_name || profile.family_name  || "",
@@ -176,9 +175,12 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
           , consumer_user_id           : profile.id
           , oauth_access_token         : token
           , oauth_access_token_secret  : tokenSecret || ""                         
-        }
-      // Callback function
-      }, done);
+        }      
+      };
+      console.log(user);
+      console.log(profile);
+      // We build the User to save
+      api.user.post(user, done);
 
       // If the user is already connected with a temporary session
       // if( req.isAuthenticated() && req.user.ugroup == "tmp") { }
