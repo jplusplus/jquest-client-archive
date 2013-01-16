@@ -150,7 +150,6 @@ var addVerify = module.exports.addVerify = function(options) {
  */
 var verify = module.exports.verify = function(req, token, tokenSecret, profile, done) {
 
-  console.log(profile);
   // Find the user whith the given id and for Twitter
   api.user_oauth({  
     consumer_user_id : profile.id,
@@ -165,7 +164,7 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
 
       // We build the User to save
       var user = api.user.post({
-        username    : profile.username || "tmp",
+        username    : profile.username || profile.name || profile.email,
         first_name  : "",
         last_name   : "",
         is_active   : true,
