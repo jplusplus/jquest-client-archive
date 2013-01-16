@@ -150,7 +150,7 @@ var addVerify = module.exports.addVerify = function(options) {
  */
 var verify = module.exports.verify = function(req, token, tokenSecret, profile, done) {
 
-
+  console.log(profile);
   // Find the user whith the given id and for Twitter
   api.user_oauth({  
     consumer_user_id : profile.id,
@@ -165,7 +165,7 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
 
       // We build the User to save
       var user = api.user.post({
-        username    : profile.username,
+        username    : profile.username || "tmp",
         first_name  : "",
         last_name   : "",
         is_active   : true,
@@ -240,7 +240,7 @@ var redirectToInstance = module.exports.redirectToInstance = function(req, res) 
  * @param  {Object} req HTTP request
  * @param  {Object} res HTTP result
  */
-var failedPage = module.exports.failedPage = function(req, res) {  
+var failedPage = module.exports.failedPage = function(req, res) {    
   res.render('users/login-failed');
 }
 
