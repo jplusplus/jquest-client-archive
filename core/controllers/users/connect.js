@@ -180,10 +180,7 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
       };
 
       // And we save it
-      api.user.post(user, function() {
-        console.log(arguments);
-        done(null, false);
-      });
+      api.user.post(user, done);
 
       // If the user is already connected with a temporary session
       // if( req.isAuthenticated() && req.user.ugroup == "tmp") { }
