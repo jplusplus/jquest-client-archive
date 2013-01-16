@@ -1,4 +1,7 @@
 {
   "port"     : 80,
-  "host"     : "http://jquest.herokuapp.com"
+  "host"     : "http://jquest.herokuapp.com", 
+  "oauth"    : {
+    "callback-host": "jquest.herokuapp.com"
+  }
 }

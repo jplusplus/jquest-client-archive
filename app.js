@@ -57,6 +57,7 @@ var express        = require('express')
   , passport       = require("passport");
 
 
+
 /**
  * @type {Object}
  */
@@ -290,8 +291,9 @@ exports.boot = function(){
       res.locals.lang = i18n.getLocale(req) || config.locale.default; 
       // Add url prefix
       res.locals.url = function(u, oauthCallback) { 
-        if(oauthCallback) {
-          return config["oauth-callback-host"] + "/" + res.locals.lang + u; 
+        var instance = res.locals.instance;
+        if(oauthCallback && instance) {
+          return config.oauth["callback-host"] + "/" + res.locals.lang + u + "/" + instance.id; 
         } else {
           return "/" + res.locals.lang + u; 
         }
@@ -301,7 +303,7 @@ exports.boot = function(){
       require(__dirname + "/core/controllers/url").checkLanguage(req, res, function() {
         // Check the current domain to dertermine the current instance
         require(__dirname + "/core/controllers/url").checkInstance(req, res, function(err, instance) {
-          if( !err && instance.objects.length > 0 ) {
+          if( !err && instance.objects.length > 0) {
             // Records the instance
             res.locals.instance = instance.objects[0]
           } else {

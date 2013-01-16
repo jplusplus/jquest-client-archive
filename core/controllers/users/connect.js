@@ -67,7 +67,7 @@ var addStrategy = module.exports.addStrategy = function(options) {
   }
 
   // Create the strategy paths
-  var connectPath  = '/:lang/u/' + options.name + "-connect/:instance",
+  var connectPath  = '/:lang/u/' + options.name + "-connect/:instance?",
       succeedPath  = '/noredirect/u/' + options.name + "-succeed",
       failedPath   = '/noredirect/u/' + options.name + "-failed";
 
@@ -76,10 +76,13 @@ var addStrategy = module.exports.addStrategy = function(options) {
   app.get(connectPath, function(req, res) {
     
     // Create the strategy name according the given request (and instance)
-    var strategyName = req.path.match(/(\w+)-connect\/\d$/)[1];        
+    var strategyName = req.path.match(/(\w+)-connect(\/\d)?$/)[1];        
     
-    // Records the instance to redirect after authentification
-    res.cookie("redirect-to-instance", req.params.instance);
+    // Is there an instance ?
+    if(req.params.instance) {
+      // Records the instance to redirect after authentification
+      res.cookie("redirect-to-instance", req.params.instance);
+    }
 
     // Triggers the passport authentification with the given strategy  
     passport.authenticate(strategyName)(req, res);      
@@ -125,7 +128,7 @@ var addVerify = module.exports.addVerify = function(options) {
 
   var strategyOptions = options.strategyOptions;
   // Generic callback url for all instances
-  strategyOptions.callbackURL = "http://" + config["oauth-callback-host"] + callbackPath;  
+  strategyOptions.callbackURL = "http://" + config.oauth["callback-host"] + callbackPath;  
   strategyOptions.session = false;
 
   // Force passing the request to the strategy's callback

@@ -9,25 +9,27 @@
 		"url": false,
     "version": "v1"
 	},
-  "oauth-callback-host":"localhost",
 	"oauth":{
-    "twitter": {
-      "consumerKey"    : "mkZ4S7psHzfkDCfOzQTOg",
-      "consumerSecret" : "ah1B8CYFt8uaIR9J1DiGV5gLwEifdEliJmNrOtOs"
-    },
-    "github": {
-      "clientID"        : "2936a4b8502fc2397039",
-      "clientSecret"    : "d60c5fe031fa98413c016fe10cf9c0684ca908ca",
-      "scope"           : "user"
-    },
-    "google": {
-      "clientID"        : "1040737619556.apps.googleusercontent.com",
-      "clientSecret"    : "sbLcVbf_9hQJgOfKt4_G6Qvt",
-      "scope"           : "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
-    },
-    "facebook": {
-      "clientID"        : "259105654123890",
-      "clientSecret"    : "ec006e1104a027ded81efd276c6683a6"
+    "callback-host": "localhost",
+    "consumers": {
+      "twitter": {
+        "consumerKey"    : "mkZ4S7psHzfkDCfOzQTOg",
+        "consumerSecret" : "ah1B8CYFt8uaIR9J1DiGV5gLwEifdEliJmNrOtOs"
+      },
+      "github": {
+        "clientID"        : "2936a4b8502fc2397039",
+        "clientSecret"    : "d60c5fe031fa98413c016fe10cf9c0684ca908ca",
+        "scope"           : "user"
+      },
+      "google": {
+        "clientID"        : "1040737619556.apps.googleusercontent.com",
+        "clientSecret"    : "sbLcVbf_9hQJgOfKt4_G6Qvt",
+        "scope"           : "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
+      },
+      "facebook": {
+        "clientID"        : "259105654123890",
+        "clientSecret"    : "ec006e1104a027ded81efd276c6683a6"
+      }
     }
 	},
 	"salts": {

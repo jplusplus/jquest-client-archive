@@ -14,7 +14,7 @@ module.exports = function(_app, sequelize) {
     require("../users/connect")(app).addStrategy({
          "name"            : "twitter" 
         ,"strategyFn"      : require("passport-twitter").Strategy
-        ,"strategyOptions" : config.oauth.twitter
+        ,"strategyOptions" : config.oauth.consumers.twitter
     });
     
 };

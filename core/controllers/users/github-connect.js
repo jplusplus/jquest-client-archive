@@ -14,7 +14,7 @@ module.exports = function(_app, sequelize) {
   require("../users/connect")(app).addStrategy({
      "name"           : "github"
     ,"strategyFn"     : require("passport-github").Strategy
-    ,"strategyOptions": config.oauth.github
+    ,"strategyOptions": config.oauth.consumers.github
   });
   
 };

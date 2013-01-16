@@ -14,7 +14,7 @@ module.exports = function(_app, sequelize) {
   require("../users/connect")(app).addStrategy({
      "name"            : "google" 
     ,"strategyFn"      : require("passport-google-oauth").OAuth2Strategy
-    ,"strategyOptions" : config.oauth.google
+    ,"strategyOptions" : config.oauth.consumers.google
   });
   
 };

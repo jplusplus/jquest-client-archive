@@ -14,7 +14,7 @@ module.exports = function(_app, sequelize) {
   require("../users/connect")(app).addStrategy({
      "name"           : "facebook"
     ,"strategyFn"     : require("passport-facebook").Strategy
-    ,"strategyOptions": config.oauth.facebook
+    ,"strategyOptions": config.oauth.consumers.facebook
   });
   
 };
