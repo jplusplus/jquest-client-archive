@@ -5,6 +5,7 @@
     , "emailify"              : "latest"    
     , "enc"                   : "0.2.0"
     , "express"               : "3.0.0rc2"    
+    , "connect-flash"         : "latest"
     , "fermata"               : "latest"
     , "i18n"                  : "latest"
     , "jade"                  : "latest"

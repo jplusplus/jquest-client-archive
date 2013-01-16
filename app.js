@@ -14,22 +14,22 @@
     * Express Framework
     * @type {Object}
     */
-var express        = require('express')
+var express = require('express')
    /**
     * Filesystem manager
     * @type {Object}
     */
-  , fs             = require('fs')
+  , fs = require('fs')
    /**
     * Data ORM
     * @type {Sequelize}
     */
-  , Sequelize      = require('sequelize')  
+  , Sequelize = require('sequelize')  
    /**
     * Locales manager
     * @type {Object}
     */
-  , i18n           = require("i18n")
+  , i18n = require("i18n")
    /**
     * Less middle ware
     * @type {Object}
@@ -44,17 +44,22 @@ var express        = require('express')
     * 
     * @type {Object}
     */
-  , config         = require("config")
+  , config = require("config")
   /**
    * Memcached class to instanciate a memcached client
    * @type {Object}
    */
-  , memjs          = require('memjs')
+  , memjs = require('memjs')
    /**
     * Authentification module  
     * @type {Object}
     */
-  , passport       = require("passport");
+  , passport = require("passport")
+  /**
+   * Flash message manager
+   * @type {Object}
+   */
+  , flash = require('connect-flash');
 
 
 
@@ -199,6 +204,9 @@ exports.boot = function(){
     app.use(express.methodOverride());
     app.use(express.cookieParser(config.salts.cookies));
     app.use(express.session());   
+    // Flash messages
+    // see also: https://github.com/jaredhanson/connect-flash    
+    app.use(flash());
 
     // Less middle ware to auto-compile less files
     app.use(lessMiddleware({
@@ -256,7 +264,9 @@ exports.boot = function(){
       // allow the use of a cookie to define the language
       , cookie    : "language"
       // locales directory
-      , directory :  "core/locales/"
+      , directory :  "core/locales/"      
+      // where to register __() and __n(), here as global variable
+      , register: global
     });
 
 
@@ -275,12 +285,12 @@ exports.boot = function(){
           "en": i18n.__("English")
         }[lang.toLowerCase()] || lang;
       },
-        // Language helpers
+      // Language helpers
       _ : i18n.__,
       _n: i18n.__n      
     });
 
-    app.use(function(req, res, next) {            
+    app.use(function(req, res, next) {      
       // Current hostname
       res.locals.host = req.host; 
       // The current request
@@ -292,6 +302,7 @@ exports.boot = function(){
       // Add url prefix
       res.locals.url = function(u, oauthCallback) { 
         var instance = res.locals.instance;
+        
         if(oauthCallback && instance) {
           return "//" + config.oauth["callback-host"] + "/" + res.locals.lang + u + "/" + instance.id; 
         } else {

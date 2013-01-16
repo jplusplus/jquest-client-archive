@@ -16,22 +16,22 @@ block body
   .container
     .row.top40.bottom40
       .span8.offset2
-        form.form-horizontal.well.padding0.log-in(action="/user/login",method="POST")
+        form.form-horizontal.well.padding0.log-in(action=url("/u/login"), method="POST")
           .row-fluid
             .span7
               fieldset.left20.top20.right20
                 legend=_("Log in with your email")
 
-                if(email)
-                  .alert.alert-error!=_("Your <b>email</b> or your <b>password</b> is incorrect.")
+                if message != false
+                  .alert.alert-error!=message
 
                 .control-group
                   label.control-label(for="input-email")=_("Your email")
                   .controls
-                    if(typeof email != "undefined")
-                      input(type="text",name="email",id="input-email",value=email)
+                    if(typeof data.email != "undefined")
+                      input(type="text",name="email",id="input-email",value=data.email)
                     else
-                      input(type="password",name="email",id="input-email")
+                      input(type="text",name="email",id="input-email")
 
                 .control-group
                   label.control-label(for="input-password")=_("Your password")
@@ -41,8 +41,8 @@ block body
                 .control-group
                   .control-label 
                   label.controls.checkbox
-                    input(type="checkbox")
-                    | Remember me on that computer
+                    input(type="checkbox", name="remenber")
+                    =_('Remember me on that computer')
 
                 .form-actions.bottom0
                   button.btn.btn-primary.btn-large(type="submit")=_("Log in")

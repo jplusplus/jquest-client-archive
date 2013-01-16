@@ -4,7 +4,6 @@ html
     meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
 
-    title=subject
     style(type='text/css')
 
       /* Based on The MailChimp Reset INLINE: Yes. */
@@ -75,7 +74,7 @@ html
       }
 
       .wells td {
-        padding:10px;
+        padding:20px;
       }
 
       .content {
@@ -230,19 +229,22 @@ html
             tr
               td(width=300, valign='top')                
                 h2
-                  a(href=config.host) jQuest
+                  if instance
+                    a(href="http://"+instance.host)=instance.name
+                  else
+                    a(href=config.host) jQuest
               td(width=300, valign='top')
                 h2.tr=subject
 
             tr.content
-              td(colspan=2, width=600)!=content
+              td(colspan=2, width=600)
+                block content
+                  !=content
 
           //- Out of the .wells block      
           table(cellpadding='0', cellspacing='0', border='0', align='center').footer        
             tr(width=600, valign='top')
               td
-                .tc
-                  | jQuest is a Trademark of <a href="http://jplusplus.org">Journalism++</a>
-                  | <br/> Sent to <a href="mailto:#{to}">#{to}</a>
+                .tc!=__('jQuest is a Trademark of <a href="http://jplusplus.org">Journalism++</a><br/> Sent to <a href="mailto:%s">%s</a>', to, to)
     
     //- End of wrapper table 

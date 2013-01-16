@@ -202,8 +202,6 @@ var redirectToInstance = module.exports.redirectToInstance = function(req, res) 
   var instance = req.cookies["redirect-to-instance"];
   // Do we need to redirect the user ?
   if( instance && req.isAuthenticated() ) {
-    // Create the token
-    var token = getRandomToken(100);
     // Send parallel requests
     async.parallel({
       // Get the instance
@@ -212,7 +210,7 @@ var redirectToInstance = module.exports.redirectToInstance = function(req, res) 
       user_token: function(done) { api.user_token.post({
         user       : req.user.resource_uri,
         created_at : new Date(),
-        token      : token
+        token      : getRandomToken(100)
       }, done) }
     // Serie done
     }, function(err, result) {      
@@ -221,9 +219,7 @@ var redirectToInstance = module.exports.redirectToInstance = function(req, res) 
       // Failed page
       if(err) failedPage(req, res);
       else {
-        var url = req.protocol + "://" + result.instance.host;
-        // Add the port if not 80
-           url += config.port == 80 ? "" : ":" + config.port;
+        var url = req.protocol + "://" + req.headers.host;
         // Add the token authentication path
            url += tokenAuthPath.replace(":token", token).replace(":user", req.user.id);
         // Redirect to the authentication path on another domain

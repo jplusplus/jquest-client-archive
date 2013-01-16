@@ -16,13 +16,17 @@ module.exports = function(_app) {
 	/*
 	 * GET user root page.
 	 */
-	app.get('/u', function(req, res){
-
-		// Redirects not logged users
-		if(!req.user) return res.redirect("/u/login");
+	app.get('/:lang/u/', function(req, res){
 		res.redirect("/");
-
 	});
+
+  /*
+   * GET user log out.
+   */
+  app.get('/:lang/u/logout', function(req, res) {
+    req.logout();
+    res.redirect("/");
+  }); 
 
 };
 

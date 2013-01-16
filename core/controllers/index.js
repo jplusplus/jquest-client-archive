@@ -1,5 +1,6 @@
-var i18n	  = require("i18n")
-, usersCtrl = require("./users");
+var i18n	= require("i18n")
+, usersCtrl = require("./users")
+	   , fs = require("fs");
 
  /**
  * @author Pirhoo
@@ -13,11 +14,12 @@ module.exports = function(app) {
 	 */
 	app.get('/:lang', function(req, res){	
 
+		var tpl = 'home/' +  res.locals.instance.slug;
 		// No specified instance, default template
-		if( ! res.locals.instance )	{
+		if( ! res.locals.instance || ! fs.existsSync("../"+tpl) )	{
 		  	res.render('home/default', { path:"/" });
 		} else {	  	
-			res.render('home/' +  res.locals.instance.slug , { path:"/" });	  	
+			res.render(tpl , { path:"/" });	  	
 		}
 	});
 
