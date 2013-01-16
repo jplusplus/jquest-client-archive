@@ -162,6 +162,7 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
     // The user do not exists yet
     } else {
 
+      // We build the User to save
       var user = {
         username    : profile.provider + "-" + profile.id,
         first_name  : profile.first_name || profile.given_name  || "",
@@ -177,10 +178,12 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
           , oauth_access_token_secret  : tokenSecret || ""                         
         }      
       };
-      console.log(user);
-      console.log(profile);
-      // We build the User to save
-      api.user.post(user, done);
+
+      // And we save it
+      api.user.post(user, function() {
+        console.log(arguments);
+        done(null, false);
+      });
 
       // If the user is already connected with a temporary session
       // if( req.isAuthenticated() && req.user.ugroup == "tmp") { }
