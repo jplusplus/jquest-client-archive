@@ -144,7 +144,7 @@ function signupPage (req, res) {
 				}
 
 				// Waiting for the confirmation email!
-				res.redirect("/u/email-confirmation");	
+				res.redirect("/u/email-confirmation/pending");	
 				// Send this email
 				sendConfirmationEmail(user, req, res);
 			})
