@@ -162,11 +162,29 @@ var verify = module.exports.verify = function(req, token, tokenSecret, profile, 
     // The user do not exists yet
     } else {
 
+      console.log({
+        username    : profile.provider + "-" + profile.id,
+        first_name  : profile.first_name || profile.given_name  || "",
+        last_name   : profile.last_name || profile.family_name  || "",
+        email       : profile.email || "",
+        is_active   : true,
+        date_joined : new Date(),
+        // UserOauth object
+        oauths      : {
+            consumer                   : profile.provider
+          , consumer_user_id           : profile.id
+          , oauth_access_token         : token
+          , oauth_access_token_secret  : tokenSecret                           
+        }
+      // Callback function
+      });
+      
       // We build the User to save
       var user = api.user.post({
         username    : profile.provider + "-" + profile.id,
         first_name  : profile.first_name || profile.given_name  || "",
         last_name   : profile.last_name || profile.family_name  || "",
+        email       : profile.email || "",
         is_active   : true,
         date_joined : new Date(),
         // UserOauth object
