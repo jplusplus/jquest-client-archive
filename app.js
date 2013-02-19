@@ -128,10 +128,10 @@ function loadAllMissions(dirname, where) {
 
       // Load and parse the JSON package
       var pkg = JSON.parse( fs.readFileSync(pkgPath, 'utf8') );
-      // If the package specifies its chapter
-      if( pkg.jquest && pkg.jquest.chapter) {        
-        // Require the mission file (use the chapter as key)
-        where[pkg.jquest.chapter] = require(path);
+
+      if( pkg.name ) {
+        // Require the mission file (use the mission id as key)
+        where[pkg.name] = require(path);
       }
     }
 
@@ -290,13 +290,17 @@ exports.boot = function(){
       _n: i18n.__n      
     });
 
+    var auth = require("./core/controllers/users/authentication");
+    // Add auto-authentification
+    app.use(auth.logInWithHash);
+    
     app.use(function(req, res, next) {      
       // Current hostname
       res.locals.host = req.host; 
       // The current request
       res.locals.req  = req;
       // Current user
-      res.locals.user = req.user && req.user.ugroup != "tmp" ? req.user : false;
+      res.locals.user = req.isAuthenticated() && req.user.is_active ? req.user : false;
       // Current language
       res.locals.lang = i18n.getLocale(req) || config.locale.default; 
       // Add url prefix
@@ -311,9 +315,9 @@ exports.boot = function(){
       };                           
 
       // Checks the language at every request
-      require(__dirname + "/core/controllers/url").checkLanguage(req, res, function() {
+      require("./core/controllers/url").checkLanguage(req, res, function() {
         // Check the current domain to dertermine the current instance
-        require(__dirname + "/core/controllers/url").checkInstance(req, res, function(err, instance) {
+        require("./core/controllers/url").checkInstance(req, res, function(err, instance) {
           if( !err && instance.objects.length > 0) {
             // Records the instance
             res.locals.instance = instance.objects[0]

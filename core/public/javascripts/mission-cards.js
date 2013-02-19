@@ -1,12 +1,37 @@
-$(function() {
+$(window).load(function() {
 
   // Active popover on mission card
-  $('.mission-card .panel').popover({trigger: "hover"});
+  $('.mission-card').popover({trigger: "hover"});
+
+  if( $.fn.iScroll ) {
+
+    var $cards   = $(".cards.verticaled"),
+        $wrapper = $cards.find(".wrapper");
+
+    // iScroll option
+    var iScrollOptions =  { 
+      hScrollbar: true,                               
+      hScroll: true,                                     
+      snap: ".vertical-mission-cards", 
+      momentum: false,                                 
+      scrollbarClass: 'iscrollbar',       
+      hideScrollbar:true,                            
+      fadeScrollbar:true                              
+    };
+
+    // Force the wrapper to keep its width
+    $wrapper.css("width",  $wrapper.outerWidth() );
+    // Resize its parent
+    $cards.css("width", "auto");
+    // Creates the iScroll instance    
+    var $iscroll = $cards.iScroll(iScrollOptions).css("overflow", "visible") 
+  }
 
   window.jsPlumb.bind("ready", function() {    
 
     // Use Canvas as default renderer
     //jsPlumb.setRenderMode(jsPlumb.CANVAS);
+    
     jsPlumb.importDefaults({
       ConnectorZIndex:10
     });
@@ -27,7 +52,7 @@ $(function() {
         if($child.length > 0) {
           // Create the connection
           jsPlumb.connect({ 
-            source: $source, 
+            source: $source,
             target: $child,          
             connector:"Flowchart",
             anchors:["Center", "Center"],  

@@ -3,15 +3,12 @@ var util      = require("util")
 , MissionQuiz = require("jquest-mission").MissionQuiz
       , async = require("async")
        , Twit = require("twit")
-          , _ = require("underscore");
+          , _ = require("underscore")
+     , config = require("config");
 
 module.exports = function(models, userId, chapterId, callback) {
 
   var self = this;  
-
-  // Change the default template directory
-  // to load a custom template
-  self.templateDirname = __dirname;
 
   // Add several questions 
   self.addQuestion(function(callback) {
@@ -230,14 +227,17 @@ function getTweet(id, callback) {
     }
   }, function(err, data) {
 
-    var tweet = null;
+    var tweet = null;    
 
     if(err) return callback(err, null);
-    else if(!data.tweet || !data.oembed) return callback(data, null);
-
-    tweet = data.tweet;
+    else if(
+         !data.tweet  || data.tweet.length  === 0
+      || !data.oembed || data.oembed.length === 0
+    ) return callback(data, null);
+    
+    tweet = data.tweet[0];
     // Adds the obembed code as a Tweet attribut
-    tweet.oembed = data.oembed;
+    tweet.oembed = data.oembed[0];
     // Save the hashtags
     tweet.hashtags = tweet.text.match(/#(\w+)/g);
     // Removed every #
@@ -246,7 +246,7 @@ function getTweet(id, callback) {
     tweet.mentions = tweet.text.match(/@(\w+)/g);
     // Removed every @
     tweet.mentions = _.map(tweet.mentions, function(el) { return el.replace("@", "")});
-  
+
     callback(err, tweet);
   });
 
@@ -263,10 +263,10 @@ function createTwitterClient() {
    * @type {Twit}
    */
   return this.twitterClient || ( this.twitterClient = new Twit({
-      consumer_key        : NODE_CONFIG.oauth.twitter.consumer_key
-    , consumer_secret     : NODE_CONFIG.oauth.twitter.consumer_secret
-    , access_token        : NODE_CONFIG.oauth.twitter.access_token
-    , access_token_secret : NODE_CONFIG.oauth.twitter.access_token_secret
+      consumer_key        : config.oauth.consumers.twitter.consumerKey
+    , consumer_secret     : config.oauth.consumers.twitter.consumerSecret
+    , access_token        : config.oauth.consumers.twitter.accessToken
+    , access_token_secret : config.oauth.consumers.twitter.accessTokenSecret
   }) );
   
 }

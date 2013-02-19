@@ -78,5 +78,10 @@
 	"Choose a mission from the list below. If it's locked, you have<br />to complete other missions before you can move on.": "Choose a mission from the list below. If it's locked, you have<br />to complete other missions before you can move on.",
 	"Confirm your email": "Confirm your email",
 	"jQuest is a Trademark of <a href=\"http://jplusplus.org\">Journalism++</a><br/> Sent to <a href=\"mailto:#{to}\">#{to}</a>": "jQuest is a Trademark of <a href=\"http://jplusplus.org\">Journalism++</a><br/> Sent to <a href=\"mailto:#{to}\">#{to}</a>",
-	"jQuest is a Trademark of <a href=\"http://jplusplus.org\">Journalism++</a><br/> Sent to <a href=\"mailto:%s\">%s</a>": "jQuest is a Trademark of <a href=\"http://jplusplus.org\">Journalism++</a><br/> Sent to <a href=\"mailto:%s\">%s</a>"
+	"jQuest is a Trademark of <a href=\"http://jplusplus.org\">Journalism++</a><br/> Sent to <a href=\"mailto:%s\">%s</a>": "jQuest is a Trademark of <a href=\"http://jplusplus.org\">Journalism++</a><br/> Sent to <a href=\"mailto:%s\">%s</a>",
+	"The mission is about to begin in % seconds.": "The mission is about to begin in % seconds.",
+	"The mission is about to begin in % second.": "The mission is about to begin in % second.",
+	"Push a button to select an answer": "Push a button to select an answer",
+	"Read the chapter again": "Read the chapter again",
+	"Try again": "Try again"
 }

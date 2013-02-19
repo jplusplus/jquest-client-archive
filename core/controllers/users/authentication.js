@@ -22,6 +22,15 @@ module.exports = function(app, sequelize) {
 	 * GET/POST user's email confirmation page.
 	 */
 	app.all('/:lang/u/email-confirmation/:state/:user?/:token?', confirmationEmailPage);
+
+	/*
+	* GET user log out.
+	*/
+	app.get('/:lang/u/logout', function(req, res) {
+		res.clearCookie("auth-hash");
+		req.logout();
+		res.redirect("/u/login");
+	}); 
 };
 
 
@@ -37,6 +46,7 @@ function loginPage (req, res) {
 
 	// Email given
 	if( req.param('email', false) ) {
+
 		// Loooks for the user using its email
 		api.user({email: req.param('email', '') }).get(function(err, result) {
 
@@ -65,6 +75,12 @@ function loginPage (req, res) {
 				} else {
 
 					// Create a cookie for auto-connect
+					if( req.param("remember") === "on") {
+						// The auth hash separte the password hashed and the user id with a ":"
+						var hash = user.id + ":" + user.password
+						// The cookie expires in 15 days
+						res.cookie("auth-hash", hash, {  maxAge: 15*24*60*60 });
+					}
 
 					// log the user in
 					req.login(user, function(err) {
@@ -244,6 +260,30 @@ function sendConfirmationEmail(user, req, res) {
    	});
 				
 }
+
+/**
+ * Log the unauthenticated user with a cookie
+ * @param  {Object}   req  Request object
+ * @param  {Object}   res  Result object
+ * @param  {Function} next Callback function 
+ */
+var logInWithHash = module.exports.logInWithHash = function(req, res, next) {
+
+	if( ! req.isAuthenticated() && req.cookies["auth-hash"] ) {
+
+		var hash = req.cookies["auth-hash"].split(":");
+		// Avoids bad cookies format
+		if( hash.length !== 2 ) next();
+		else {
+			// Check the password of the given user
+			api.user(hash[0]).check_password({hash: hash[1]}).get(function(err, user) {
+				if(err || ! user) next();
+				else req.login(user, next);
+			});
+		}
+
+	} else next();
+};
 
 /**
  * True if the given email is valid

@@ -201,6 +201,27 @@ footer {
   &.radius-right { .border-radius(0 3px 3px 0); }   
   &.radius-bottom { .border-radius(0 0 3px 3px); }    
   &.radius-left { .border-radius(3px 3px 0 0); }    
+}.cards
+
+
+.cards {
+    text-align:center;
+}
+
+.cards.verticaled {
+  
+  overflow:auto;
+  position:relative;
+  width:1000000px;  
+  
+  .wrapper {
+    float:left;
+  }   
+
+  .vertical-mission-cards {
+    float:left;
+    width:200px;
+  }
 }
 
 
@@ -210,10 +231,10 @@ footer {
   margin:20px;
   padding:0;
   text-align:center;
-  z-index:100;
-  
+    
   position:relative;
   overflow:hidden;
+  
   .border-radius(4px);
   
   font-size:12px;
@@ -225,6 +246,9 @@ footer {
   }
   
   .panel {    
+    z-index:100;
+    position:relative;
+    
     .border-radius(4px);
     .box-shadow(~"0 -1px 4px 0 rgba(0,0,0, 0.2) inset");
     background:url("/images/bg.jpg");

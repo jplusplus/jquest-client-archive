@@ -20,14 +20,6 @@ module.exports = function(_app) {
 		res.redirect("/");
 	});
 
-  /*
-   * GET user log out.
-   */
-  app.get('/:lang/u/logout', function(req, res) {
-    req.logout();
-    res.redirect("/");
-  }); 
-
 };
 
 /**
