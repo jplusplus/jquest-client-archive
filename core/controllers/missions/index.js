@@ -102,16 +102,15 @@ var missionPage = module.exports.missionPage = function(req, res){
 
             // Additional step for the Mission screen
             // *****************************************************************
+            // @TODO: Put the whole mission managment to a dedicated manager 
             
             // Create the mission object using the database mission            
             var mission = results.mission;     
 
-            console.log(app.userMissions)
-
             if( req.isAuthenticated() ) {
 
               // Future mission instance
-              mission.module = getMission(req.user.id, mission.resource_uri);       
+              mission.module = getMission(req.user.id, mission.resource_uri);  
               
               // If we didn't find the mission but the mission class is available
               if(mission.module === undefined && app.missions["fr-twitter-talk-1"]) {
@@ -122,7 +121,7 @@ var missionPage = module.exports.missionPage = function(req, res){
                 mission.module = new app.missions["fr-twitter-talk-1"](api, req.user.id, mission.id, function(err) {  
 
                   // Add this instance to the list of available instances
-                  app.userMissions.push(this);   
+                  app.userMissions.push(mission.module);   
 
                   // Prepare the mission to play
                   mission.module.prepare(req, res, function(err) {                                                                              
@@ -141,8 +140,8 @@ var missionPage = module.exports.missionPage = function(req, res){
               }
 
             } else {              
-              // Render the single mission page
-              res.render('missions/mission', { mission: mission });
+              // Redirect to login page
+              res.redirect('/u/login');
             }
 
 
