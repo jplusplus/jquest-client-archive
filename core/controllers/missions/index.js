@@ -111,6 +111,7 @@ var missionPage = module.exports.missionPage = function(req, res){
 
               // Future mission instance
               mission.module = getMission(req.user.id, mission.resource_uri);  
+              console.log(app.userMissions.length)
               
               // If we didn't find the mission but the mission class is available
               if(mission.module === undefined && app.missions["fr-twitter-talk-1"]) {
