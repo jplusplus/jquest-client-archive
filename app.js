@@ -94,7 +94,7 @@ function loadAllRequires(dirname, instance) {
       // Recursive calling
       loadAllRequires(path, instance);      
     // If it's a regular file...
-    } else {      
+    } else {   
       // Require the module with app in parameter
       where[slug] = instance ? require(path)(app) : require(path);
     }
@@ -173,6 +173,25 @@ function importAllModels(dirname, where) {
 }
 
 
+/**
+ * Send a basic header authentication if needed
+ * @param  {Object}   req  User request
+ * @param  {Object}   res  User result
+ * @param  {Function} next Callback function
+ */
+function checkBasicAuth(req, res, next) {
+
+  var b = process.env.BASIC_AUTH;
+  // Do not protect the app if not required
+  if(b) {
+    // Check the authentication now
+    express.basicAuth(function(username, password) {        
+      return username + ":" + password == b;
+    }, 'Forbidden!')(req, res, next);
+  } else next();
+}
+
+
 
 /**
  * Boots the app
@@ -242,7 +261,6 @@ exports.boot = function(){
     passport.deserializeUser(function(obj, done) {
       done(null, obj);
     });
-
 
     /************************************
      * Configure languages   
@@ -325,12 +343,12 @@ exports.boot = function(){
             // Disables instance mode
             res.locals.instance = false;
           }
-          // Next step
-          next();
+          // Set up basic authentication strategy
+          checkBasicAuth(req, res, next);
         }); 
       })     
-    });
 
+    });
 
 
     /************************************
@@ -365,7 +383,6 @@ exports.boot = function(){
      ************************************/   
     // @warning Needs to be after the helpers
     app.use(app.router);
-
   });
 
 
