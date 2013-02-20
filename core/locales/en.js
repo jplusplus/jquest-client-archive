@@ -84,5 +84,6 @@
 	"Push a button to select an answer": "Push a button to select an answer",
 	"Read the chapter again": "Read the chapter again",
 	"Try again": "Try again",
-	"Remember me on that computer": "Remember me on that computer"
+	"Remember me on that computer": "Remember me on that computer",
+	"Back to missions list": "Back to missions list"
 }
