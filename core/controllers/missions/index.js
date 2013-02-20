@@ -110,15 +110,15 @@ var missionPage = module.exports.missionPage = function(req, res){
             if( req.isAuthenticated() ) {
 
               // Future mission instance
-              mission.module = getMission(req.user.id, mission.resource_uri); 
+              mission.module = getMission(req.user.id, mission.id); 
               
               // If we didn't find the mission but the mission class is available
-              if(mission.module === undefined && app.missions["fr-twitter-talk-1"]) {
+              if(mission.module === undefined && app.missions[mission.package]) {
 
                 // Instances the mission 
                 // (uses the chapter slug to find the good one) 
                 // and call the render callback
-                mission.module = new app.missions["fr-twitter-talk-1"](api, req.user.id, mission.resource_uri, function(err) {  
+                mission.module = new app.missions[mission.package](api, req.user.id, mission.id, function(err) {  
 
                   // Add this instance to the list of available instances
                   app.userMissions.push(mission.module);   

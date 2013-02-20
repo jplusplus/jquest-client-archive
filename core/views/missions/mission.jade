@@ -27,46 +27,45 @@ block body
               if mission.module.state == "game"
                 .splashscreen( data-msg-cd-plural=_("The mission is about to begin in % seconds."), data-msg-cd-single=_("The mission is about to begin in % second.") )
                   .countdown
-                  .instruction=_("Push a button to select an answer")
+                  .instruction=_("Push a button to select an answer") 
 
-            //- Hides the quiz navigation toolbar
-            //- if we are not playing a classic game
-            if mission.module.type == "classic" || mission.module.state != "game"
-              .main-panel
-                .well.well-small.bottom0
-                  .row-fluid
-                    case mission.module.state
-                      
-                      when "game"
-                        .pull-right
-                          button.btn.btn-primary(type="submit")
-                            =_("Next")
-                            i.icon-arrow-right.icon-white.left05
-                      
-                      when "success"
-                        .span4.tl
-                          a.btn.btn-primary(href="")
-                            i.icon-arrow-left.icon-white.right05
-                            =_("Read the chapter again")
-                        .span4.tc
-                          button.btn(type="submit")
-                            i.icon-repeat.right05
-                            =_("Play again")
-                        if(nextChapter)
-                          .pull-right
-                            a.btn.btn-primary(href="")
-                              =_("Next chapter")
-                              i.icon-arrow-right.icon-white.left05
+              case mission.module.state                    
+                when "game"         
+                  //- Next button only in classic mode
+                  if mission.module.type == 'classic'
+                    .top30.tr
+                      button.btn.btn-primary(type="submit")
+                        =_("Next")
+                        i.icon-arrow-right.icon-white.left05
+                
+                when "success"
+                  .row-fluid.top30
+                    .span4.tl
+                      a.btn.btn-primary(href="")
+                        i.icon-arrow-left.icon-white.right05
+                        =_("Read the chapter again")
+                    .span4.tc
+                      button.btn(type="submit")
+                        i.icon-repeat.right05
+                        =_("Play again")
+                    if(nextChapter)
+                      .pull-right
+                        a.btn.btn-primary(href="")
+                          =_("Next chapter")
+                          i.icon-arrow-right.icon-white.left05
 
-                      when "failed"
-                        .span4.tl
-                          a.btn.btn-primary(href="")
-                            i.icon-arrow-left.icon-white.right05
-                            =_("Read the chapter again")
-                        .span4.tc
-                          button.btn(type="submit")
-                            i.icon-repeat.right05
-                            =_("Try again")                  
+                when "failed"
+                  .row-fluid.top30
+                    .span4.tl
+                      a.btn.btn-primary(href="")
+                        i.icon-arrow-left.icon-white.right05
+                        =_("Read the chapter again")
+                    .span4.tc
+                      button.btn(type="submit")
+                        i.icon-repeat.right05
+                        =_("Try again")                  
+
+                        
   .white-panel.border-top
     .container    
       .cards.verticaled
