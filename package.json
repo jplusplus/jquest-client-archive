@@ -9,7 +9,7 @@
     , "fermata"               : "latest"
     , "i18n"                  : "latest"
     , "jade"                  : "latest"
-    , "jquest-mission"        : "latest"
+    , "jquest-mission"        : "git://github.com/jplusplus/jquest-mission.git#master"
     , "less-middleware"       : "latest"
     , "memjs"                 : "latest"
     , "memory-cache"          : "latest"
