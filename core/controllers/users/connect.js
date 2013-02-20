@@ -150,7 +150,6 @@ var addVerify = module.exports.addVerify = function(options) {
  */
 var verify = module.exports.verify = function(req, token, tokenSecret, profile, done) {
 
-  console.log(token, tokenSecret, profile);
   // Find the user whith the given id and for Twitter
   api.user_oauth({  
     consumer_user_id : profile.id,
@@ -214,13 +213,17 @@ var redirectToInstance = module.exports.redirectToInstance = function(req, res) 
         token      : getRandomToken(100)
       }, done) }
     // Serie done
-    }, function(err, result) {      
+    }, function(err, result) {    
+
       // First we clear the cookie
       res.clearCookie("redirect-to-instance");
       // Failed page
       if(err) failedPage(req, res);
       else {
-        var url = req.protocol + "://" + req.headers.host;
+        
+        var token = result.user_token.token;
+
+        var url = req.protocol + "://" + req.headers.host;        
         // Add the token authentication path
            url += tokenAuthPath.replace(":token", token).replace(":user", req.user.id);
         // Redirect to the authentication path on another domain
