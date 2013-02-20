@@ -5,7 +5,6 @@ To make jQuest up and running, you need:
 
 * **Node** 0.8.7
 * **NPM** 1.1.32
-* **MySQL** 14.* or **PostGreSQL** 9.*
 
 
 ### Dependencies
@@ -25,7 +24,7 @@ The following environment variables can be use with the highest priority :
 * **PORT** defines the port to listen to (ex: *80*);
 * **API_URL** defines the url to the API;
 * **NODE_ENV** defines the runing mode (ex: *development*, *production*, etc);
-* **BASIC_AUTH** if contain a value, use that string on basic authentication (ex: *user:pass*).
+* **BASIC_AUTH** if contains a value, use that string on basic authentication (ex: *user:pass*).
 
 ### Common issues
 * **Error: watch ENOSPC**: Do not run the application with DropBox on the same system.
