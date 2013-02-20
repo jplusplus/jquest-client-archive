@@ -1,6 +1,7 @@
 var i18n	= require("i18n")
 , usersCtrl = require("./users")
-	   , fs = require("fs");
+	   , fs = require("fs")
+	 , path = require("path");
 
  /**
  * @author Pirhoo
@@ -14,9 +15,9 @@ module.exports = function(app) {
 	 */
 	app.get('/:lang', function(req, res){	
 
-		var tpl = 'home/' +  res.locals.instance.slug;
+		var tpl = 'home/' + res.locals.instance.slug + ".jade";	
 		// No specified instance, default template
-		if( ! res.locals.instance || ! fs.existsSync("../"+tpl) )	{
+		if( ! res.locals.instance || ! fs.existsSync( path.join(app.get("views"), tpl) ) ) {
 		  	res.render('home/default', { path:"/" });
 		} else {	  	
 			res.render(tpl , { path:"/" });	  	

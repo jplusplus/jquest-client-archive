@@ -21,8 +21,8 @@ block body
       h1=_("Choose a mission")
       p!=_("Choose a mission from the list below. If it's locked, you have<br />to complete other missions before you can move on.")
       
-  .container    
-    .cards.pull-left.main-panel
+  .container  
+    .cards.pull-left.main-panel.tc
       - var lastLevel = 0;
       each m in instance.missions
         //- Line break when the level change
