@@ -104,7 +104,9 @@ var missionPage = module.exports.missionPage = function(req, res){
             // *****************************************************************
             
             // Create the mission object using the database mission            
-            var mission = results.mission;        
+            var mission = results.mission;     
+
+            console.log(app.userMissions)
 
             if( req.isAuthenticated() ) {
 
@@ -117,11 +119,17 @@ var missionPage = module.exports.missionPage = function(req, res){
                 // Instances the mission 
                 // (uses the chapter slug to find the good one) 
                 // and call the render callback
-                mission.module = new app.missions["fr-twitter-talk-1"](api, req.user.id, mission.id, function(err) {                        
+                mission.module = new app.missions["fr-twitter-talk-1"](api, req.user.id, mission.id, function(err) {  
+
                   // Add this instance to the list of available instances
-                  app.userMissions.push(this);                                                                            
-                  // Render the single mission page
-                  res.render('missions/mission', { mission: mission });
+                  app.userMissions.push(this);   
+
+                  // Prepare the mission to play
+                  mission.module.prepare(req, res, function(err) {                                                                              
+                    // Render the single mission page
+                    res.render('missions/mission', { mission: mission });
+                  });
+
                 }); 
 
               } else {
@@ -293,7 +301,7 @@ module.exports.missionRender = function (error, data, req, res) {
 var getMission = module.exports.getMission = function(user, mission) {
 
   // Create the missions array if unexists
-  if(typeof app.userMissions == "undefined") app.userMissions = [];   
+  if(typeof app.userMissions == "undefined") app.userMissions = [];  
 
   // Looks for the mission for this mission and user
   return _.findWhere(app.userMissions,  {user:  user, mission: mission});
