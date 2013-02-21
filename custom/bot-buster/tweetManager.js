@@ -11,7 +11,7 @@ var self;
  */
 function TweetManager() {   
   self = this; 
-  self.tracks = ["syrian", "syria"];
+  self.tracks = ["syrian", "syria", "tweet"];
   self.tweets = [];
   self.createStream();
 }
@@ -124,11 +124,11 @@ TweetManager.prototype.get = function(n) {
 
 /**
  * Get all tweet matching to the given Object
- * @param  {Object} when
+ * @param  {Object} where
  * @return {Array}
  */
-TweetManager.prototype.getWhen = function(when) {
-  return _.where(self.tweets, when);
+TweetManager.prototype.getWhere = function(where) {
+  return _.where(self.tweets, where);
 }
 
 
