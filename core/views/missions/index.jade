@@ -30,7 +30,7 @@ block body
           br
         if m.isActivated
           .mission-card.activated(data-uri=m.resource_uri, data-children=m.children.join(','), title=m.name, data-content=m.description )
-            a.panel(href=url("/m/"+m.id))
+            a.panel(href=url("/m/"+m.id+"/play"))
               .mission-name=m.name
               if m.progression
                 .user-points=m.progression.points+" points"

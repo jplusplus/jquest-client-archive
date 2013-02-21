@@ -27,7 +27,7 @@ block body
               .instruction=_("Push a button to select an answer") 
 
           case mission.module.state                    
-            when "game"         
+            when "game"      
               //- Next button only in classic mode
               if mission.module.type == 'classic'
                 .top30.tr
@@ -37,30 +37,22 @@ block body
             
             when "success"
               .row-fluid.top30
-                .span4.tl
-                  a.btn.btn-primary(href="")
-                    i.icon-arrow-left.icon-white.right05
-                    =_("Back to missions list")
-                .span4.tc
-                  button.btn(type="submit")
+                .span4.offset-4.tc
+                  .btn(type="submit")
                     i.icon-repeat.right05
                     =_("Play again")
                 if(nextChapter)
-                  .pull-right
+                  .span4.tr
                     a.btn.btn-primary(href="")
                       =_("Next chapter")
                       i.icon-arrow-right.icon-white.left05
 
             when "failed"
               .row-fluid.top30
-                .span4.tl
-                  a.btn.btn-primary(href="")
-                    i.icon-arrow-left.icon-white.right05
-                    =_("Back to missions list")
-                .span4.tc
-                  button.btn(type="submit")
+                .tc
+                  a(href="./open").btn(type="submit")
                     i.icon-repeat.right05
-                    =_("Try again")                  
+                    =_("Play again")                  
 
 
   .white-panel.border-top
@@ -78,7 +70,7 @@ block body
 
             if m.isActivated
               .mission-card.activated(data-uri=m.resource_uri, data-children=m.children.join(','), title=m.name, data-content=m.description )
-                a.panel(href=url("/m/"+m.id))
+                a.panel(href=url("/m/"+m.id+"/play"))
                   .mission-name=m.name
                   if m.progression
                     .user-points=m.progression.points+" points"

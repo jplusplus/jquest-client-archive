@@ -54,7 +54,7 @@ new (function(window, undefined) {
       
       that.hideSplashscreen();
       // And start the question countdown
-      //that.startQuestionCountdown();
+      that.startQuestionCountdown();
 
     // Or updates it
     } else {
@@ -155,7 +155,7 @@ new (function(window, undefined) {
 
     // Send the values to know 
     // if the user is correct
-    $.post("", values, function(data) {
+    $.post("./data", values, function(data) {
       
       // remove "loading mode" on the mission
       $form.loading(false);
@@ -181,7 +181,7 @@ new (function(window, undefined) {
     that.initElements();  
 
     // Remove the splashscreen in a few second
-    if(that.el.$splashscreen.length) setTimeout(function() { that.updateSplashscreen(1) }, 1000);
+    if(that.el.$splashscreen.length) setTimeout(function() { that.updateSplashscreen(4) }, 1000);
 
     // Auto-submit for the quiz forms
     that.el.$mission.on('change', function() { 

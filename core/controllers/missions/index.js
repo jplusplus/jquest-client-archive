@@ -19,7 +19,7 @@ module.exports = function(_app) {
 	/*
 	 * GET/POST Missions list and single page.
 	 */
-	app.all('/:lang/m/:id?', missionPage);
+	app.all('/:lang/m/:id?/:action?', missionPage);
 
 };
 
@@ -48,22 +48,22 @@ var missionPage = module.exports.missionPage = function(req, res){
               if(! req.params.id) return callback(null, null);
               else api.mission(1*req.params.id).get(callback);
             }
-        }, function render(err, results) {
+        }, function render(err, locals) {
             
             // Switchs to the 404 page if an error happends
-            if(err || !results.instance) return res.render('404');  
+            if(err || !locals.instance) return res.render('404');  
             
             // Create the mission three with missions mapping :
             //   1 - to record the user progression
             //   2 - to determines if the mission is activated
             //   3 - to extract its childrens
             //   4 - and map every children list to only keep resource_uri
-            _.map(results.instance.missions, function(mission) {
+            _.map(locals.instance.missions, function(mission) {
 
                 // Merge Instance's missions with user progressions
-                if(results.userProgressions) {
+                if(locals.userProgressions) {
                     // Filters the userProgressions array to this mission
-                    mission.progression = _.find(results.userProgressions.objects, function(p) { 
+                    mission.progression = _.find(locals.userProgressions.objects, function(p) { 
                         return p.mission == mission.resource_uri;
                     });
                 }
@@ -72,79 +72,36 @@ var missionPage = module.exports.missionPage = function(req, res){
                 //  1 - Yes, if no parent
                 mission.isActivated = mission.relationships.length == 0;
                 //  2 - Or not, if no user progression and the current is the root (loged out)
-                mission.isActivated = mission.isActivated || (!results.userProgressions && !mission.relationships.length)
+                mission.isActivated = mission.isActivated || (!locals.userProgressions && !mission.relationships.length)
                 //  3 - Or yes, if one parent is succeed
                 mission.isActivated = mission.isActivated || !!_.find(mission.relationships, function(rs) {
                     // Find the user progession of each parent to its state
-                    return !! _.find(results.userProgressions.objects, function(up) {                            
+                    return !! _.find(locals.userProgressions.objects, function(up) {                            
                         return rs.parent == up.mission && up.state == "succeed"
                     })
                 })
 
                 // Get childs number by fetch every missions' relationships
-                mission.children = _.filter(results.instance.missions, function(m) {
+                mission.children = _.filter(locals.instance.missions, function(m) {
                     return _.find(m.relationships, function(rs) {
                         return rs.parent == mission.resource_uri;
                     });
                 });
 
                 // Pluck the resource uri
-                mission.children = _.pluck(mission.children, "resource_uri");
+                mission.children = _.pluck(mission.children, "resource_uri");                
+            });
 
-            })
 
-            var missions = bfsCollapse(results.instance.missions, "resource_uri");                                
+            var missions = bfsCollapse(locals.instance.missions, "resource_uri");                                
             // Overwrite the locals' instance attribut
-            res.locals.instance.missions = missions;
+            locals.instance.missions = missions;
             // No single one mission given, renders on the misson list view
-            if(!results.mission) return res.render('missions/index');
-            
+            if(!locals.mission) return res.render('missions/index');            
 
-            // Additional step for the Mission screen
+            // Additional step for the Mission screen in an other router function
             // *****************************************************************
-            // @TODO: Put the whole mission managment to a dedicated manager 
-            
-            // Create the mission object using the database mission            
-            var mission = results.mission;     
-
-            if( req.isAuthenticated() ) {
-
-              // Future mission instance
-              mission.module = getMission(req.user.id, mission.id); 
-              
-              // If we didn't find the mission but the mission class is available
-              if(mission.module === undefined && app.missions[mission.package]) {
-
-                // Instances the mission 
-                // (uses the chapter slug to find the good one) 
-                // and call the render callback
-                mission.module = new app.missions[mission.package](api, req.user.id, mission.id, function(err) {  
-
-                  // Add this instance to the list of available instances
-                  app.userMissions.push(mission.module);   
-
-                  // Prepare the mission to play
-                  mission.module.prepare(req, res, function(err) {                                                                              
-                    // Render the single mission page
-                    res.render('missions/mission', { mission: mission });
-                  });
-
-                }); 
-
-              } else {
-                // Prepare the mission to play
-                mission.module.prepare(req, res, function(err) {                   
-                  // Render the single mission page
-                  res.render('missions/mission', { mission: mission });
-                });
-              }
-
-            } else {              
-              // Redirect to login page
-              res.redirect('/u/login');
-            }
-
-
+            missionRouter(req, res, locals);
         });
     }
 };
@@ -241,67 +198,91 @@ var getRoot = module.exports.getRoot = function(graph) {
 
 }
 
+/**
+ * Get a mission instance for the given user and mission
+ * @param  {Number} user
+ * @param  {String} mission
+ * @param  {Function} callback
+ */
+var getMissionModule = module.exports.getMissionModule = function(user, mission, callback) {
 
-module.exports.missionRender = function (error, data, req, res) {
+  // Create the missions array if unexists
+  if(typeof app.missionModules == "undefined") app.missionModules = [];  
 
-  // Switchs to the 404 page if an error happends
-  if( !data
-  || data.course      === undefined 
-  || data.chapter     === undefined
-  || data.mission     === undefined
-  || data.nextChapter === undefined) return res.render('404');
+  // Looks for the mission for this mission and user
+  var module = _.findWhere(app.missionModules,  {user:  user.id, mission: mission.id});
 
-  if( ! usersCtrl.isAllowed(data.chapter, req.user, data.parentUserProgression) ) {
-    res.render('401'); // Authentification required !
-    return;
-  }
+  // If we didn't find the mission but the mission class is available
+  if(module === undefined && app.missions[mission.package]) {
 
-  // Change the render following the method
-  if(req.method === "POST") {
-    
-      switch(data.mission.state) {
+    // Instances the mission 
+    // (uses the chapter slug to find the good one) 
+    // and call the render callback
+    module = new app.missions[mission.package](api, user.id, mission.id, function(err) {  
+      // Add this instance to the list of available instances
+      if(!err) app.missionModules.push(module);     
+      // Callback function
+      callback(err, module);
+    }); 
 
-        // We lost the mission      
-        case "failed":
-          // Open the mission again
-          data.mission.open(function() {
-            // Redirect to the mission without POST data
-            res.redirect(req.url);
-          });
-          break;
-
-        default:
-          // Redirect to the mission without POST data
-          res.redirect(req.url);  
-      }
-
-  } else {       
-
-    // Render on the course view
-    res.render('chapters/mission', {
-      title         : "Mission ‹ " +  data.chapter.title + " ‹ " + data.course.title,
-      templatePath  : app.settings.views + "/chapters/mission/",
-      course        : data.course,
-      chapter       : data.chapter,
-      nextChapter   : data.nextChapter,
-      mission       : data.mission
-    });
-
+  } else {  
+    // Callback function
+    callback(null, module);
   }
 
 }
 
+
 /**
- * Get a mission instance for the given user and chapter
- * @param  {Number} user
- * @param  {String} mission
- * @return {Object} The mission instance, false if not found
+ * Second router for mission screen that adapt the rendering
+ * to the mission state and user action (param :action)
+ * @param  {Object} req    User HTTP request
+ * @param  {Object} res    User HTTP result
+ * @param  {Obkect} locals Template local variables 
  */
-var getMission = module.exports.getMission = function(user, mission) {
+function missionRouter(req, res, locals) {
 
-  // Create the missions array if unexists
-  if(typeof app.userMissions == "undefined") app.userMissions = [];  
+  // Get the mission module
+  getMissionModule(req.user, locals.mission, function(err, module) {
 
-  // Looks for the mission for this mission and user
-  return _.findWhere(app.userMissions,  {user:  user, mission: mission});
+    // Saves the mission module
+    if(module) locals.mission.module = module;
+
+    switch(err || req.params.action) {
+      
+      case "open":
+        module.open(function() {
+          // Once the mission is open,
+          // redirect to the play screen
+          res.redirect("../play")
+        });
+        break;
+
+      case "play":
+        // Prepare the mission to play before rendering
+        module.play(function(err) {          
+          res.render('missions/mission', locals);
+        });
+        break;
+      
+      
+      case "data":
+        // Receive data to evaluate throw the request body
+        module.data(req.body, function(err, results) {          
+          res.json(err || results);
+        });
+        break;
+
+      case "info":
+        // Nothing yet.
+        // Do not break to continue until the default statement.
+      
+      default:
+        res.render("404");
+        break;
+    }
+
+  }); 
+
+
 }
