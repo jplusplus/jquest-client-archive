@@ -97,7 +97,7 @@ var missionPage = module.exports.missionPage = function(req, res){
             // Overwrite the locals' instance attribut
             locals.instance.missions = missions;
             // No single one mission given, renders on the misson list view
-            if(!locals.mission) return res.render('missions/index');            
+            if(!locals.mission) return res.render('missions/index', locals);            
 
             // Additional step for the Mission screen in an other router function
             // *****************************************************************
@@ -212,18 +212,22 @@ var getMissionModule = module.exports.getMissionModule = function(user, mission,
   // Looks for the mission for this mission and user
   var module = _.findWhere(app.missionModules,  {user:  user.id, mission: mission.id});
 
-  // If we didn't find the mission but the mission class is available
-  if(module === undefined && app.missions[mission.package]) {
+  // If we didn't find the mission
+  if(module === undefined) {
+    
+    // Is the mission class available ?
+    if(app.missions[mission.package]) {      
+      // Instances the mission 
+      // (uses the chapter slug to find the good one) 
+      // and call the render callback
+      module = new app.missions[mission.package](api, user.id, mission.id, function(err) {  
+        // Add this instance to the list of available instances
+        if(!err) app.missionModules.push(module);     
+        // Callback function
+        callback(err, module);
+      });
 
-    // Instances the mission 
-    // (uses the chapter slug to find the good one) 
-    // and call the render callback
-    module = new app.missions[mission.package](api, user.id, mission.id, function(err) {  
-      // Add this instance to the list of available instances
-      if(!err) app.missionModules.push(module);     
-      // Callback function
-      callback(err, module);
-    }); 
+    } else callback({error: "Mission's package missing."}, null)
 
   } else {  
     // Callback function
