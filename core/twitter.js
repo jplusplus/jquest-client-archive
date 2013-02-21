@@ -8,14 +8,17 @@ var self;
 
 /**
  * TweetMangager class
+ * *****************************************************************************
  */
 function TweetManager() {   
-  self = this; 
-  self.tracks = ["syrian", "syria", "tweet"];
+  self = this;
+  // Every tweets 
   self.tweets = [];
-  self.createStream();
+  // User monitored
+  self.users  = [];
+  // Create user montir
+  self.starUserMonitor();
 }
-
 
 /**
  * Create a twitter client (instance of Twit) in this.twitterClient
@@ -36,11 +39,12 @@ TweetManager.prototype.twitterClient = function() {
 
 /**
  * Create the Twitter stream using the Twitter Client
+ * @param {Array} tracks Array of track to filter
  * @return {Object} Created stream
  */
-TweetManager.prototype.createStream = function() {
+TweetManager.prototype.createStream = function(tracks) {
         
-    self.stream = self.twitterClient().stream('statuses/filter', { track: self.tracks.join(",") });
+    self.stream = self.twitterClient().stream('statuses/filter', { track: tracks.join(",") });
 
     // Bind the "tweet" event
     self.stream.on("tweet", self.addTweetEvent);
@@ -105,6 +109,63 @@ TweetManager.prototype.addTweetEvent = function(tweet) {
 }
 
 /**
+ * Add user monitor
+ * @param {Object} user User object to monitor
+ */
+TweetManager.prototype.addUser = function(user) {
+  var existingUser = _.findWhere(self.users, {data: user});
+  return existingUser || self.users[ self.users.push( new User(user) ) ]
+}
+
+/**
+ * Start an interval to extract tweets of users
+ * @return {[type]} [description]
+ */
+TweetManager.prototype.starUserMonitor = function() {
+  if(self.userMonitor) clearInterval(self.userMonitor);
+  // Collect users' tweets every 2 minutes
+  self.userMonitor = setInterval(self.collectUsersTweets, 60*1000);
+}
+
+/**
+ * Start an interval to extract tweets of users
+ * @param {Function} callback
+ */
+TweetManager.prototype.collectUsersTweets = function(callback) {
+
+  callback = callback || function() {};
+  // Do not make any request if there is no user
+  if(!self.users.length) return;
+
+  var options = {
+    // Get all user screen_names (limited to 100)
+    screen_name : _.map( self.users.slice(0,100), function(u) { return u.data.screen_name } )
+  }
+
+  // Yet we make twitter lookup to get one last tweet of each user.
+  // We probably use later a more complete solution.
+  self.twitterClient().get("users/lookup", options, function(err, data) {
+    // Something went wrong 
+    if(err) callback(err, null);
+    else {
+      // Record each tweet in the right user
+      _.each(data, function(user) {        
+        // One or more user matchings (flexible assertion)
+        _.each( self.getUsersWhere({ screen_name: user.screen_name.toLowerCase() }), function(u) {   
+          var tweet = user.status;
+          // Update the user data
+          u.data = _.extend(u.data, _.omit(user, "status") );
+          // Add the tweet to each user
+          u.addTweet(tweet);
+        });
+      });      
+      // Callback function
+      callback(null, data);
+    }
+  });
+}
+
+/**
  * Get tweets count
  * @return {Integer}
  */
@@ -127,10 +188,59 @@ TweetManager.prototype.get = function(n) {
  * @param  {Object} where
  * @return {Array}
  */
-TweetManager.prototype.getWhere = function(where) {
+TweetManager.prototype.getTweetsWhere = function(where) {
   return _.where(self.tweets, where);
 }
 
+
+/**
+ * Get all user matching to the given Object
+ * @param  {Object} where
+ * @return {Array}
+ */
+TweetManager.prototype.getUsersWhere = function(where) {
+  return _.filter(self.users, function(user) {
+    return _.findWhere([user.data], where) !== undefined;
+  });
+}
+
+
+/**
+ * User class
+ * @param {Object} user User to monitor
+ * *****************************************************************************
+ */
+function User(user) {     
+  this.data = user;
+  // Every user have its own 
+  this.tweets = [];
+}
+
+/**
+ * Get all tweet matching to the given Object
+ * @param  {Object} where
+ * @return {Array}
+ */
+User.prototype.getTweetsWhere = function(where) {
+  return _.where(this.tweets, where);
+}
+
+/**
+ * Add a tweet to the user (once)
+ * @param {Object} tweet Tweet to add
+ */
+User.prototype.addTweet = function(tweet) {
+  var user = this;
+  // If the tweet not exists yet
+  if( ! this.getTweetsWhere({id: tweet.id}).length ) {    
+    // Extend the tweet
+    self.extendTweet(tweet, function(err, t) {
+      if(err) return;
+      // Add it to the array
+      user.tweets.push(t);      
+    });
+  }
+}
 
 // Assure the manager object is a singleton.
 global.JQUEST_TWEET_MANAGER = global.JQUEST_TWEET_MANAGER ? global.JQUEST_TWEET_MANAGER : new TweetManager();

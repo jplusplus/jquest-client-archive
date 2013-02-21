@@ -3,20 +3,28 @@ var       util = require("util")
  , MissionQuiz = require("jquest-mission").MissionQuiz
            , _ = require("underscore")
       , config = require("config")
-, tweetManager = require("./tweetManager.js");
+, tweetManager = require("../../core/twitter");
 
 // Tweets array
 var tweets = [];
 
+// Add users
+tweetManager.addUser({screen_name: "Pirhoo", solution: "human"});
+tweetManager.addUser({screen_name: "Clemence_Mercy", solution: "human"});
+tweetManager.addUser({screen_name: "Nicolaskb", solution: "human"});
+tweetManager.addUser({screen_name: "martin_u", solution: "human"});
+tweetManager.addUser({screen_name: "jplusplus_", solution: "bot"});
+tweetManager.addUser({screen_name: "jplusplus_fr", solution: "bot"});
+// Force collectiong tweets
+tweetManager.collectUsersTweets();
 
 module.exports = function(api, user, mission, callback) {
 
   var self = this;  
-
   // Add several questions 
-  self.addQuestion(getTweet);
-  self.addQuestion(getTweet);
-  self.addQuestion(getTweet);
+  self.addQuestion(getTweetFromUser);
+  self.addQuestion(getTweetFromUser);
+  self.addQuestion(getTweetFromUser);
 
   // Call the parent constructor
   module.exports.super_.call(self, api, user, mission, callback);
@@ -24,10 +32,10 @@ module.exports = function(api, user, mission, callback) {
 };
 
 /**
- * Get a tweet from the tweets manager (yet an array)
+ * Get a tweet from the tweets manager stream
  * @param  {Function} callback Callback function
  */
-function getTweet(callback) {
+function getTweetFromStream(callback) {
   
   // Ask for a tweet every 500 ms
   var waitForTweet = setInterval(function() {
@@ -36,7 +44,7 @@ function getTweet(callback) {
     if(tweetManager.count() > 0) clearInterval(waitForTweet);
     else return; // No tweet, continue to wait
 
-    var tweet = tweetManager.get( _.random(0, tweetManager.count()) );    
+    var tweet = tweetManager.get( _.random(0, tweetManager.count()-1) );    
 
     callback(null, {
       label    : "Do you think this message was published by a human or by a robot?",
@@ -47,6 +55,32 @@ function getTweet(callback) {
     });
 
   }, 500);
+
+}
+
+/**
+ * Get a tweet from the tweets manager user (yet an array)
+ * @param  {Function} callback Callback function
+ */
+function getTweetFromUser(callback) {
+  
+  var tweet = false;
+
+  do {
+    // Random user
+    var user = tweetManager.users[ _.random(0, tweetManager.users.length - 1) ];
+    // Random tweet
+    if(user.tweets.length) tweet = user.tweets[ _.random(0, user.tweets.length) ];
+
+  } while(!tweet);
+
+  callback(null, {
+    label    : "Do you think this message was published by a human or by a robot?",
+    content  : tweet.oembed.html,
+    duration : 15,
+    solution : user.data.solution,
+    answers  : ["bot", "human"]
+  });
 
 }
 
