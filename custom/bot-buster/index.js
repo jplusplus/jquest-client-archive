@@ -9,12 +9,19 @@ var       util = require("util")
 var tweets = [];
 
 // Add users
-tweetManager.addUser({screen_name: "Pirhoo", solution: "human"});
+tweetManager.addUser({screen_name: "Pirhoo",         solution: "human"});
 tweetManager.addUser({screen_name: "Clemence_Mercy", solution: "human"});
-tweetManager.addUser({screen_name: "Nicolaskb", solution: "human"});
-tweetManager.addUser({screen_name: "martin_u", solution: "human"});
-tweetManager.addUser({screen_name: "jplusplus_", solution: "bot"});
-tweetManager.addUser({screen_name: "jplusplus_fr", solution: "bot"});
+tweetManager.addUser({screen_name: "nicolaskb",      solution: "human"});
+tweetManager.addUser({screen_name: "martin_u",       solution: "human"});
+tweetManager.addUser({screen_name: "DDJelle",        solution: "human"});
+tweetManager.addUser({screen_name: "Devergranne",    solution: "human"});
+tweetManager.addUser({screen_name: "brianboyer",     solution: "human"});
+tweetManager.addUser({screen_name: "annelisebouyer", solution: "human"});
+tweetManager.addUser({screen_name: "jplusplus_",     solution: "bot"});
+tweetManager.addUser({screen_name: "jplusplus_fr",   solution: "bot"});
+tweetManager.addUser({screen_name: "SwiftKey",       solution: "bot"});
+tweetManager.addUser({screen_name: "DeliciousHot",   solution: "bot"});
+
 // Force collectiong tweets
 tweetManager.collectUsersTweets();
 
@@ -22,9 +29,7 @@ module.exports = function(api, user, mission, callback) {
 
   var self = this;  
   // Add several questions 
-  self.addQuestion(getTweetFromUser);
-  self.addQuestion(getTweetFromUser);
-  self.addQuestion(getTweetFromUser);
+  for(var i=0; i<15; i++) self.addQuestion(getTweetFromUser);
 
   // Call the parent constructor
   module.exports.super_.call(self, api, user, mission, callback);

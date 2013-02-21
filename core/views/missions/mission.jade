@@ -35,16 +35,16 @@ block body
                     =_("Next")
                     i.icon-arrow-right.icon-white.left05
             
-            when "success"
+            when "succeed"
               .row-fluid.top30
-                .span4.offset-4.tc
-                  .btn(type="submit")
+                .span4.offset4.tc                  
+                  a(href="./open").btn(type="submit")
                     i.icon-repeat.right05
-                    =_("Play again")
-                if(nextChapter)
+                    =_("Play again")   
+                - if(typeof nextUrl != "undefined")
                   .span4.tr
-                    a.btn.btn-primary(href="")
-                      =_("Next chapter")
+                    a.btn.btn-primary(href=next)
+                      =_("Next mission")
                       i.icon-arrow-right.icon-white.left05
 
             when "failed"
