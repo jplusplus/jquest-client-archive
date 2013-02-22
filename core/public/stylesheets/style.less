@@ -50,6 +50,43 @@
 
 }
 
+
+.say-thank-you {        
+    background:fade(@footerBackground, 80%);
+    .no-rgba & { background:darken(@footerBackground, 10%); }
+    position:absolute;
+    top:-1px;
+    bottom:-1px;
+    right:0;
+    left:0;    
+    z-index:300;     
+    text-align:center;
+    padding:0 20px;
+    padding-top:60px;
+    font-size:16px;
+    display:table-cell;
+    vertical-align:middle;
+    .box-shadow(inset 0 0 100px darken(@footerBackground, 10%) );
+    .border-radius(@baseBorderRadius);
+    
+    &, h3, a {            
+        color:white;
+        text-shadow:none;
+    }
+
+    .csstransforms & {
+        .translate(0,0);
+        .transition(0.4s);
+        .opacity(100);
+        
+        &.hidden {                    
+            display:block;
+            .translate(0,-100%);
+            .opacity(0);
+        }
+    }
+}
+
 #mission {
 
 	position:relative;	
@@ -71,6 +108,7 @@
 	.content {
 		margin-top:-19px; // default well padding
 	}
+
 
 	.splashscreen {
         display:block;

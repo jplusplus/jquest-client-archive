@@ -5,6 +5,7 @@ new (function(window, undefined) {
   that.initElements = function() {
     that.el = {
       $mission      : $("#mission"),
+      $sayThankYou  : $(".say-thank-you"),
       $splashscreen : $("#mission .splashscreen"),
       $countdown    : $("#mission .question-countdown"),
       $countdownBar : $("#mission .question-countdown .progress .bar"),
@@ -27,15 +28,20 @@ new (function(window, undefined) {
     // Toggle the classes on the btn
     $solution.parents(".btn").addClass("btn-success");
     $checked.parents(".btn").filter(":not(.btn-success)").addClass("btn-danger");
+  };  
+  
+  that.sayThankYou = function() {
+    that.el.$sayThankYou.removeClass("hidden");
   };
 
-  that.newQuestion = function() {
+  that.newQuestion = function() {    
 
     // Ajax loading of the new mission.    
     that.el.$mission.load(" #mission > *", function() {
       that.initElements();
       that.hideSplashscreen();
       that.startQuestionCountdown();
+      that.el.$sayThankYou.addClass("hidden");
       // Loads twitter widgets
       if(window.twttr) window.twttr.widgets.load();        
     });
@@ -160,8 +166,17 @@ new (function(window, undefined) {
       // remove "loading mode" on the mission
       $form.loading(false);
 
-      // Show the solution
-      that.showSolution(data.solution);
+      if(data.solution) {        
+        // do we know the solution ?
+        if(data.solution.length) {
+          // Show the solution
+          that.showSolution(data.solution);
+        // did the user give an answer ?
+        } else if(values["quiz-answer"] && values["quiz-answer"]  !== "") {
+          // Thanks the user
+          that.sayThankYou();
+        }
+      }
 
       // Wait a few seconds
       setTimeout(function() {
@@ -169,7 +184,7 @@ new (function(window, undefined) {
         if( ! data.isComplete ) that.newQuestion();
         // Reload the page to display the final one
         else window.location.reload()
-      }, 1000);
+      }, 2000);
 
     }, "json");
 

@@ -16,9 +16,13 @@ block body
       p!=mission.description    
       
   .container
-    .main-panel
+    .main-panel.overflow
+      .say-thank-you.hidden
+        h3=_("Thank you!")
+        p=_("Your positive participation helps our system to learn!")
       form.bottom0#mission(method="POST", class="mission-"+mission.module.type, data-type=mission.module.type, data-state=mission.module.state)
-        .well.bottom0
+
+        .well.bottom0          
           !=mission.module.getContent();
 
           if mission.module.state == "game"

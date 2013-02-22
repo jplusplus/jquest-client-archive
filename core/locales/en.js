@@ -86,5 +86,8 @@
 	"Try again": "Try again",
 	"Remember me on that computer": "Remember me on that computer",
 	"Back to missions list": "Back to missions list",
-	"Play again": "Play again"
+	"Play again": "Play again",
+	"Thank you!": "Thank you!",
+	"Your positive participation help our system to learn!": "Your positive participation help our system to learn!",
+	"Your positive participation helps our system to learn!": "Your positive participation helps our system to learn!"
 }

@@ -9,14 +9,14 @@ var       util = require("util")
 var tweets = [];
 
 // Add users
+tweetManager.addUser({screen_name: "annelisebouyer", solution: undefined});
+tweetManager.addUser({screen_name: "nicolaskb",      solution: undefined});
+tweetManager.addUser({screen_name: "martin_u",       solution: undefined});
 tweetManager.addUser({screen_name: "Pirhoo",         solution: "human"});
 tweetManager.addUser({screen_name: "Clemence_Mercy", solution: "human"});
-tweetManager.addUser({screen_name: "nicolaskb",      solution: "human"});
-tweetManager.addUser({screen_name: "martin_u",       solution: "human"});
 tweetManager.addUser({screen_name: "DDJelle",        solution: "human"});
 tweetManager.addUser({screen_name: "Devergranne",    solution: "human"});
 tweetManager.addUser({screen_name: "brianboyer",     solution: "human"});
-tweetManager.addUser({screen_name: "annelisebouyer", solution: "human"});
 tweetManager.addUser({screen_name: "jplusplus_",     solution: "bot"});
 tweetManager.addUser({screen_name: "jplusplus_fr",   solution: "bot"});
 tweetManager.addUser({screen_name: "SwiftKey",       solution: "bot"});
