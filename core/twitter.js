@@ -1,10 +1,14 @@
 // Dependencies
 var Twit = require("twit")
       , _ = require("underscore")
- , config = require("config");
+ , config = require("config")
+ , entity = require("./entity.js");
 
 // Context helper
 var self;
+
+// Family id for 
+var FAMILY_TWEET = "/v1/entity_family/1/";
 
 /**
  * TweetMangager class
@@ -237,7 +241,9 @@ User.prototype.addTweet = function(tweet) {
     self.extendTweet(tweet, function(err, t) {
       if(err) return;
       // Add it to the array
-      user.tweets.push(t);      
+      user.tweets.push(t); 
+      // Record this tweet in database
+      entity.add(t, t.id, FAMILY_TWEET);
     });
   }
 }
