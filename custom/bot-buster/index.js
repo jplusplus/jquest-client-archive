@@ -37,33 +37,6 @@ module.exports = function(api, user, mission, callback) {
 };
 
 /**
- * Get a tweet from the tweets manager stream
- * @param  {Function} callback Callback function
- */
-function getTweetFromStream(callback) {
-  
-  // Ask for a tweet every 500 ms
-  var waitForTweet = setInterval(function() {
-
-    // Is there tweets ?
-    if(tweetManager.count() > 0) clearInterval(waitForTweet);
-    else return; // No tweet, continue to wait
-
-    var tweet = tweetManager.get( _.random(0, tweetManager.count()-1) );    
-
-    callback(null, {
-      label    : "Do you think this message was published by a human or by a robot?",
-      content  : tweet.oembed.html,
-      duration : 15,
-      solution : "Human",
-      answers  : ["Bot", "Human"]
-    });
-
-  }, 500);
-
-}
-
-/**
  * Get a tweet from the tweets manager user (yet an array)
  * @param  {Function} callback Callback function
  */
