@@ -8,7 +8,7 @@ var Twit = require("twit")
 var self;
 
 // Family id for 
-var FAMILY_TWEET = "/v1/entity_family/1/";
+var FAMILY_ID = 1;
 
 /**
  * TweetMangager class
@@ -243,7 +243,7 @@ User.prototype.addTweet = function(tweet) {
       // Add it to the array
       user.tweets.push(t); 
       // Record this tweet in database
-      entity.add(t, t.id, FAMILY_TWEET);
+      entity.add(t, t.id, FAMILY_ID);
     });
   }
 }
