@@ -247,6 +247,9 @@ var getMissionModule = module.exports.getMissionModule = function(user, mission,
  */
 function missionRouter(req, res, locals) {
 
+  // Do not go further if the User isn't authenticated
+  if(! req.isAuthenticated() ) return res.redirect("u/login");
+
   // Get the mission module
   getMissionModule(req.user, locals.mission, function(err, module) {
 
