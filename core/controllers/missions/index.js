@@ -1,8 +1,9 @@
-var async = require('async')
- , config = require("config")
-  , users = require("../users")
-    , api = require("../../api")
-      , _ = require("underscore");
+var entityManager = require("../../entity")
+         , config = require("config")
+          , async = require('async')
+          , users = require("../users")
+            , api = require("../../api")
+              , _ = require("underscore");
 
 // app global object
 var app;
@@ -220,7 +221,7 @@ var getMissionModule = module.exports.getMissionModule = function(user, mission,
       // Instances the mission 
       // (uses the chapter slug to find the good one) 
       // and call the render callback
-      module = new app.missions[mission.package](api, user.id, mission.id, function(err) {  
+      module = new app.missions[mission.package](api, entityManager, user.id, mission.id, function(err) {  
         // Add this instance to the list of available instances
         if(!err) app.missionModules.push(module);     
         // Callback function

@@ -1,8 +1,8 @@
 // Dependencies
-var Twit = require("twit")
-      , _ = require("underscore")
- , config = require("config")
- , entity = require("./entity.js");
+var entityManager = require("./entity.js")
+         , config = require("config")
+           , Twit = require("twit")
+              , _ = require("underscore")
 
 // Context helper
 var self;
@@ -243,7 +243,7 @@ User.prototype.addTweet = function(tweet) {
       // Add it to the array
       user.tweets.push(t); 
       // Record this tweet in database
-      entity.add(t, t.id, FAMILY_ID);
+      entityManager.add(t, t.id, FAMILY_ID);
     });
   }
 }

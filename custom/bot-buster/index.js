@@ -25,14 +25,14 @@ tweetManager.addUser({screen_name: "DeliciousHot",   solution: "bot"});
 // Force collectiong tweets
 tweetManager.collectUsersTweets();
 
-module.exports = function(api, user, mission, callback) {
+module.exports = function(apiManager, entityManager, user, mission, callback) {
 
   var self = this;  
   // Add several questions 
   for(var i=0; i<15; i++) self.addQuestion(getTweetFromUser);
 
   // Call the parent constructor
-  module.exports.super_.call(self, api, user, mission, callback);
+  module.exports.super_.call(self, apiManager, entityManager, user, mission, callback);
 
 };
 
