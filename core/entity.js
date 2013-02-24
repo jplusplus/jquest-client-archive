@@ -47,6 +47,24 @@ EntityManager.prototype.eval = function(value, fid, family, callback) {
     api.entity_eval.post(data, callback);
 };
 
+/**
+ * Get an entity to evaluate that the user didn't evaluate yet
+ * @param  {Integer}  family    Family id
+ * @param  {Integer}  user      User id
+ * @param  {Function} callback  Callback function  
+ */
+EntityManager.prototype.entityToEval = function(family, user, callback) {
+  api.entity({
+    // Filter by family
+    family: family,
+    // The given didn't evalute the entity before
+    not_evaluated_by: user,
+    // Get just 1 entity
+    limit: 1
+  }).get(callback);
+}
+
+
 // Assure the manager object is a singleton.
 global.JQUEST_ENTITY_MANAGER = global.JQUEST_ENTITY_MANAGER ? global.JQUEST_ENTITY_MANAGER : new EntityManager();
 

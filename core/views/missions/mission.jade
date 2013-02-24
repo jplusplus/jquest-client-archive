@@ -23,7 +23,7 @@ block body
       form.bottom0#mission(method="POST", class="mission-"+mission.module.type, data-type=mission.module.type, data-state=mission.module.state)
 
         .well.bottom0          
-          !=mission.module.getContent();
+          !=mission.module.getContent({question: question, mission: mission});
 
           if mission.module.state == "game"
             .splashscreen( data-msg-cd-plural=_("The mission is about to begin in % seconds."), data-msg-cd-single=_("The mission is about to begin in % second.") )

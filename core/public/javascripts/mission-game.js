@@ -13,20 +13,20 @@ new (function(window, undefined) {
     };
   };
 
-  that.showSolution = function(solution) {
+  that.showSolution = function(solutions) {
 
     // Find the checked input
     var $checked = that.el.$mission.find("input[name=quiz-answer]:checked")
-    // Find the input with the solution
-     , $solution = that.el.$mission.find("input[name=quiz-answer]").filter(function() {
-        return $.inArray($(this).val(), solution) > -1;
+    // Find the input with a solution
+    , $solutions = that.el.$mission.find("input[name=quiz-answer]").filter(function() {
+        return solutions.indexOf( $(this).val() ) > -1;
      });
 
     // Disabled all inputs
     that.el.$mission.find("input,button,.btn").addClass("disabled").prop("disabled", true);
 
     // Toggle the classes on the btn
-    $solution.parents(".btn").addClass("btn-success");
+    $solutions.parents(".btn").addClass("btn-success");
     $checked.parents(".btn").filter(":not(.btn-success)").addClass("btn-danger");
   };  
   
@@ -166,16 +166,16 @@ new (function(window, undefined) {
       // remove "loading mode" on the mission
       $form.loading(false);
 
-      if(data.solution) {        
-        // do we know the solution ?
-        if(data.solution.length) {
-          // Show the solution
-          that.showSolution(data.solution);
-        // did the user give an answer ?
-        } else if(values["quiz-answer"] && values["quiz-answer"]  !== "") {
-          // Thanks the user
-          that.sayThankYou();
-        }
+      if(data.solution) {   
+        // one or several solutions
+        var solutions = data.solution.split(",");
+        // Show solutions
+        that.showSolution(solutions);
+
+      // No solution, but the user gave an answer
+      } else if(values["quiz-answer"] && values["quiz-answer"]  !== "") {
+        // Thanks the user
+        that.sayThankYou();
       }
 
       // Wait a few seconds

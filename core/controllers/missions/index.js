@@ -268,7 +268,8 @@ function missionRouter(req, res, locals) {
 
       case "play":
         // Prepare the mission to play before rendering
-        module.play(function(err) {          
+        module.play(function(err, question) {          
+          locals.question = question;   
           res.render('missions/mission', locals);
         });
         break;

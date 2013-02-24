@@ -16,6 +16,8 @@ var FAMILY_ID = 1;
  */
 function TweetManager() {   
   self = this;
+  // Export the family id
+  self.FAMILY_ID = FAMILY_ID;
   // Every tweets 
   self.tweets = [];
   // User monitored
@@ -188,6 +190,20 @@ TweetManager.prototype.get = function(n) {
 }
 
 /**
+ * Get a tweet to evaluate from the db
+ * @param  {Integer}  user    User id
+ * @param  {Function} callback Callback function  
+ */
+TweetManager.prototype.tweetToEval = function(user, callback) {
+  entityManager.entityToEval(self.FAMILY_ID, user, function(err, data) {
+    err = err || !data.objects || data.objects.length == 0 || null;
+    // Return the first entity body
+    callback(err, err || data.objects[0].body);
+  });
+}
+
+
+/**
  * Get all tweet matching to the given Object
  * @param  {Object} where
  * @return {Array}
@@ -243,7 +259,7 @@ User.prototype.addTweet = function(tweet) {
       // Add it to the array
       user.tweets.push(t); 
       // Record this tweet in database
-      entityManager.add(t, t.id, FAMILY_ID);
+      entityManager.add(t, t.id, self.FAMILY_ID);
     });
   }
 }
