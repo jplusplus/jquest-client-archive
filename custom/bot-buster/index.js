@@ -9,14 +9,10 @@ var       util = require("util")
 var tweets = [];
 
 // Add users
-twitterManager.addUser({screen_name: "annelisebouyer", solution: "human"});
-twitterManager.addUser({screen_name: "nicolaskb",      solution: "human"});
-twitterManager.addUser({screen_name: "martin_u",       solution: "human"});
 twitterManager.addUser({screen_name: "Pirhoo",         solution: "human"});
 twitterManager.addUser({screen_name: "Clemence_Mercy", solution: "human"});
 twitterManager.addUser({screen_name: "DDJelle",        solution: "human"});
 twitterManager.addUser({screen_name: "Devergranne",    solution: "human"});
-twitterManager.addUser({screen_name: "brianboyer",     solution: "human"});
 twitterManager.addUser({screen_name: "jplusplus_",     solution: "bot"});
 twitterManager.addUser({screen_name: "jplusplus_fr",   solution: "bot"});
 twitterManager.addUser({screen_name: "SwiftKey",       solution: "bot"});
@@ -29,7 +25,7 @@ module.exports = function(apiManager, entityManager, user, mission, callback) {
 
   self = this;  
   // Add several questions from twitter user 
-  for(var i=0; i<10; i++) self.addQuestion(getTweetFromUser);
+  // for(var i=0; i<10; i++) self.addQuestion(getTweetFromUser);
   // Add several question from the database (entity to eval)
   for(var i=0; i<5;  i++) self.addQuestion(getTweetToEval);
 
@@ -72,7 +68,7 @@ function getTweetFromUser(callback) {
 function getTweetToEval(callback) {
   
   var tweet = twitterManager.tweetToEval(self.user, function(err, tweet) {
-    
+
     callback(err, {
       label    : "Do you think this message was published by a human or by a robot?",
       content  : err || tweet.oembed.html,

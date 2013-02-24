@@ -145,7 +145,7 @@ TweetManager.prototype.collectUsersTweets = function(callback) {
 
   var options = {
     // Get all user screen_names (limited to 100)
-    screen_name : _.map( self.users.slice(0,100), function(u) { return u.data.screen_name } )
+    screen_name : _.map( self.users.slice(0,100), function(u) { return u.data.screen_name } ).join(',')
   }
 
   // Yet we make twitter lookup to get one last tweet of each user.
@@ -157,7 +157,7 @@ TweetManager.prototype.collectUsersTweets = function(callback) {
       // Record each tweet in the right user
       _.each(data, function(user) {        
         // One or more user matchings (flexible assertion)
-        _.each( self.getUsersWhere({ screen_name: user.screen_name.toLowerCase() }), function(u) {   
+        _.each( self.getUsersWhere({ screen_name: user.screen_name }), function(u) {   
           var tweet = user.status;
           // Update the user data
           u.data = _.extend(u.data, _.omit(user, "status") );
