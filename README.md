@@ -1,4 +1,3 @@
-process.env.PORT
 ## Installation
 ### Software dependencies
 To make jQuest up and running, you need:

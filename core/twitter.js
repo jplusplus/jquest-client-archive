@@ -22,7 +22,7 @@ function TweetManager() {
   self.tweets = [];
   // User monitored
   self.users  = [];
-  // Create user montir
+  // Create user monitor
   self.starUserMonitor();
 }
 
@@ -212,6 +212,27 @@ TweetManager.prototype.getTweetsWhere = function(where) {
   return _.where(self.tweets, where);
 }
 
+/**
+ * Get the user profile matching to the given Object
+ * @param   {Object} where
+ * @param   {Function} callback
+ * @return  {Array}
+ */
+TweetManager.prototype.getUserProfile = function(where, callback) {
+  
+  // ensure a callback function
+  callback = callback || function() {};
+
+  var users = _.filter(self.getUsersWhere(where), function(u) {
+    return u.data && u.data.id_str;
+  });
+
+  // Is the user available in the list ?
+  if(users.length) return callback(null, users[0].data);
+
+  // If not, loads it from twitter
+  self.twitterClient().get("users/show", where, callback);  
+};
 
 /**
  * Get all user matching to the given Object
@@ -257,9 +278,7 @@ User.prototype.addTweet = function(tweet) {
     self.extendTweet(tweet, function(err, t) {
       if(err) return;
       // Add it to the array
-      user.tweets.push(t); 
-      // Record this tweet in database
-      entityManager.add(t, t.id, self.FAMILY_ID);
+      user.tweets.push(t);
     });
   }
 }
