@@ -228,7 +228,7 @@ TweetManager.prototype.getUserProfile = function(where, callback) {
   });
 
   // Is the user available in the list ?
-  if(users.length) return callback(null, users[0].data);
+  if(users.length && users[0].data) return callback(null, users[0].data);
 
   // If not, loads it from twitter
   self.twitterClient().get("users/show", where, callback);  
@@ -279,7 +279,12 @@ User.prototype.addTweet = function(tweet) {
       if(err) return;
       // Add it to the array
       user.tweets.push(t);
-    });
+      
+      var tweetToRecord = _.clone(t);
+      tweetToRecord.user = user.data;
+      // Record the tweet
+      entityManager.add(tweetToRecord, tweetToRecord.id, self.FAMILY_ID);
+    })
   }
 }
 

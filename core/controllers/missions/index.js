@@ -284,8 +284,8 @@ function missionRouter(req, res, locals) {
       
       case "get":
         // Receive data request
-        module.get(req.query, function(err, results) {          
-          res.json(err || results);
+        module.get(req.query, function(err, results) {       
+          res.send(err || results);
         });
         break;
 

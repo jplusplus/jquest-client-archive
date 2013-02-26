@@ -13,13 +13,17 @@ case mission.state
         .progress
           .bar 
 
-    .content       
+    .content  
       .steps=mission.getStep() + "/" + mission.questionsNumber
       .row-fluid
         .span8
           //- Additional content above the question
           if typeof question.content != "undefined"
             !=question.content
+
+          .tc.top40
+            a.btn.btn-large.btn-primary.js-user-profil(data-user-id=question.user.id) Show more information about user
+
 
         .span4
           //- The question text itself
@@ -43,6 +47,23 @@ case mission.state
                       label.btn.btn-block.top20
                         input(type="radio", name="quiz-answer", value=answer)
                         =answer
+
+      .user-profile.hidden
+      //- WARNING: Inline javascript here because 
+      //- the sdk doesn't manage yet the assets (sorry for that)
+      script(type="text/javascript")
+        // On click on an unabled button
+        $("#mission").on("click", ".js-user-profil:not(.disabled)", function() {
+          // Disable it
+          $(this).addClass("disabled");
+          // Load the select user profil
+          $(".user-profile")
+            .load("./get?type=user&id=" + $(this).data("user-id"), function() {
+              $(this).removeClass("hidden");
+            });
+        });
+
+
 
 
   when "succeed"

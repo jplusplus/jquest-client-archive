@@ -26,6 +26,10 @@ html(class='no-js', lang=lang)
       //- Add a custom stylesheet
       link(href="/stylesheets/instance/" + instance.slug + ".css", type='text/css', rel="stylesheet")  
 
+    //- Thoses librairies are at the top of the page 
+    //- until we set up an assets for missions from the SDK
+    script(src='/javascripts/vendor/modernizr.custom.js')
+    script(src='/javascripts/vendor/jquery.min.js')
   body
 
     #main(rel="main")
@@ -43,10 +47,6 @@ html(class='no-js', lang=lang)
 
 
     
-    script(src='/javascripts/vendor/modernizr.custom.js')
-    //--script(src='//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
-    //--script window.jQuery || document.write('<script src="/javascripts/vendor/jquery.min.js"><\\/script>')
-    script(src='/javascripts/vendor/jquery.min.js')
     script(src='/javascripts/global.js')
     block scripts
 

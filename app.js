@@ -62,7 +62,6 @@ var express = require('express')
   , flash = require('connect-flash');
 
 
-
 /**
  * @type {Object}
  */

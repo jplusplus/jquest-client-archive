@@ -1,0 +1,30 @@
+//- Presence of an id indicate that we find or not the user
+- if(typeof id == "undefined")
+    h3 Sorry, unable to find the user.
+- else
+    .row-fluid
+        .span6
+            h3 Basic information about @#{screen_name}
+            .row-fluid
+                .span4
+                    .value=statuses_count
+                    .tag tweets
+                .span4
+                    .value=friends_count
+                    .tag followings
+                .span4
+                    .value=followers_count
+                    .tag followers
+        .span6
+            h3 Last tweets by @#{screen_name}
+            ul.unstyled
+                - var statuses = [status]
+                each status in statuses                
+                    li.tweet
+                        .pull-right=created_at
+                        p
+                            strong.right05=name 
+                            |  @#{screen_name}
+                        p=status.text
+
+

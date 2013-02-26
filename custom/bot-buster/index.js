@@ -1,8 +1,8 @@
 // Dependencies
-var       util = require("util")
- , MissionQuiz = require("jquest-mission").MissionQuiz
-           , _ = require("underscore")
-      , config = require("config")
+var         util = require("util")
+   , MissionQuiz = require("jquest-mission").MissionQuiz
+             , _ = require("underscore")
+          , jade = require("jade")
 , twitterManager = require("../../core/twitter");
 
 // Tweets array
@@ -40,7 +40,7 @@ module.exports = function(apiManager, entityManager, user, mission, callback) {
 
   self = this;  
   // Add several questions from twitter user 
-  for(var i=0; i<10; i++) self.addQuestion(getTweetFromUser);
+  // for(var i=0; i<10; i++) self.addQuestion(getTweetFromUser);
   // Add several question from the database (entity to eval)
   for(var i=0; i<5;  i++) self.addQuestion(getTweetToEval);
 
@@ -74,7 +74,9 @@ module.exports.prototype.get = function(data, callback) {
       else if(data.screen_name) where.screen_name = data.screen_name;
       else return callback({error: "User identifier mission: use 'id' or 'screen_name' parameter."}, null);
 
-      twitterManager.getUserProfile(where, callback);      
+      twitterManager.getUserProfile(where, function(err, profile) { 
+        callback(err, err ? null : self.render("profile.jade", profile) ); 
+      });   
       break;
 
     default:
@@ -104,7 +106,9 @@ function getTweetFromUser(callback) {
     content  : tweet.oembed.html,
     duration : 15,
     solution : user.data.solution,
-    answers  : ["bot", "human"]
+    answers  : ["bot", "human"],
+    fid      : tweet.id,
+    user     : user.data
   });
 
 }
@@ -123,7 +127,8 @@ function getTweetToEval(callback) {
       content  : err || tweet.oembed.html,
       duration : 15,
       answers  : ["bot", "human"],
-      fid      : tweet.id,
+      fid      : err || tweet.id,
+      user     : err || tweet.user,
       family   : twitterManager.FAMILY_ID
     });
 
