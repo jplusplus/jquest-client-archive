@@ -40,7 +40,7 @@ module.exports = function(apiManager, entityManager, user, mission, callback) {
 
   self = this;  
   // Add several questions from twitter user 
-  for(var i=0; i<10; i++)  self.addQuestion(getTweetFromUser);
+  for(var i=0; i<5; i++)  self.addQuestion(getTweetFromUser);
   // Add several question from the database (entity to eval)
   // for(var i=0; i<5;  i++) self.addQuestion(getTweetToEval);
 
@@ -69,6 +69,7 @@ module.exports.prototype.get = function(data, callback) {
 
     case "user":
       var where = {};
+
       // User clause
       if(data.id) where.id = 1*data.id; // Important casting for right matching
       else if(data.screen_name) where.screen_name = data.screen_name;
@@ -81,6 +82,7 @@ module.exports.prototype.get = function(data, callback) {
         // Send the profile as locals
         callback(err, err ? null : self.render("profile.jade", profile) ); 
       });   
+
       break;
 
     default:
@@ -104,7 +106,7 @@ function getTweetFromUser(callback) {
     if(data.statuses.length === 0)  return callback({error: "No tweet available."}, null);
 
     // Random tweet
-    var tweet = data.statuses[ _.random(0, data.statuses.length-1) ];      
+    var tweet = data.statuses[ _.random(0, data.statuses.length-1) ];          
 
     // Extend the tweet before display it (if needed)
     twitterManager.extendTweet(tweet, function(err, tweet) {
@@ -113,13 +115,14 @@ function getTweetFromUser(callback) {
       if(err) return callback(err, null);
 
       callback(null, {
-        label    : "Do you think this message was published by a human or by a robot?",
-        content  : tweet.oembed.html,
-        duration : 15,
-        solution : data.solution,
-        answers  : ["bot", "human"],
-        fid      : tweet.id,
-        user     : data
+        label     : "Do you think this message was published by a human or by a robot?",
+        content   : tweet,
+        duration  : 15,
+        solution  : data.solution,
+        answers   : ["bot", "human"],
+        fid       : tweet.id,
+        user      : _.clone(data),
+        parseText : twitterManager.parseText
       });
 
     })    
@@ -146,13 +149,14 @@ function getTweetToEval(callback) {
   var tweet = twitterManager.tweetToEval(self.user, function(err, tweet) {
 
     callback(err, {
-      label    : "Do you think this message was published by a human or by a robot?",
-      content  : err || tweet.oembed.html,
-      duration : 15,
-      answers  : ["bot", "human"],
-      fid      : err || tweet.id,
-      user     : err || tweet.user,
-      family   : twitterManager.FAMILY_ID
+      label     : "Do you think this message was published by a human or by a robot?",
+      content   : err || tweet,
+      duration  : 15,
+      answers   : ["bot", "human"],
+      fid       : err || tweet.id,
+      user      : err || tweet.user,
+      family    : twitterManager.FAMILY_ID,
+      parseText : twitterManager.parseText
     });
 
   });

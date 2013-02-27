@@ -37,19 +37,7 @@ block body
                 .top30.tr
                   button.btn.btn-primary(type="submit")
                     =_("Next")
-                    i.icon-arrow-right.icon-white.left05
-            
-            when "succeed"
-              .row-fluid.top30
-                .span4.offset4.tc                  
-                  a(href="./open").btn(type="submit")
-                    i.icon-repeat.right05
-                    =_("Play again")   
-                - if(typeof nextUrl != "undefined")
-                  .span4.tr
-                    a.btn.btn-primary(href=next)
-                      =_("Next mission")
-                      i.icon-arrow-right.icon-white.left05
+                    i.icon-arrow-right.icon-white.left05          
 
             when "failed"
               .row-fluid.top30

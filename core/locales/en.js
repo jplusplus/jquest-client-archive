@@ -91,5 +91,7 @@
 	"Your positive participation help our system to learn!": "Your positive participation help our system to learn!",
 	"Your positive participation helps our system to learn!": "Your positive participation helps our system to learn!",
 	"Wooops...": "Wooops...",
-	"There is something wrong.": "There is something wrong."
+	"There is something wrong.": "There is something wrong.",
+	"There is something wrong:": "There is something wrong:",
+	"Wooops... There is something wrong.": "Wooops... There is something wrong."
 }
