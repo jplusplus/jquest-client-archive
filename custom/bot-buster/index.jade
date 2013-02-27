@@ -61,7 +61,7 @@ case mission.state
             .load("./get?type=user&id=" + $(this).data("user-id"), function() {
               $(this).removeClass("hidden");
             });
-        }).find(".js-user-profil:not(.disabled)").trigger("click");
+        });
 
 
 
