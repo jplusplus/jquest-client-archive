@@ -74,7 +74,7 @@ module.exports.prototype.get = function(data, callback) {
       else if(data.screen_name) where.screen_name = data.screen_name;
       else return callback({error: "User identifier mission: use 'id' or 'screen_name' parameter."}, null);
 
-      twitterManager.getUserProfile(where, function(err, profile) { 
+      twitterManager.getUserProfile(where, function(err, profile) {
         // Add the twitter parse date function to the locals
         profile.parseDate = twitterManager.parseDate;
         profile.parseText = twitterManager.parseText;
