@@ -22,7 +22,7 @@
     , "pg"                    : "0.7.2"
     , "restler"               : "latest"
     , "sequelize"             : ">= 1.4.1"
-    , "twit"                  : "latest"
+    , "twit"                  : "1.0.10"
     , "underscore"            : "latest"  
   }
   , "engines": {
