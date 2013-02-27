@@ -40,9 +40,9 @@ module.exports = function(apiManager, entityManager, user, mission, callback) {
 
   self = this;  
   // Add several questions from twitter user 
-  for(var i=0; i<5; i++)  self.addQuestion(getTweetFromUser);
+  for(var i=0; i<10; i++)  self.addQuestion(getTweetFromUser);
   // Add several question from the database (entity to eval)
-  for(var i=0; i<5;  i++) self.addQuestion(getTweetToEval);
+  // for(var i=0; i<5;  i++) self.addQuestion(getTweetToEval);
 
   // Override the template's directory to use a custom template
   self.templateDirname  = __dirname,
