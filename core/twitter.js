@@ -19,12 +19,63 @@ function TweetManager() {
   // Export the family id
   self.FAMILY_ID = FAMILY_ID;
   // Every tweets 
-  self.tweets = [];
+  self.statuses = [];
   // User monitored
   self.users  = [];
   // Create user monitor
   self.starUserMonitor();
 }
+
+
+/**
+ * Pass in the 'created_at' string returned from twitter
+ * stamp arrives formatted as Tue Apr 07 22:52:51 +0000 2009 
+ * @src http://www.quietless.com/kitchen/format-twitter-created_at-date-with-javascript/
+ */
+TweetManager.prototype.parseDate = function(stamp)
+{   
+  // convert to local string and remove seconds and year   
+  var date = new Date(Date.parse(stamp)).toLocaleString().substr(0, 16);
+  // get the two digit hour
+  var hour = date.substr(-5, 2);
+  // convert to AM or PM
+  var ampm = hour<12 ? ' AM' : ' PM';
+  if (hour>12) hour-= 12;
+  if (hour==0) hour = 12;
+  // return the formatted string
+  return date.substr(0, 11)+' • ' + hour + date.substr(13) + ampm;
+}
+
+/**
+ * Transform the given text into html (for links and hashtags)
+ * @param  {String} text Text to parse
+ * @return {String} Text parsed
+ */
+TweetManager.prototype.parseText = function(text) {
+
+  var parseURL = function(t) {
+    return t.replace(/[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&~\?\/.=]+/g, function(url) {
+      return url.link(url);
+    });
+  };
+
+  var parseUsername = function(t) {
+    return t.replace(/[@]+[A-Za-z0-9-_]+/g, function(u) {
+      var username = u.replace("@","")
+      return u.link("http://twitter.com/"+username);
+    });
+  };
+
+  var parseHashtag = function(t) {
+    return t.replace(/[#]+[A-Za-z0-9-_]+/g, function(t) {
+      var tag = t.replace("#","%23")
+      return t.link("http://search.twitter.com/search?q="+tag);
+    });
+  };
+
+  return parseHashtag(parseUsername(parseURL(text)));
+}
+
 
 /**
  * Create a twitter client (instance of Twit) in this.twitterClient
@@ -110,13 +161,22 @@ TweetManager.prototype.extendTweet = function(tweet, callback) {
 TweetManager.prototype.addTweetEvent = function(tweet) {
   
   self.extendTweet(tweet, function(err, tweetExtended) {
-    if(! err) self.tweets.push(tweetExtended);
+    if(! err) self.statuses.push(tweetExtended);
   });
 }
 
 /**
  * Add user monitor
  * @param {Object} user User object to monitor
+ */
+TweetManager.prototype.addUserMonitor = function(user) {
+  var existingUser = _.findWhere(self.users, {data: user});
+  return existingUser || self.users[ self.users.push( new User(user) ) ]
+}
+
+/**
+ * Add user
+ * @param {Object} user User object
  */
 TweetManager.prototype.addUser = function(user) {
   var existingUser = _.findWhere(self.users, {data: user});
@@ -176,7 +236,7 @@ TweetManager.prototype.collectUsersTweets = function(callback) {
  * @return {Integer}
  */
 TweetManager.prototype.count = function() {
-  return this.tweets.length;
+  return this.statuses.length;
 }
 
 /**
@@ -185,8 +245,8 @@ TweetManager.prototype.count = function() {
  * @return {Array|Object}   One or several tweet
  */
 TweetManager.prototype.get = function(n) {
-  if( isNaN(n) ) return this.tweets;
-  else return n < this.count() ? this.tweets[n] : null;
+  if( isNaN(n) ) return this.statuses;
+  else return n < this.count() ? this.statuses[n] : null;
 }
 
 /**
@@ -209,7 +269,7 @@ TweetManager.prototype.tweetToEval = function(user, callback) {
  * @return {Array}
  */
 TweetManager.prototype.getTweetsWhere = function(where) {
-  return _.where(self.tweets, where);
+  return _.where(self.statuses, where);
 }
 
 /**
@@ -223,15 +283,25 @@ TweetManager.prototype.getUserProfile = function(where, callback) {
   // ensure a callback function
   callback = callback || function() {};
 
-  var users = _.filter(self.getUsersWhere(where), function(u) {
-    return u.data && u.data.id_str;
-  });
+  var users = self.getUsersWhere(where);
 
-  // Is the user available in the list ?
-  if(users.length && users[0].data) return callback(null, users[0].data);
+  // Is the user available in the list with enougth statuses?
+  if(users.length && users[0].data && users[0].data.statuses.length >= 3) {
+    // Send the data
+    return callback(null, users[0].data); 
+  // Is the user available but with not enougth statuses?
+  } else if(users.length && users[0].data) {
+    // Load the statuses before the callback
+    return users[0].loadStatuses(callback);
+  }
 
   // If not, loads it from twitter
-  self.twitterClient().get("users/show", where, callback);  
+  self.twitterClient().get("users/show", where, function(err, user) {
+    // Error control
+    if(err) return callback(err, null);
+    // Save the user and load these statuses
+    self.addUser(user).loadStatuses(callback);
+  });  
 };
 
 /**
@@ -241,7 +311,7 @@ TweetManager.prototype.getUserProfile = function(where, callback) {
  */
 TweetManager.prototype.getUsersWhere = function(where) {
   return _.filter(self.users, function(user) {
-    return _.findWhere([user.data], where) !== undefined;
+    return _.findWhere([user.data], where) != undefined;
   });
 }
 
@@ -251,10 +321,11 @@ TweetManager.prototype.getUsersWhere = function(where) {
  * @param {Object} user User to monitor
  * *****************************************************************************
  */
-function User(user) {     
+function User(user) {   
+  // Every user have its own statuses array
+  user.statuses = user.statuses || [];  
+  // Save the data
   this.data = user;
-  // Every user have its own 
-  this.tweets = [];
 }
 
 /**
@@ -263,7 +334,7 @@ function User(user) {
  * @return {Array}
  */
 User.prototype.getTweetsWhere = function(where) {
-  return _.where(this.tweets, where);
+  return _.where(this.data.statuses, where);
 }
 
 /**
@@ -272,20 +343,38 @@ User.prototype.getTweetsWhere = function(where) {
  */
 User.prototype.addTweet = function(tweet) {
   var user = this;
+
   // If the tweet not exists yet
-  if( ! this.getTweetsWhere({id: tweet.id}).length ) {    
+  if( ! this.getTweetsWhere({id: 1*tweet.id}).length ) {  
     // Extend the tweet
     self.extendTweet(tweet, function(err, t) {
+      
       if(err) return;
       // Add it to the array
-      user.tweets.push(t);
-      
-      var tweetToRecord = _.clone(t);
-      tweetToRecord.user = user.data;
-      // Record the tweet
-      entityManager.add(tweetToRecord, tweetToRecord.id, self.FAMILY_ID);
-    })
+      user.data.statuses.push(t);
+
+      // Record the tweet      
+      // var tweetToRecord = _.clone(t);
+      // tweetToRecord.user = user.data;
+      // entityManager.add(tweetToRecord, tweetToRecord.id, self.FAMILY_ID);
+    });
   }
+}
+/**
+ * Load tweet of the user
+ * @param   {Function} callback
+ */
+User.prototype.loadStatuses = function(callback) {
+  var user = this;
+  // Load now the tweets of the client
+  self.twitterClient().get("statuses/user_timeline", {id: user.data.id}, function(err, statuses) {
+    // Error control
+    if(err) return callback(err, null);
+    // Adds statuses to the user object
+    user.data.statuses = statuses;
+    // Send the result to the callback function
+    callback(null, user.data);
+  });
 }
 
 // Assure the manager object is a singleton.

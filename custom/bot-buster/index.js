@@ -9,28 +9,28 @@ var         util = require("util")
 var tweets = [];
 
 // Add bots
-twitterManager.addUser({screen_name: "ChamRT", solution: "bot"});
-twitterManager.addUser({screen_name: "assemroe", solution: "bot"});
-twitterManager.addUser({screen_name: "Egitto3000", solution: "bot"});
-twitterManager.addUser({screen_name: "Fuwaara", solution: "bot"});
-twitterManager.addUser({screen_name: "leenoo1989", solution: "bot"});
+twitterManager.addUserMonitor({screen_name: "ChamRT", solution: "bot"});
+twitterManager.addUserMonitor({screen_name: "assemroe", solution: "bot"});
+twitterManager.addUserMonitor({screen_name: "Egitto3000", solution: "bot"});
+twitterManager.addUserMonitor({screen_name: "Fuwaara", solution: "bot"});
+twitterManager.addUserMonitor({screen_name: "leenoo1989", solution: "bot"});
 // Add trusted user
-twitterManager.addUser({screen_name: "acarvin", solution: "human"});
-twitterManager.addUser({screen_name: "leighstream", solution: "human"});
-twitterManager.addUser({screen_name: "jenanmoussa", solution: "human"});
-twitterManager.addUser({screen_name: "bbclysedoucet", solution: "human"});
-twitterManager.addUser({screen_name: "RawyaRageh", solution: "human"});
-twitterManager.addUser({screen_name: "hany2m", solution: "human"});
-twitterManager.addUser({screen_name: "zkaram", solution: "human"});
-twitterManager.addUser({screen_name: "cjchivers", solution: "human"});
-twitterManager.addUser({screen_name: "gebauerspon", solution: "human"});
-twitterManager.addUser({screen_name: "abuaardvark", solution: "human"});
-twitterManager.addUser({screen_name: "fieldproducer", solution: "human"});
-twitterManager.addUser({screen_name: "Brown_Moses", solution: "human"});
-twitterManager.addUser({screen_name: "NabilAbiSaab", solution: "human"});
-twitterManager.addUser({screen_name: "Max_Fisher", solution: "human"});
-twitterManager.addUser({screen_name: "DavidKenner", solution: "human"});
-twitterManager.addUser({screen_name: "ezzsaid", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "acarvin", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "leighstream", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "jenanmoussa", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "bbclysedoucet", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "RawyaRageh", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "hany2m", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "zkaram", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "cjchivers", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "gebauerspon", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "abuaardvark", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "fieldproducer", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "Brown_Moses", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "NabilAbiSaab", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "Max_Fisher", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "DavidKenner", solution: "human"});
+twitterManager.addUserMonitor({screen_name: "ezzsaid", solution: "human"});
 
 
 // Force collectiong tweets
@@ -70,11 +70,15 @@ module.exports.prototype.get = function(data, callback) {
     case "user":
       var where = {};
       // User clause
-      if(data.id) where.id = data.id;
+      if(data.id) where.id = 1*data.id; // Important casting for right matching
       else if(data.screen_name) where.screen_name = data.screen_name;
       else return callback({error: "User identifier mission: use 'id' or 'screen_name' parameter."}, null);
 
       twitterManager.getUserProfile(where, function(err, profile) { 
+        // Add the twitter parse date function to the locals
+        profile.parseDate = twitterManager.parseDate;
+        profile.parseText = twitterManager.parseText;
+        // Send the profile as locals
         callback(err, err ? null : self.render("profile.jade", profile) ); 
       });   
       break;
@@ -97,7 +101,7 @@ function getTweetFromUser(callback) {
     // Random user
     var user = twitterManager.users[ _.random(0, twitterManager.users.length - 1) ];
     // Random tweet
-    if(user.tweets.length) tweet = user.tweets[ _.random(0, user.tweets.length) ];
+    if(user.statuses.length) tweet = user.statuses[ _.random(0, user.statuses.length) ];
 
   } while(!tweet);
 
@@ -135,6 +139,5 @@ function getTweetToEval(callback) {
   });
 
 }
-
 
 exports = module.exports;

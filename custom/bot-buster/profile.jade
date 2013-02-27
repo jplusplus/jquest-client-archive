@@ -1,30 +1,56 @@
 //- Presence of an id indicate that we find or not the user
 - if(typeof id == "undefined")
-    h3 Sorry, unable to find the user.
+    h4 Sorry, unable to find the user.
 - else
     .row-fluid
         .span6
-            h3 Basic information about @#{screen_name}
-            .row-fluid
-                .span4
-                    .value=statuses_count
-                    .tag tweets
-                .span4
-                    .value=friends_count
-                    .tag followings
-                .span4
-                    .value=followers_count
-                    .tag followers
+            h4 Basic information about @#{screen_name}
+            .card.tc
+                .details-overlay                    
+                    if typeof profile_banner_url != "undefined"
+                        img.banner(src=profile_banner_url + "/web")
+                    else
+                        img.banner(src="//abs.twimg.com/a/1361843548/t1/img/grey_header_web.png")
+
+                    .details
+                        a.thumbnail(href="//twitter.com/"+screen_name, target="_blank")
+                            img(width=60,src=profile_image_url,alt="User avatar")
+                        h5
+                            a(href="//twitter.com/"+screen_name, target="_blank")=name
+                        h6
+                            a(href="//twitter.com/"+screen_name, target="_blank") @#{screen_name}
+                        p=description
+                        if location && url
+                            p #{location} &bullet; <a href='#{url}' target="_blank">#{url}</a>
+                        else if location 
+                            p #{location} 
+                        else if url
+                            p <a href='#{url}' target="_blank">#{url}</a>
+
+
+                .row-fluid
+                    .span4.indicator
+                        .value=statuses_count
+                        .tag tweets
+                    .span4.indicator
+                        .value=friends_count
+                        .tag followings
+                    .span4.indicator
+                        .value=followers_count
+                        .tag followers
+
         .span6
-            h3 Last tweets by @#{screen_name}
-            ul.unstyled
-                - var statuses = [status]
-                each status in statuses                
-                    li.tweet
-                        .pull-right=created_at
-                        p
-                            strong.right05=name 
-                            |  @#{screen_name}
-                        p=status.text
+            if typeof statuses != "undefined"
+                h4 Last tweets by @#{screen_name}
+                ul.unstyled.timeline
+                    each status in statuses.slice(0,3)               
+                        li.tweet
+                            a.created_at.pull-right(href="//twitter.com/"+screen_name+"/status/"+status.id_str,  target="_blank")
+                                =parseDate(created_at)
+                            p
+                                a.username(href="//twitter.com/"+screen_name,  target="_blank")
+                                    strong.name=name 
+                                    span.screen_name @#{screen_name}
+                            p!=parseText(status.text)
 
 

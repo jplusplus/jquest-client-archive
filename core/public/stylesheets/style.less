@@ -192,6 +192,121 @@
 }
 
 
+.user-profile {
+  padding-top:30px;    
+  
+  .card {
+    padding:0;
+    margin:0;
+    
+    overflow:hidden;
+    border:1px solid fade(#000, 10);
+    background:white;
+    .border-radius(6px);
+    
+    .details {
+      padding:10px 20px;
+      padding-bottom:20px;
+      position:relative;      
+      color:white;
+      font-size:14px;
+      text-shadow:1px 0 2px black;
+      
+      #gradient > .vertical(fade(#000, 0), fade(#000, 55));
+      
+      .thumbnail {
+        margin:10px auto;
+        background:white;
+        border:0;
+        .box-shadow(0 1px 1px rgba(0, 0, 0, 0.25) );
+        display:inline-block;
+      }
+
+
+      h5 {
+        font-size:24px;
+        font-weight:bold;
+      }
+
+      h6 {
+        font-size:18px;
+        font-weight:normal;
+      }
+
+      a { 
+        color:white;
+        text-decoration:underline;
+      }
+
+      h5 a, h6 a {
+        text-decoration:none;
+      }
+
+    }
+
+    .details-overlay {
+      position:relative;
+      overflow:hidden;
+      
+      .banner {
+        position:absolute;
+        top:0;
+        left:0;
+        min-width:100%;
+        max-width:auto;
+        min-height:100%;
+        max-height:auto;
+      }
+    }
+
+    .indicator {
+      padding:5px;
+      border-left:1px solid  fade(#000, 10);
+      text-transform:uppercase;
+      line-height:16px;
+      
+      .value {
+        color:#000;
+        font-weight:bold;
+        font-size:14px;
+      }
+      .tag {
+        color:#aaa;
+        font-size:10px;
+      }
+
+      @media (max-width: 767px) {
+        border-left:0;
+        border-top:1px solid  fade(#000, 10);
+      }
+    }
+  }
+}
+
+.timeline {
+  
+  .tweet {    
+    .box-shadow(0 1px 3px rgba(0, 0, 0, 0.15) );
+    .border-radius(4px);
+    padding:10px;
+    margin-bottom:10px;
+    background:white;
+    border:1px solid #EEEEEE;
+    border-color:#EEEEEE #DDDDDD #BBBBBB;
+    
+    .name {
+      margin-right:5px;
+      color:#000;
+    }
+
+    .screen_name {
+      color:#666666;
+    }
+  }
+
+}
+
+
 hr.soften {
 	position:relative;
   height: 1px;
