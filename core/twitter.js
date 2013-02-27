@@ -118,7 +118,8 @@ TweetManager.prototype.createStream = function(tracks) {
  */
 TweetManager.prototype.extendTweet = function(tweet, callback) {
 
-  var tweetClone = _.clone(tweet);
+  // Do we need to extend the tweet ?
+  if(tweet.oembed) return callback(null, tweet);
 
   // Twitter request option
   var options = { 
@@ -138,18 +139,9 @@ TweetManager.prototype.extendTweet = function(tweet, callback) {
       return callback({error: err || "No embed code."}, null);
     }
 
-    tweetClone.oembed = oembed;
-    // Save the hashtags
-    tweetClone.hashtags = tweetClone.text.match(/#(\w+)/g);
-    // Removed every #
-    tweetClone.hashtags = _.map(tweetClone.hashtags, function(el) { return el.replace("#", "")});
-    // Save the mentions
-    tweetClone.mentions = tweetClone.text.match(/@(\w+)/g);
-    // Removed every @
-    tweetClone.mentions = _.map(tweetClone.mentions, function(el) { return el.replace("@", "")});
-
+    tweet.oembed = oembed;
     // extend the clone    
-    callback(null, tweetClone);
+    callback(null, tweet);
   });
 
 }
@@ -326,6 +318,7 @@ function User(user) {
   user.statuses = user.statuses || [];  
   // Save the data
   this.data = user;
+  return this;
 }
 
 /**

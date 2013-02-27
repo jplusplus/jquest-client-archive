@@ -89,5 +89,7 @@
 	"Play again": "Play again",
 	"Thank you!": "Thank you!",
 	"Your positive participation help our system to learn!": "Your positive participation help our system to learn!",
-	"Your positive participation helps our system to learn!": "Your positive participation helps our system to learn!"
+	"Your positive participation helps our system to learn!": "Your positive participation helps our system to learn!",
+	"Wooops...": "Wooops...",
+	"There is something wrong.": "There is something wrong."
 }

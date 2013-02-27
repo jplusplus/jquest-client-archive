@@ -9,28 +9,28 @@ var         util = require("util")
 var tweets = [];
 
 // Add bots
-twitterManager.addUserMonitor({screen_name: "ChamRT", solution: "bot"});
-twitterManager.addUserMonitor({screen_name: "assemroe", solution: "bot"});
-twitterManager.addUserMonitor({screen_name: "Egitto3000", solution: "bot"});
-twitterManager.addUserMonitor({screen_name: "Fuwaara", solution: "bot"});
-twitterManager.addUserMonitor({screen_name: "leenoo1989", solution: "bot"});
+twitterManager.addUser({screen_name: "ChamRT", solution: "bot"});
+twitterManager.addUser({screen_name: "assemroe", solution: "bot"});
+twitterManager.addUser({screen_name: "Egitto3000", solution: "bot"});
+twitterManager.addUser({screen_name: "Fuwaara", solution: "bot"});
+twitterManager.addUser({screen_name: "leenoo1989", solution: "bot"});
 // Add trusted user
-twitterManager.addUserMonitor({screen_name: "acarvin", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "leighstream", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "jenanmoussa", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "bbclysedoucet", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "RawyaRageh", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "hany2m", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "zkaram", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "cjchivers", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "gebauerspon", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "abuaardvark", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "fieldproducer", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "Brown_Moses", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "NabilAbiSaab", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "Max_Fisher", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "DavidKenner", solution: "human"});
-twitterManager.addUserMonitor({screen_name: "ezzsaid", solution: "human"});
+twitterManager.addUser({screen_name: "acarvin", solution: "human"});
+twitterManager.addUser({screen_name: "leighstream", solution: "human"});
+twitterManager.addUser({screen_name: "jenanmoussa", solution: "human"});
+twitterManager.addUser({screen_name: "bbclysedoucet", solution: "human"});
+twitterManager.addUser({screen_name: "RawyaRageh", solution: "human"});
+twitterManager.addUser({screen_name: "hany2m", solution: "human"});
+twitterManager.addUser({screen_name: "zkaram", solution: "human"});
+twitterManager.addUser({screen_name: "cjchivers", solution: "human"});
+twitterManager.addUser({screen_name: "gebauerspon", solution: "human"});
+twitterManager.addUser({screen_name: "abuaardvark", solution: "human"});
+twitterManager.addUser({screen_name: "fieldproducer", solution: "human"});
+twitterManager.addUser({screen_name: "Brown_Moses", solution: "human"});
+twitterManager.addUser({screen_name: "NabilAbiSaab", solution: "human"});
+twitterManager.addUser({screen_name: "Max_Fisher", solution: "human"});
+twitterManager.addUser({screen_name: "DavidKenner", solution: "human"});
+twitterManager.addUser({screen_name: "ezzsaid", solution: "human"});
 
 
 // Force collectiong tweets
@@ -40,7 +40,7 @@ module.exports = function(apiManager, entityManager, user, mission, callback) {
 
   self = this;  
   // Add several questions from twitter user 
-  // for(var i=0; i<10; i++) self.addQuestion(getTweetFromUser);
+  for(var i=0; i<5; i++)  self.addQuestion(getTweetFromUser);
   // Add several question from the database (entity to eval)
   for(var i=0; i<5;  i++) self.addQuestion(getTweetToEval);
 
@@ -95,25 +95,44 @@ module.exports.prototype.get = function(data, callback) {
  */
 function getTweetFromUser(callback) {
   
-  var tweet = false;
 
-  do {
-    // Random user
-    var user = twitterManager.users[ _.random(0, twitterManager.users.length - 1) ];
+  function send(err, data) {
+
+    // Spreads the error
+    if(err) return callback(err, null);
+    // Check statuses exist
+    if(data.statuses.length === 0)  return callback({error: "No tweet available."}, null);
+
     // Random tweet
-    if(user.statuses.length) tweet = user.statuses[ _.random(0, user.statuses.length) ];
+    var tweet = data.statuses[ _.random(0, data.statuses.length-1) ];      
 
-  } while(!tweet);
+    // Extend the tweet before display it (if needed)
+    twitterManager.extendTweet(tweet, function(err, tweet) {
 
-  callback(null, {
-    label    : "Do you think this message was published by a human or by a robot?",
-    content  : tweet.oembed.html,
-    duration : 15,
-    solution : user.data.solution,
-    answers  : ["bot", "human"],
-    fid      : tweet.id,
-    user     : user.data
-  });
+      // Spreads the error
+      if(err) return callback(err, null);
+
+      callback(null, {
+        label    : "Do you think this message was published by a human or by a robot?",
+        content  : tweet.oembed.html,
+        duration : 15,
+        solution : data.solution,
+        answers  : ["bot", "human"],
+        fid      : tweet.id,
+        user     : data
+      });
+
+    })    
+
+
+  }
+
+  // Gets a random user
+  var user = twitterManager.users[ _.random(0, twitterManager.users.length - 1) ];
+  // If there is some tweet
+  if(user.data.statuses.length) send(null, user.data);
+  // If not, load the timeline first
+  else user.loadStatuses(send);
 
 }
 

@@ -18,4 +18,9 @@ block body
       .row    
         .span8
           h1=_("Wooops...")
-          p=_("There is something wrong.")
+          - (if typeof error == "undefined")
+            p=_("There is something wrong.")
+          - else
+            p=_("There is something wrong:")
+            blockquote
+              p=error

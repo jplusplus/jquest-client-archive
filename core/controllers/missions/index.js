@@ -270,7 +270,7 @@ function missionRouter(req, res, locals) {
         // Prepare the mission to play before rendering
         module.play(function(err, question) {
           // Something happens          
-          if(err) return res.render("500");
+          if(err) return res.render("500", err);
           
           locals.question = question;   
           res.render('missions/mission', locals);
