@@ -1,0 +1,38 @@
+extends ../layout
+
+block title
+    | Entity #{id}
+    
+block stylesheets
+    link(href="//fonts.googleapis.com/css?family=Share:400,700", type='text/css', rel="stylesheet")
+    link(href="/stylesheets/style.css", type='text/css', rel="stylesheet")
+
+block scripts
+    script(src="http://google-code-prettify.googlecode.com/svn/loader/run_prettify.js?lang=js&skin=default", type="text/javascript")
+    script(src="/javascripts/vendor/bootstrap/bootstrap.min.js", type="text/javascript")
+
+block body
+
+    include ../layouts/menu
+    .page-header
+        .container
+            h1 Entity #{id}           
+
+    .container
+        .row-fluid            
+            .span7              
+                pre
+                    code.prettyprint=JSON.stringify(body, null, 4)
+            .span5
+                .main-panel
+                    h2 Discussion
+                    #disqus_thread
+                        script(type='text/javascript')
+                            /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+                            var disqus_shortname = 'jquest-community'; // required: replace example with your forum shortname
+                            /* * * DON'T EDIT BELOW THIS LINE * * */
+                            (function() {
+                                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                                dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+                                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                            })();
