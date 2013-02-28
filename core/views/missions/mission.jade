@@ -16,7 +16,7 @@ block body
       p!=mission.description    
       
   .container
-    .main-panel.overflow
+    .main-panel.overflow.bottom20
       .say-thank-you.hidden
         h3=_("Thank you!")
         p=_("Your positive participation helps our system to learn!")
@@ -28,23 +28,20 @@ block body
           if mission.module.state == "game"
             .splashscreen( data-msg-cd-plural=_("The mission is about to begin in % seconds."), data-msg-cd-single=_("The mission is about to begin in % second.") )
               .countdown
-              .instruction=_("Push a button to select an answer") 
+              .instruction=_("Push a button to select an answer")          
 
-          case mission.module.state                    
-            when "game"      
-              //- Next button only in classic mode
-              if mission.module.type == 'classic'
-                .top30.tr
-                  button.btn.btn-primary(type="submit")
-                    =_("Next")
-                    i.icon-arrow-right.icon-white.left05          
+    if mission.module.state != "game" && typeof rankings != "undefined"
+      .mission-rankings
+        h3 Rankings
+        ul.row-fluid.unstyled.top20
+          each rank in rankings.slice(0,6)
+            li.rank.span2.tl.bottom20.well.tc.overflow
+              //- No avatar support yet
+              img(src="/images/no_avatar.jpg", width=60).img-circle.img-polaroid.bottom20
+              p.margin0
+                strong #{rank.points} points
+              p.margin0=rank.user.username
 
-            when "failed"
-              .row-fluid.top30
-                .tc
-                  a(href="./open").btn(type="submit")
-                    i.icon-repeat.right05
-                    =_("Play again")                  
 
 
   .white-panel.border-top
@@ -92,3 +89,4 @@ block scripts
       js.src="//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs);
       return window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
     }(document, "script", "twitter-wjs"));  
+ 

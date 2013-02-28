@@ -270,10 +270,34 @@ function missionRouter(req, res, locals) {
         // Prepare the mission to play before rendering
         module.play(function(err, question) {
           // Something happens          
-          if(err) return res.render("500", err);
+          if(err) return res.render("500", err);          
           
+          // Add the received question to locals
           locals.question = question;   
-          res.render('missions/mission', locals);
+
+          // Get the rankings if we are not playing
+          if(locals.mission.state !== "game") {
+
+            // Get rankings from the api for this mission,
+            // only for succeed state and sorted by desc points
+            var params = { 
+              mission: locals.mission.id, 
+              state: 's', 
+              order_by:'-points',
+              limit: 6
+            };
+
+            api.user_progression(params).get(function(err, up) {
+              // Something happens          
+              if(err) return res.render("500", err);    
+
+              if(up.objects.length > 0) locals.rankings = up.objects;
+              res.render('missions/mission', locals);
+            });
+
+          // Render without rankings
+          } else res.render('missions/mission', locals);          
+
         });
         break;
       

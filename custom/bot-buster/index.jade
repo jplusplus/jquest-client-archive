@@ -1,4 +1,22 @@
-  
+mixin missinSummary(mission)
+  - if(typeof mission.previousQuestions != "undefined" && mission.previousQuestions.length)
+  h3 Mission summary
+  table.table.table-striped.mission-summary
+    each question in  mission.previousQuestions          
+      if question.user
+        tr
+          td.is-correct
+            i(class=question.isCorrect ? "icon-ok" : " icon-remove")
+          td.solution
+            =question.solution
+          td.avatar
+            img.img-polaroid(src=question.user.profile_image_url, width=40)
+          td.tweet
+            p.bottom0
+              a.username(href="//twitter.com/"+question.user.screen_name,  target="_blank")
+                strong.name.right05=question.user.name 
+                span.screen_name @#{question.user.screen_name}
+            p!=question.parseText(question.content.text)     
 
 case mission.state
 
@@ -94,27 +112,33 @@ case mission.state
                   | Next mission
                   i.icon-arrow-right.icon-white.left05          
       .span6
-        - if(typeof mission.previousQuestions != "undefined" && mission.previousQuestions.length)
-          h3 Mission summary
-          table.table.table-striped.mission-summary
-            each question in  mission.previousQuestions          
-              if question.user
-                tr
-                  td.is-correct
-                    i(class=question.isCorrect ? "icon-ok" : " icon-remove")
-                  td.solution
-                    =question.solution
-                  td.avatar
-                    img.img-polaroid(src=question.user.profile_image_url, width=40)
-                  td.tweet
-                    p.bottom0
-                      a.username(href="//twitter.com/"+question.user.screen_name,  target="_blank")
-                        strong.name.right05=question.user.name 
-                        span.screen_name @#{question.user.screen_name}
-                    p!=question.parseText(question.content.text)                    
+        mixin missinSummary(mission)               
 
 
   when "failed"
-      h2 Oh my gosh dude, you did something realy bad
-      p You should try again
+    .row-fluid
+      .span6
+        .succeed-card.right20
+          h2 Mission failed! 
+          .row-fluid
+            .span4.indicator 
+              i.icon-dashboard.icon
+              | #{mission.points}<br />
+              strong points
+            .span4.indicator 
+              i.icon-bell.icon
+              | 0 second<br />
+              strong time bonus             
+            .span4.indicator 
+              i.icon-gift.icon
+              | 0 out of 10<br />
+              strong accuracy bonus             
+
+          .row-fluid.top30
+            .span4.offset4.tc                  
+              a.btn.btn-large.btn-primary(href="./open")
+                i.icon-repeat.right05
+                | Replay        
+      .span6
+        mixin missinSummary(mission)         
 
