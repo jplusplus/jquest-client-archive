@@ -20,7 +20,6 @@
     , "passport-facebook"     : "latest"    
     , "passport-twitter"      : "latest"    
     , "pg"                    : "0.7.2"
-    , "restler"               : "latest"
     , "sequelize"             : ">= 1.4.1"
     , "twit"                  : "1.0.10"
     , "underscore"            : "latest"  
