@@ -9,28 +9,28 @@ var         util = require("util")
 var tweets = [];
 
 // Add bots
-twitterManager.addUser({screen_name: "ChamRT", solution: "bot"});
-twitterManager.addUser({screen_name: "assemroe", solution: "bot"});
-twitterManager.addUser({screen_name: "Egitto3000", solution: "bot"});
-twitterManager.addUser({screen_name: "Fuwaara", solution: "bot"});
-twitterManager.addUser({screen_name: "leenoo1989", solution: "bot"});
+twitterManager.addUser({screen_name: "ChamRT", solution: "bot"}, true);
+twitterManager.addUser({screen_name: "assemroe", solution: "bot"}, true);
+twitterManager.addUser({screen_name: "Egitto3000", solution: "bot"}, true);
+twitterManager.addUser({screen_name: "Fuwaara", solution: "bot"}, true);
+twitterManager.addUser({screen_name: "leenoo1989", solution: "bot"}, true);
 // Add trusted user
-twitterManager.addUser({screen_name: "acarvin", solution: "human"});
-twitterManager.addUser({screen_name: "leighstream", solution: "human"});
-twitterManager.addUser({screen_name: "jenanmoussa", solution: "human"});
-twitterManager.addUser({screen_name: "bbclysedoucet", solution: "human"});
-twitterManager.addUser({screen_name: "RawyaRageh", solution: "human"});
-twitterManager.addUser({screen_name: "hany2m", solution: "human"});
-twitterManager.addUser({screen_name: "zkaram", solution: "human"});
-twitterManager.addUser({screen_name: "cjchivers", solution: "human"});
-twitterManager.addUser({screen_name: "gebauerspon", solution: "human"});
-twitterManager.addUser({screen_name: "abuaardvark", solution: "human"});
-twitterManager.addUser({screen_name: "fieldproducer", solution: "human"});
-twitterManager.addUser({screen_name: "Brown_Moses", solution: "human"});
-twitterManager.addUser({screen_name: "NabilAbiSaab", solution: "human"});
-twitterManager.addUser({screen_name: "Max_Fisher", solution: "human"});
-twitterManager.addUser({screen_name: "DavidKenner", solution: "human"});
-twitterManager.addUser({screen_name: "ezzsaid", solution: "human"});
+twitterManager.addUser({screen_name: "acarvin", solution: "human"}, true);
+twitterManager.addUser({screen_name: "leighstream", solution: "human"}, true);
+twitterManager.addUser({screen_name: "jenanmoussa", solution: "human"}, true);
+twitterManager.addUser({screen_name: "bbclysedoucet", solution: "human"}, true);
+twitterManager.addUser({screen_name: "RawyaRageh", solution: "human"}, true);
+twitterManager.addUser({screen_name: "hany2m", solution: "human"}, true);
+twitterManager.addUser({screen_name: "zkaram", solution: "human"}, true);
+twitterManager.addUser({screen_name: "cjchivers", solution: "human"}, true);
+twitterManager.addUser({screen_name: "gebauerspon", solution: "human"}, true);
+twitterManager.addUser({screen_name: "abuaardvark", solution: "human"}, true);
+twitterManager.addUser({screen_name: "fieldproducer", solution: "human"}, true);
+twitterManager.addUser({screen_name: "Brown_Moses", solution: "human"}, true);
+twitterManager.addUser({screen_name: "NabilAbiSaab", solution: "human"}, true);
+twitterManager.addUser({screen_name: "Max_Fisher", solution: "human"}, true);
+twitterManager.addUser({screen_name: "DavidKenner", solution: "human"}, true);
+twitterManager.addUser({screen_name: "ezzsaid", solution: "human"}, true);
 
 
 // Force collectiong tweets
@@ -40,9 +40,9 @@ module.exports = function(apiManager, entityManager, user, mission, callback) {
 
   self = this;  
   // Add several questions from twitter user 
-  for(var i=0; i<5; i++)  self.addQuestion(getTweetFromUser);
+  for(var i=0; i<5; i++)  self.addQuestion(getTweetEvaluated);
   // Add several question from the database (entity to eval)
-  // for(var i=0; i<5;  i++) self.addQuestion(getTweetToEval);
+  for(var i=0; i<5;  i++) self.addQuestion(getTweetToEval);
 
   // Override the template's directory to use a custom template
   self.templateDirname  = __dirname,
@@ -157,6 +157,30 @@ function getTweetToEval(callback) {
       user      : err || tweet.user,
       family    : twitterManager.FAMILY_ID,
       parseText : twitterManager.parseText
+    });
+
+  });
+
+}
+
+/**
+ * Get a tweet from the database to evaluate
+ * @param  {Function} callback Callback function
+ */
+function getTweetEvaluated(callback) {
+  
+  var tweet = twitterManager.tweetEvaluated(self.user, function(err, tweet) {
+
+    callback(err, {
+      label     : "Do you think this message was published by a human or by a robot?",
+      content   : err || tweet,
+      duration  : 15,
+      answers   : ["bot", "human"],
+      fid       : err || tweet.id,
+      user      : err || tweet.user,
+      family    : twitterManager.FAMILY_ID,
+      parseText : twitterManager.parseText,
+      solution  : tweet.solution
     });
 
   });

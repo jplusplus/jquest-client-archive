@@ -7,9 +7,10 @@ function EntityManager() {}
  * @param {Object}          entity    Entity object
  * @param {String}          fid       Identifier of the entity in its family   
  * @param {Integer|String}  family    Family identifier (id or resource uri)
+ * @param {String}          solution  (optional) Solution of a trusted source
  * @param {Function}        callback  Callback function
  */
-EntityManager.prototype.add = function(entity, fid, family, callback) {
+EntityManager.prototype.add = function(entity, fid, family, solution, callback) {
     callback = callback || function() {};
     var data = { 
         // Stringify the entity
@@ -17,8 +18,11 @@ EntityManager.prototype.add = function(entity, fid, family, callback) {
         // Specify the entity id (from its provider) to avoid duplicates
         fid: fid,
         // Specify the family (Tweet, FB update, etc)
-        family: family
+        family: family,
+        // Add the solution
+        solution: solution
     };
+
     api.entity.post(data, callback);
 };
 
@@ -59,8 +63,30 @@ EntityManager.prototype.entityToEval = function(family, user, callback) {
     family: family,
     // The given didn't evalute the entity before
     not_evaluated_by: user,
+    // No solution given
+    solution: "",
     // Get just 1 entity
-    limit: 1
+    limit: 1,
+  }).get(callback);
+}
+
+/**
+ * Get an entity to evaluate that the user didn't evaluate yet 
+ * but that has a solution
+ * @param  {Integer}  family    Family id
+ * @param  {Integer}  user      User id
+ * @param  {Function} callback  Callback function  
+ */
+EntityManager.prototype.entityEvaluated = function(family, user, callback) {
+  api.entity({
+    // Filter by family
+    family: family,
+    // The given didn't evalute the entity before
+    not_evaluated_by: user,
+    // No solution given
+    have_solution: "",
+    // Get just 1 entity
+    limit: 1,
   }).get(callback);
 }
 

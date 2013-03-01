@@ -1,6 +1,7 @@
 // Dependencies
 var entityManager = require("./entity.js")
          , config = require("config")
+           , util = require("util")
            , Twit = require("twit")
               , _ = require("underscore")
 
@@ -20,8 +21,10 @@ function TweetManager() {
   self.FAMILY_ID = FAMILY_ID;
   // Every tweets 
   self.statuses = [];
-  // User monitored
+  // User extracted
   self.users  = [];
+  // User monitored
+  self.userMonitors  = [];
   // Create user monitor
   self.starUserMonitor();
 }
@@ -162,17 +165,18 @@ TweetManager.prototype.addTweetEvent = function(tweet) {
  * @param {Object} user User object to monitor
  */
 TweetManager.prototype.addUserMonitor = function(user) {
-  var existingUser = _.findWhere(self.users, {data: user});
-  return existingUser || self.users[ self.users.push( new User(user) ) ]
+  var existingUserMonitor = _.findWhere(self.userMonitors, {data: user});  
+  return existingUserMonitor || self.userMonitors[ self.userMonitors.push( new UserMonitor(user) ) ]
 }
 
 /**
  * Add user
  * @param {Object} user User object
+ * @param {Boolean} monitor True to create a monitor
  */
-TweetManager.prototype.addUser = function(user) {
+TweetManager.prototype.addUser = function(user, monitor) {
   var existingUser = _.findWhere(self.users, {data: user});
-  return existingUser || self.users[ self.users.push( new User(user) ) ]
+  return existingUser || self.users[ self.users.push( new User(user, monitor) ) ]
 }
 
 /**
@@ -180,13 +184,13 @@ TweetManager.prototype.addUser = function(user) {
  * @return {[type]} [description]
  */
 TweetManager.prototype.starUserMonitor = function() {
-  if(self.userMonitor) clearInterval(self.userMonitor);
+  if(self.userMonitorInterval) clearInterval(self.userMonitorInterval);
   // Collect users' tweets every 2 minutes
-  self.userMonitor = setInterval(self.collectUsersTweets, 60*1000);
+  self.userMonitorInterval = setInterval(self.collectUsersTweets, 60*1000);
 }
 
 /**
- * Start an interval to extract tweets of users
+ * Start an interval to extract tweets of user monitors
  * @param {Function} callback
  */
 TweetManager.prototype.collectUsersTweets = function(callback) {
@@ -197,29 +201,32 @@ TweetManager.prototype.collectUsersTweets = function(callback) {
 
   var options = {
     // Get all user screen_names (limited to 100)
-    screen_name : _.map( self.users.slice(0,100), function(u) { return u.data.screen_name } ).join(',')
+    screen_name : _.map( self.userMonitors.slice(0,1), function(u) { return u.data.screen_name } ).join(',')
   }
+
 
   // Yet we make twitter lookup to get one last tweet of each user.
   // We probably use later a more complete solution.
   self.twitterClient().get("users/lookup", options, function(err, data) {
     // Something went wrong 
-    if(err) callback(err, null);
-    else {
-      // Record each tweet in the right user
-      _.each(data, function(user) {        
-        // One or more user matchings (flexible assertion)
-        _.each( self.getUsersWhere({ screen_name: user.screen_name }), function(u) {   
-          var tweet = user.status;
-          // Update the user data
-          u.data = _.extend(u.data, _.omit(user, "status") );
-          // Add the tweet to each user
-          u.addTweet(tweet);
-        });
-      });      
-      // Callback function
-      callback(null, data);
-    }
+    if(err) return callback(err, null);
+
+    // Record each tweet in the right user mintor
+    _.each(data, function(user) {        
+      // One or more user matchings (flexible assertion)
+      _.each( self.getUserMonitorsWhere({ screen_name: user.screen_name }), function(u) { 
+
+        var tweet = user.status;
+        // Update the user data
+        u.data = _.extend(u.data, _.omit(user, "status") );
+        // Add the tweet to each user
+        u.addTweet(tweet, callback);
+
+      });
+    });
+
+    // Callback function
+    callback(null, data);
   });
 }
 
@@ -251,6 +258,23 @@ TweetManager.prototype.tweetToEval = function(user, callback) {
     err = err || !data.objects || data.objects.length == 0 || null;
     // Return the first entity body
     callback(err, err || data.objects[0].body);
+  });
+}
+/**
+ * Get an evaluated tweet from the db
+ * @param  {Integer}  user    User id
+ * @param  {Function} callback Callback function  
+ */
+TweetManager.prototype.tweetEvaluated = function(user, callback) {
+  entityManager.entityEvaluated(self.FAMILY_ID, user, function(err, data) {
+    err = err || !data.objects || data.objects.length == 0 || null;
+    if(err) return callback(err, null);
+    
+    var tweet = data.objects[0].body;
+    if(data.objects[0].solution) tweet.solution = data.objects[0].solution;
+
+    // Return the first entity body
+    callback(null, tweet);
   });
 }
 
@@ -307,17 +331,31 @@ TweetManager.prototype.getUsersWhere = function(where) {
   });
 }
 
+/**
+ * Get all user monitor matching to the given Object
+ * @param  {Object} where
+ * @return {Array}
+ */
+TweetManager.prototype.getUserMonitorsWhere = function(where) {
+  return _.filter(self.userMonitors, function(userMonitor) {
+    return _.findWhere([userMonitor.data], where) != undefined;
+  });
+}
+
 
 /**
  * User class
- * @param {Object} user User to monitor
+ * @param {Object}  user    User to monitor
+ * @param {Boolean} monitor True to create a monitor
  * *****************************************************************************
  */
-function User(user) {   
+function User(user, monitor) {   
   // Every user have its own statuses array
   user.statuses = user.statuses || [];  
   // Save the data
   this.data = user;
+  // Shoudl we create a user monitor to save its tweets ?
+  if(monitor) self.addUserMonitor(user);  
   return this;
 }
 
@@ -333,23 +371,24 @@ User.prototype.getTweetsWhere = function(where) {
 /**
  * Add a tweet to the user (once)
  * @param {Object} tweet Tweet to add
+ * @param {Function} callback Callback function
  */
-User.prototype.addTweet = function(tweet) {
+User.prototype.addTweet = function(tweet, callback) {
   var user = this;
+  callback = callback || function() {};
 
   // If the tweet not exists yet
   if( ! this.getTweetsWhere({id: 1*tweet.id}).length ) {  
     // Extend the tweet
     self.extendTweet(tweet, function(err, t) {
       
-      if(err) return;
+      if(err) return callback(err, null, null);
       // Add it to the array
       user.data.statuses.push(t);
 
-      // Record the tweet      
-      // var tweetToRecord = _.clone(t);
-      // tweetToRecord.user = user.data;
-      // entityManager.add(tweetToRecord, tweetToRecord.id, self.FAMILY_ID);
+      // Send the result to the callback function
+      callback(null, t, user);
+
     });
   }
 }
@@ -369,6 +408,46 @@ User.prototype.loadStatuses = function(callback) {
     callback(null, user.data);
   });
 }
+
+
+
+
+/**
+ * User Monitor class
+ * @extends {User}
+ * @param   {Object} user User to monitor
+ * *****************************************************************************
+ */
+function UserMonitor(user) {
+  // Call the parent constructor
+  return UserMonitor.super_.call(this, user, false); 
+}
+
+/**
+ * Inheritance from "User"
+ */
+util.inherits(UserMonitor, User);
+
+/**
+ * Add a tweet to the user (once)
+ * @param {Object} tweet Tweet to add
+ * @param {Function} callback Callback function
+ */
+UserMonitor.prototype.addTweet = function(tweet, callback) {
+
+  UserMonitor.super_.prototype.addTweet.call(this, tweet, function(err, tweet, user) {
+
+    if(err) return callback(err, null, null);
+    // Record the tweet      
+    var tweetToRecord = _.clone(tweet);
+    // Add the user to the tweet as attribute
+    tweetToRecord.user = user.data;
+    // Save the tweet
+    entityManager.add(tweetToRecord, tweetToRecord.id, self.FAMILY_ID, user.data.solution, callback);
+
+  });
+}
+
 
 // Assure the manager object is a singleton.
 global.JQUEST_TWEET_MANAGER = global.JQUEST_TWEET_MANAGER ? global.JQUEST_TWEET_MANAGER : new TweetManager();
